@@ -513,7 +513,20 @@ function showTab(id){
   if(id==='ingresos')  renderIngresos();
 }
 
-async function syncSheet(){ const b=document.getElementById('btnSync'); b.style.animation='spin .7s linear infinite'; setSyncDot('loading'); await cargarSheet(); b.style.animation=''; }
+async function syncSheet(){
+  const b=document.getElementById('btnSync');
+  b.style.animation='spin .7s linear infinite';
+  setSyncDot('loading');
+  await cargarSheet();
+  /* FIX 4: re-renderizar la pestaña activa para que los datos nuevos se vean sin cambiar de tab */
+  const tabActiva=TABS.find(t=>document.getElementById('panel-'+t)?.classList.contains('active'));
+  if(tabActiva==='historial') renderHistorial();
+  else if(tabActiva==='tracker') renderTracker();
+  else if(tabActiva==='creditos') renderCreditos();
+  else if(tabActiva==='egresos') renderEgresos();
+  else if(tabActiva==='ingresos') renderIngresos();
+  b.style.animation='';
+}
 
 async function cargarSheet(){
   const url=config.scriptUrl;
