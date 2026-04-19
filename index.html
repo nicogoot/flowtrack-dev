@@ -66,6 +66,26 @@ input,select,textarea{font-family:inherit;outline:none}
 .form-label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
 .form-control{width:100%;padding:10px 12px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--text);font-size:14px;transition:border .15s}
 .form-control:focus{border-color:var(--accent)}
+/* FIX 5: highlight visual en fecha sospechosa */
+.form-control.fecha-warning{background:#3a2d1a;border-color:var(--warn);border-width:2px;}
+.form-control.fecha-danger{background:#3a1f1a;border-color:var(--danger);border-width:2px;}
+.fecha-warning-label{font-size:11px;color:var(--warn);margin-top:4px;display:none;}
+.fecha-danger-label{font-size:11px;color:var(--danger);margin-top:4px;display:none;font-weight:600;}
+.fecha-warning-label.show, .fecha-danger-label.show{display:block;}
+/* FIX 5: modal de confirmación condicional */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:8px;color:var(--warn);}
+.modal-subtitle{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.4;}
+.modal-detail{background:var(--card2);border-radius:var(--r2);padding:12px;margin-bottom:16px;font-size:13px;}
+.modal-detail-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);}
+.modal-detail-row:last-child{border-bottom:none;}
+.modal-detail-label{color:var(--muted);}
+.modal-detail-value{color:var(--text);font-weight:500;text-align:right;}
+.modal-detail-value.highlight{color:var(--warn);font-weight:600;}
+.modal-actions{display:flex;gap:8px;}
+.modal-actions .btn{flex:1;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 textarea.form-control{resize:vertical;min-height:70px}
 select.form-control{cursor:pointer}
@@ -223,7 +243,9 @@ td{padding:8px 10px;color:var(--text)}
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Fecha</label>
-          <input type="date" class="form-control" id="f-fecha">
+          <input type="date" class="form-control" id="f-fecha" onchange="chequearFechaUI()">
+          <div class="fecha-warning-label" id="f-fecha-warn">⚠️ Fecha de mes anterior — confirmá al guardar</div>
+          <div class="fecha-danger-label" id="f-fecha-danger">🚨 Fecha de AÑO distinto al actual — revisá con cuidado</div>
         </div>
         <div class="form-group">
           <label class="form-label">Monto</label>
@@ -474,6 +496,19 @@ td{padding:8px 10px;color:var(--text)}
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- FIX 5: modal de confirmación condicional para fechas sospechosas -->
+<div class="modal-overlay" id="modal-confirmar">
+  <div class="modal-box">
+    <div class="modal-title">⚠️ Confirmá la fecha</div>
+    <div class="modal-subtitle" id="modal-mensaje">La fecha de esta transacción no es del mes actual. Revisá el detalle antes de guardar.</div>
+    <div class="modal-detail" id="modal-detail"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="cancelarGuardado()">Cancelar y revisar</button>
+      <button class="btn btn-primary" onclick="confirmarGuardado()">Confirmar y guardar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let allRows=[], tablasCuentas=[], tablasCategorias=[], tablasTipos=[];
 let config={}, tasas={}, sortState={}, trackerPeriod='mes';
@@ -653,6 +688,8 @@ Respondé con JSON array (1 o 2 elementos):
     document.getElementById('f-cuota').value=tx.cuota||'';
     document.getElementById('f-cuotas').value=tx.cuotas||'';
     document.getElementById('form-resultado').style.display='block';
+    /* FIX 5: chequear UI de fecha inmediatamente después de autocompletar */
+    chequearFechaUI();
     if(window._pendingTx2) showToast('⚡ 2 transacciones detectadas');
   } catch(e){ showToast('Error con Groq'); console.error(e); }
   finally{ document.getElementById('groq-loader').style.display='none'; document.getElementById('btnProcesar').disabled=false; }
@@ -661,6 +698,30 @@ Respondé con JSON array (1 o 2 elementos):
 async function guardarTx(){
   const url=config.scriptUrl;
   if(!url){ showToast('Configurá la URL del Script ⚙️'); return; }
+  /* FIX 5: chequear fecha sospechosa ANTES de guardar; si lo es, popup de confirmación */
+  const fecha=document.getElementById('f-fecha').value;
+  const estado=chequearFechaSospechosa(fecha);
+  if(estado==='mes-anterior' || estado==='año-distinto'){
+    document.getElementById('btnGuardar').disabled=true;
+    _guardadoPendiente=_ejecutarGuardado;
+    mostrarModalConfirmacion(
+      fecha,
+      parseFloat(document.getElementById('f-monto').value)||0,
+      document.getElementById('f-moneda').value,
+      document.getElementById('f-en').value.trim(),
+      document.getElementById('f-con').value.trim(),
+      /* categoría no existe como input; se deriva en backend. Pasamos EN como hint para contexto visual. */
+      '(auto)',
+      estado
+    );
+    return;
+  }
+  /* Fecha OK (mes actual y año actual): guardar directo sin fricción */
+  await _ejecutarGuardado();
+}
+
+async function _ejecutarGuardado(){
+  const url=config.scriptUrl;
   document.getElementById('btnGuardar').disabled=true;
   setSyncDot('loading');
   const fila=[
@@ -870,6 +931,75 @@ function sanitizarFecha(f){
     return `${año-1}-${mmFix}-${ddFix}`;
   }
   return f;
+}
+
+/* FIX 5: clasifica si una fecha es sospechosa para disparar highlight y/o popup */
+function chequearFechaSospechosa(fecha){
+  if(!fecha || typeof fecha!=='string') return 'ok';
+  const m=fecha.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return 'ok';
+  const año=parseInt(m[1]), mes=parseInt(m[2]);
+  const hoy=new Date();
+  const añoActual=hoy.getFullYear();
+  const mesActual=hoy.getMonth()+1;
+  if(año!==añoActual) return 'año-distinto';
+  if(mes<mesActual) return 'mes-anterior';
+  return 'ok';
+}
+
+/* FIX 5: aplica estilos visuales al campo fecha según sospecha */
+function chequearFechaUI(){
+  const input=document.getElementById('f-fecha');
+  const warnLabel=document.getElementById('f-fecha-warn');
+  const dangerLabel=document.getElementById('f-fecha-danger');
+  if(!input) return;
+  const estado=chequearFechaSospechosa(input.value);
+  input.classList.remove('fecha-warning','fecha-danger');
+  warnLabel?.classList.remove('show');
+  dangerLabel?.classList.remove('show');
+  if(estado==='mes-anterior'){
+    input.classList.add('fecha-warning');
+    warnLabel?.classList.add('show');
+  } else if(estado==='año-distinto'){
+    input.classList.add('fecha-danger');
+    dangerLabel?.classList.add('show');
+  }
+}
+
+/* FIX 5: estado del modal de confirmación y callbacks */
+let _guardadoPendiente=null;
+function confirmarGuardado(){
+  document.getElementById('modal-confirmar').classList.remove('active');
+  if(_guardadoPendiente){
+    const fn=_guardadoPendiente;
+    _guardadoPendiente=null;
+    fn();
+  }
+}
+function cancelarGuardado(){
+  document.getElementById('modal-confirmar').classList.remove('active');
+  _guardadoPendiente=null;
+  document.getElementById('btnGuardar').disabled=false;
+  setSyncDot('ok');
+  document.getElementById('f-fecha').focus();
+}
+function mostrarModalConfirmacion(fecha, monto, moneda, en, con, categoria, estado){
+  const det=document.getElementById('modal-detail');
+  const [y,m,d]=fecha.split('-');
+  const fechaFmt=`${d}/${m}/${y}`;
+  const mensaje=document.getElementById('modal-mensaje');
+  if(estado==='año-distinto'){
+    mensaje.textContent=`⚠ La fecha es de OTRO AÑO (${y}). Si es correcto, confirmá. Si no, cancelá y corregí.`;
+  } else {
+    mensaje.textContent=`La fecha es de un mes anterior al actual. Revisá el detalle antes de guardar.`;
+  }
+  det.innerHTML=`
+    <div class="modal-detail-row"><span class="modal-detail-label">Fecha</span><span class="modal-detail-value highlight">${fechaFmt}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Monto</span><span class="modal-detail-value">${fmtNum(monto)} ${moneda}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">EN (destino)</span><span class="modal-detail-value">${esc(en)||'—'}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">CON (origen)</span><span class="modal-detail-value">${esc(con)||'—'}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Categoría</span><span class="modal-detail-value">${esc(categoria)||'—'}</span></div>`;
+  document.getElementById('modal-confirmar').classList.add('active');
 }
 function esc(s){ const d=document.createElement('div'); d.textContent=str(s); return d.innerHTML; }
 function fmtNum(n){ return Math.round(n).toLocaleString('es-AR'); }
