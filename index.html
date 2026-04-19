@@ -235,7 +235,11 @@ td{padding:8px 10px;color:var(--text)}
       <label class="form-label">Describí tu transacción</label>
       <textarea class="form-control" id="txInput" rows="3" placeholder="ej: 15000 super con visa&#10;ej: cobré 800 mil de Vision BI en Santander&#10;ej: compré 200 USDT a 1480 desde Buenbit"></textarea>
     </div>
-    <button class="btn btn-primary" id="btnProcesar" onclick="procesarTx()">✨ Procesar con IA</button>
+    <!-- FIX 7b: botones de procesar con IA + carga manual como alternativa -->
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" id="btnProcesar" onclick="procesarTx()" style="flex:2">✨ Procesar con IA</button>
+      <button class="btn btn-secondary" onclick="cargarManual()" style="flex:1">✍️ Manual</button>
+    </div>
     <div id="groq-loader" class="loader" style="display:none"><span class="spinner"></span>Procesando…</div>
     <div id="form-resultado" style="display:none;margin-top:16px">
       <div class="divider"></div>
@@ -282,6 +286,11 @@ td{padding:8px 10px;color:var(--text)}
           <label class="form-label">Cuotas</label>
           <input type="number" class="form-control" id="f-cuotas" min="1">
         </div>
+      </div>
+      <!-- FIX 6: aviso cuando Groq detecta que hay una segunda tx implícita -->
+      <div id="aviso-segunda-tx" style="display:none;background:#2a2416;border:1px solid var(--warn);border-radius:var(--r2);padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.4;color:var(--text);">
+        <div style="font-weight:600;color:var(--warn);margin-bottom:4px;">📌 Detecté una operación compuesta</div>
+        <div style="color:var(--muted);">Guardá primero esta transacción y cargá la complementaria después. Ejemplo: compra de USD → guardar egreso ARS ahora, ingreso USD en la siguiente carga.</div>
       </div>
       <button class="btn btn-primary" id="btnGuardar" onclick="guardarTx()">💾 Guardar en Sheets</button>
       <div style="height:8px"></div>
@@ -641,7 +650,7 @@ async function procesarTx(){
   const listaEN=tablasCuentas.filter(c=>c.tipo_cuenta==='Egreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Super, Verduleria, Alquiler, Spotify...';
   const listaCON=tablasCuentas.filter(c=>c.tipo_cuenta==='Ingreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Visa Santander, MP, Efectivo, Santander...';
   const listaCat=[...new Set(tablasCategorias.map(c=>c.categoria).filter(c=>c&&c!=='TBD'))].sort().join(', ')||'Alimentación, Vivienda, Movilidad, Salidas, Suscripciones, Viajes, Ocio, Compras Tech, Compras Personales, Regalos, Mascotas, Activos Adquiridos, Evangelista, Varios / TBD';
-  const prompt=`Sos un asistente de finanzas personales argentino. Extraé los datos y respondé SOLO con JSON array válido sin texto ni markdown.
+  const prompt=`Sos un asistente de finanzas personales argentino. Extraé los datos y respondé SOLO con JSON válido sin texto ni markdown.
 
 Transacción: "${txt}"
 
@@ -659,26 +668,52 @@ REGLAS DE DATOS:
 2. Usá EXACTAMENTE los nombres de las listas. Sin cambiar tildes ni mayúsculas.
 3. Si el nombre se parece a uno de la lista aunque esté mal escrito, usá el de la lista.
 4. Monto SIEMPRE positivo.
-5. Compra de activos (USD, USDT, BTC, NVDA, ETF, etc.): generá DOS objetos. Primera: egreso de la moneda que pagás. Segunda: ingreso del activo.
-6. Sin fecha → ${hoy}. Moneda default: ARS.
+5. Sin fecha → ${hoy}. Moneda default: ARS.
+6. SIEMPRE devolvé UNA SOLA transacción. NUNCA devuelvas dos. Si detectás compra de activos (USD, USDT, BTC, NVDA, ETF, etc.), transferencia entre cuentas, o devolución, devolvé SOLO la transacción principal mencionada y marcá "requiere_segunda_tx": true.
+7. Para compra de activos: la transacción principal es el EGRESO de la moneda que pagás (ej: "compré 100 USD a 1480 desde Buenbit" → monto=148000, moneda=ARS, descripcion=USD, medio_pago=Buenbit).
+8. Para devoluciones: la transacción principal es el INGRESO del monto devuelto (EN = cuenta que recibe, CON = comercio que devuelve).
 
 Nombres válidos para EN: ${listaEN}
 Nombres válidos para CON: ${listaCON}
 Categorías válidas: ${listaCat}
 
-Respondé con JSON array (1 o 2 elementos):
-[{"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"nombre exacto EN","medio_pago":"nombre exacto CON","categoria":"categoría exacta","comentario":"","cuota":null,"cuotas":null}]`;
+Respondé con JSON OBJECT (no array):
+{"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"nombre exacto EN","medio_pago":"nombre exacto CON","categoria":"categoría exacta","comentario":"","cuota":null,"cuotas":null,"requiere_segunda_tx":false}`;
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:500})});
+    /* FIX 7a: manejo robusto de errores HTTP de Groq */
+    if(!res.ok){
+      let msg='Error con Groq';
+      if(res.status===429) msg='Límite de Groq alcanzado — carga manual habilitada';
+      else if(res.status===401) msg='API key de Groq inválida — verificá en Config';
+      else if(res.status>=500) msg='Groq fuera de servicio — carga manual habilitada';
+      else msg=`Error Groq (${res.status}) — carga manual habilitada`;
+      showToast(msg);
+      cargarManual();
+      return;
+    }
     const d=await res.json();
-    const raw=d.choices?.[0]?.message?.content||'[]';
+    const raw=d?.choices?.[0]?.message?.content;
+    if(!raw){
+      showToast('Respuesta vacía de Groq — carga manual habilitada');
+      cargarManual();
+      return;
+    }
     const clean=raw.replace(/```json|```/g,'').trim();
-    const txs=JSON.parse(clean);
-    const tx=Array.isArray(txs)?txs[0]:txs;
-    window._pendingTx2=(Array.isArray(txs)&&txs.length>1)?txs[1]:null;
+    /* FIX 6: Groq ahora devuelve 1 sola transacción (object). Por retrocompat, si devuelve array, tomamos el primero. */
+    let tx;
+    try{
+      tx=JSON.parse(clean);
+      if(Array.isArray(tx)) tx=tx[0]||{};
+      if(!tx || typeof tx!=='object') throw new Error('JSON inesperado');
+    } catch(parseErr){
+      console.error('[procesarTx] JSON inválido de Groq:', clean);
+      showToast('Groq devolvió algo raro — carga manual habilitada');
+      cargarManual();
+      return;
+    }
     /* FIX 1: sanitización defensiva de fecha por si Groq ignora el prompt */
     if(tx.fecha) tx.fecha=sanitizarFecha(tx.fecha);
-    if(window._pendingTx2 && window._pendingTx2.fecha) window._pendingTx2.fecha=sanitizarFecha(window._pendingTx2.fecha);
     document.getElementById('f-fecha').value=tx.fecha||hoy;
     document.getElementById('f-monto').value=tx.monto||'';
     document.getElementById('f-moneda').value=tx.moneda||'ARS';
@@ -690,9 +725,44 @@ Respondé con JSON array (1 o 2 elementos):
     document.getElementById('form-resultado').style.display='block';
     /* FIX 5: chequear UI de fecha inmediatamente después de autocompletar */
     chequearFechaUI();
-    if(window._pendingTx2) showToast('⚡ 2 transacciones detectadas');
-  } catch(e){ showToast('Error con Groq'); console.error(e); }
+    /* FIX 6: aviso cuando Groq detecta que hay una segunda tx implícita */
+    if(tx.requiere_segunda_tx){
+      mostrarAvisoSegundaTx();
+    }
+  } catch(e){
+    /* FIX 7a: error de red o inesperado — fallback a carga manual */
+    console.error('[procesarTx] error inesperado:', e);
+    showToast('Error de red con Groq — carga manual habilitada');
+    cargarManual();
+  }
   finally{ document.getElementById('groq-loader').style.display='none'; document.getElementById('btnProcesar').disabled=false; }
+}
+
+/* FIX 7b: abre el formulario vacío para carga manual, sin llamar a Groq */
+function cargarManual(){
+  const hoy=new Date().toISOString().split('T')[0];
+  document.getElementById('f-fecha').value=hoy;
+  document.getElementById('f-monto').value='';
+  document.getElementById('f-moneda').value='ARS';
+  document.getElementById('f-en').value='';
+  document.getElementById('f-con').value='';
+  document.getElementById('f-comentario').value='';
+  document.getElementById('f-cuota').value='';
+  document.getElementById('f-cuotas').value='';
+  document.getElementById('form-resultado').style.display='block';
+  ocultarAvisoSegundaTx();
+  chequearFechaUI();
+  document.getElementById('f-monto').focus();
+}
+
+/* FIX 6: aviso discreto cuando se detecta compra de activos / devolución / transferencia */
+function mostrarAvisoSegundaTx(){
+  const div=document.getElementById('aviso-segunda-tx');
+  if(div) div.style.display='block';
+}
+function ocultarAvisoSegundaTx(){
+  const div=document.getElementById('aviso-segunda-tx');
+  if(div) div.style.display='none';
 }
 
 async function guardarTx(){
@@ -738,10 +808,7 @@ async function _ejecutarGuardado(){
     '','',
   ];
   const rows=[fila];
-  if(window._pendingTx2){
-    const t=window._pendingTx2;
-    rows.push([t.fecha||fila[0],t.monto||0,t.moneda||'ARS',t.descripcion||'',t.comentario||'',t.medio_pago||'','',t.categoria||'Activos Adquiridos','','','','']);
-  }
+  /* FIX 6: ya no hay _pendingTx2, siempre 1 sola transacción por vez */
   try{
     // no-cors: Apps Script acepta esto, no podemos leer la respuesta pero los datos se guardan
     await fetch(url, {
@@ -759,7 +826,6 @@ async function _ejecutarGuardado(){
     console.error(e);
   } finally{
     document.getElementById('btnGuardar').disabled=false;
-    window._pendingTx2=null;
   }
 }
 
@@ -776,7 +842,7 @@ function jsonpPost(url, payload){
   });
 }
 
-function resetForm(){ document.getElementById('txInput').value=''; document.getElementById('form-resultado').style.display='none'; window._pendingTx2=null; }
+function resetForm(){ document.getElementById('txInput').value=''; document.getElementById('form-resultado').style.display='none'; ocultarAvisoSegundaTx(); }
 
 function renderHistorial(){
   let rows=allRows;
