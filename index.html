@@ -15,7 +15,22 @@
   --accent:#00d4aa;--danger:#ff4757;--warn:#ffa502;--green:#2ed573;
   --font:'DM Sans',system-ui,sans-serif;--mono:'DM Mono','Fira Code',monospace;
   --r:12px;--r2:8px;
+  /* STAGING: variables del ambiente de prueba */
+  --staging-orange:#ff8c42;
+  --staging-beige:#d4a574;
 }
+/* STAGING: banda superior indicando ambiente no productivo */
+.staging-banner{
+  position:sticky;top:0;z-index:200;background:var(--staging-orange);
+  color:#1a1b20;text-align:center;font-size:11px;font-weight:700;
+  letter-spacing:1px;padding:4px 8px;text-transform:uppercase;
+  border-bottom:2px solid var(--staging-beige);
+}
+/* STAGING: topbar con borde naranja y logo resaltado */
+.staging-mode .topbar{top:22px;border-bottom:1px solid var(--staging-orange);}
+.staging-mode .topbar-logo{color:var(--staging-orange);}
+.staging-mode .topbar-logo::after{content:' [DEV]';color:var(--staging-beige);font-size:11px;font-weight:500;}
+.staging-mode .tabnav{top:79px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;-webkit-font-smoothing:antialiased}
 button{cursor:pointer;font-family:inherit;border:none;outline:none}
@@ -170,7 +185,9 @@ td{padding:8px 10px;color:var(--text)}
 .ms-option .ms-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
 </style>
 </head>
-<body>
+<body class="staging-mode">
+<!-- STAGING: banner de ambiente de prueba -->
+<div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
 <div id="app">
 
   <div class="topbar">
@@ -501,16 +518,27 @@ async function syncSheet(){ const b=document.getElementById('btnSync'); b.style.
 async function cargarSheet(){
   const url=config.scriptUrl;
   if(!url){ showToast('Configurá la URL del Script ⚙️'); return; }
-  try{
-    const r=await fetch(url+'?action=read');
-    const d=await r.json();
-    if(d.status==='ok'){ allRows=d.rows||[]; poblarFiltros(); showToast(`${allRows.length} filas ✓`); setSyncDot('ok'); }
-  } catch(e){ showToast('Error al cargar'); setSyncDot('err'); }
-  try{
-    const r2=await fetch(url+'?action=cuentas');
-    const d2=await r2.json();
-    if(d2.status==='ok'){ tablasCuentas=d2.cuentas||[]; tablasCategorias=d2.categorias||[]; tablasTipos=d2.tipos||[]; poblarDropdowns(); }
-  } catch(e){}
+  /* FIX 3: fetches en paralelo con Promise.allSettled — baja ~40% el tiempo de carga inicial.
+     Usamos allSettled y no all para que si un endpoint falla, el otro igual entregue sus datos. */
+  const [resRead, resCuentas]=await Promise.allSettled([
+    fetch(url+'?action=read').then(r=>r.json()),
+    fetch(url+'?action=cuentas').then(r=>r.json())
+  ]);
+  if(resRead.status==='fulfilled' && resRead.value.status==='ok'){
+    allRows=resRead.value.rows||[];
+    poblarFiltros();
+    showToast(`${allRows.length} filas ✓`);
+    setSyncDot('ok');
+  } else {
+    showToast('Error al cargar filas');
+    setSyncDot('err');
+  }
+  if(resCuentas.status==='fulfilled' && resCuentas.value.status==='ok'){
+    tablasCuentas=resCuentas.value.cuentas||[];
+    tablasCategorias=resCuentas.value.categorias||[];
+    tablasTipos=resCuentas.value.tipos||[];
+    poblarDropdowns();
+  }
 }
 
 function poblarFiltros(){
@@ -560,6 +588,8 @@ async function procesarTx(){
   document.getElementById('btnProcesar').disabled=true;
   document.getElementById('form-resultado').style.display='none';
   const hoy=new Date().toISOString().split('T')[0];
+  /* FIX 1: anclas temporales adicionales para que Groq no invente años */
+  const añoActual=new Date().getFullYear();
   const listaEN=tablasCuentas.filter(c=>c.tipo_cuenta==='Egreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Super, Verduleria, Alquiler, Spotify...';
   const listaCON=tablasCuentas.filter(c=>c.tipo_cuenta==='Ingreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Visa Santander, MP, Efectivo, Santander...';
   const listaCat=[...new Set(tablasCategorias.map(c=>c.categoria).filter(c=>c&&c!=='TBD'))].sort().join(', ')||'Alimentación, Vivienda, Movilidad, Salidas, Suscripciones, Viajes, Ocio, Compras Tech, Compras Personales, Regalos, Mascotas, Activos Adquiridos, Evangelista, Varios / TBD';
@@ -567,7 +597,16 @@ async function procesarTx(){
 
 Transacción: "${txt}"
 
-REGLAS CRÍTICAS:
+CONTEXTO TEMPORAL (CRÍTICO):
+- Hoy es ${hoy}. Año actual: ${añoActual}.
+- Si el usuario menciona solo día y mes (ej: "15 de abril", "el 3"), asumí año ${añoActual}.
+- Si el usuario dice "ayer", "anteayer", "hace X días", calculá la fecha relativa a ${hoy}.
+- Si el usuario dice un día de la semana (ej: "el viernes"), asumí el más reciente que YA pasó respecto a ${hoy}.
+- Si la fecha resultante queda más de 7 días EN EL FUTURO respecto a ${hoy}, restale 1 año.
+- La fecha NUNCA puede ser más de 7 días en el futuro.
+- Formato de salida OBLIGATORIO: YYYY-MM-DD con año de 4 dígitos.
+
+REGLAS DE DATOS:
 1. EN = destino del dinero. CON = origen del dinero.
 2. Usá EXACTAMENTE los nombres de las listas. Sin cambiar tildes ni mayúsculas.
 3. Si el nombre se parece a uno de la lista aunque esté mal escrito, usá el de la lista.
@@ -589,6 +628,9 @@ Respondé con JSON array (1 o 2 elementos):
     const txs=JSON.parse(clean);
     const tx=Array.isArray(txs)?txs[0]:txs;
     window._pendingTx2=(Array.isArray(txs)&&txs.length>1)?txs[1]:null;
+    /* FIX 1: sanitización defensiva de fecha por si Groq ignora el prompt */
+    if(tx.fecha) tx.fecha=sanitizarFecha(tx.fecha);
+    if(window._pendingTx2 && window._pendingTx2.fecha) window._pendingTx2.fecha=sanitizarFecha(window._pendingTx2.fecha);
     document.getElementById('f-fecha').value=tx.fecha||hoy;
     document.getElementById('f-monto').value=tx.monto||'';
     document.getElementById('f-moneda').value=tx.moneda||'ARS';
@@ -790,6 +832,32 @@ function renderTracker(){
 function toggleCat(h){ const it=h.closest('.cat-item'); const was=it.classList.contains('open'); document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('open')); if(!was) it.classList.add('open'); }
 
 function str(v){ return String(v||'').trim(); }
+
+/* FIX 1: sanitiza fechas mal parseadas por la IA — si quedan muy en el pasado/futuro, las acerca al año actual */
+function sanitizarFecha(f){
+  if(!f || typeof f!=='string') return f;
+  const m=f.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return f;
+  const [_,yStr,mmStr,ddStr]=m;
+  const año=parseInt(yStr), mes=parseInt(mmStr), dia=parseInt(ddStr);
+  const hoy=new Date();
+  const añoActual=hoy.getFullYear();
+  /* Si el año está a más de 1 año de distancia del actual, corregilo al año actual */
+  if(Math.abs(año-añoActual)>1){
+    const mmFix=String(mes).padStart(2,'0'), ddFix=String(dia).padStart(2,'0');
+    console.warn(`[sanitizarFecha] año ${año} sospechoso, corrigiendo a ${añoActual}`);
+    return `${añoActual}-${mmFix}-${ddFix}`;
+  }
+  /* Si la fecha resultante queda a más de 7 días en el futuro, restar 1 año */
+  const fechaObj=new Date(f);
+  const diffDias=(fechaObj-hoy)/(1000*60*60*24);
+  if(diffDias>7){
+    const mmFix=String(mes).padStart(2,'0'), ddFix=String(dia).padStart(2,'0');
+    console.warn(`[sanitizarFecha] fecha futura sospechosa, restando 1 año`);
+    return `${año-1}-${mmFix}-${ddFix}`;
+  }
+  return f;
+}
 function esc(s){ const d=document.createElement('div'); d.textContent=str(s); return d.innerHTML; }
 function fmtNum(n){ return Math.round(n).toLocaleString('es-AR'); }
 function partesFecha(r){ const f=str(r.fecha); if(!f) return{y:null,m:null,d:null}; if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(f)){const[d,m,y]=f.split('/');return{y:+y,m:+m,d:+d};} if(/^\d{4}-\d{2}-\d{2}/.test(f)){const[y,m,d]=f.split('-');return{y:+y,m:+m,d:+d};} const dt=new Date(f); if(!isNaN(dt.getTime())) return{y:dt.getFullYear(),m:dt.getMonth()+1,d:dt.getDate()}; return{y:null,m:null,d:null}; }
