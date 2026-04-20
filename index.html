@@ -19,9 +19,10 @@
   --staging-orange:#ff8c42;
   --staging-beige:#d4a574;
 }
-/* STAGING: banda superior indicando ambiente no productivo */
-.staging-banner{
-  position:sticky;top:0;z-index:200;background:var(--staging-orange);
+/* STAGING: banda superior indicando ambiente no productivo (solo visible con .staging-mode en body) */
+.staging-banner{display:none;}
+.staging-mode .staging-banner{
+  display:block;position:sticky;top:0;z-index:200;background:var(--staging-orange);
   color:#1a1b20;text-align:center;font-size:11px;font-weight:700;
   letter-spacing:1px;padding:4px 8px;text-transform:uppercase;
   border-bottom:2px solid var(--staging-beige);
@@ -86,6 +87,23 @@ input,select,textarea{font-family:inherit;outline:none}
 .modal-detail-value.highlight{color:var(--warn);font-weight:600;}
 .modal-actions{display:flex;gap:8px;}
 .modal-actions .btn{flex:1;}
+/* FIX 8: subtabs dentro de Config */
+.subtabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;overflow-x:auto;scrollbar-width:none;}
+.subtabs::-webkit-scrollbar{display:none;}
+.subtab{flex:0 0 auto;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:500;background:transparent;color:var(--muted);border:1px solid transparent;white-space:nowrap;}
+.subtab.active{background:var(--card);color:var(--text);border-color:var(--border2);}
+.subpanel{display:none;}
+.subpanel.active{display:block;}
+/* FIX 8: pendientes — lista de EN para clasificar */
+.pend-row{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.pend-info{flex:1;min-width:0;}
+.pend-name{font-size:14px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pend-stats{font-size:11px;color:var(--muted);margin-top:2px;}
+.pend-select{flex:0 0 140px;font-size:12px;padding:6px 8px;border-radius:var(--r2);background:var(--card2);border:1px solid var(--border);color:var(--text);}
+.pend-select.changed{background:#1a3a2d;border-color:var(--green);}
+.pend-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;}
+.pend-summary{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.pend-summary b{color:var(--accent);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 textarea.form-control{resize:vertical;min-height:70px}
 select.form-control{cursor:pointer}
@@ -474,31 +492,69 @@ td{padding:8px 10px;color:var(--text)}
 
   <!-- CONFIG -->
   <div class="panel" id="panel-config">
-    <div class="config-section">
-      <div class="config-title">🔗 Conexión</div>
-      <div class="form-group">
-        <label class="form-label">URL Apps Script</label>
-        <input type="url" class="form-control" id="cfg-script-url" placeholder="https://script.google.com/...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">API Key Groq</label>
-        <input type="password" class="form-control" id="cfg-groq-key" placeholder="gsk_...">
-      </div>
-      <button class="btn btn-primary" onclick="guardarConfig()">Guardar conexión</button>
+    <!-- FIX 8: sub-pestañas dentro de Config -->
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('conexion')" id="subtab-conexion">🔗 Conexión</button>
+      <button class="subtab" onclick="showSubtab('pendientes')" id="subtab-pendientes">🏷️ Pendientes</button>
+      <button class="subtab" onclick="showSubtab('tasas')" id="subtab-tasas">💱 Tasas</button>
+      <button class="subtab" onclick="showSubtab('mantenimiento')" id="subtab-mantenimiento">🔧 Mantenimiento</button>
     </div>
-    <div class="config-section" style="margin-top:16px">
-      <div class="config-title">💱 Tasas de cambio</div>
-      <div class="config-row"><span class="config-key">USD → ARS</span><input type="number" class="config-input" id="tc-usd-ars"></div>
-      <div class="config-row"><span class="config-key">USDT → USD</span><input type="number" class="config-input" id="tc-usdt-usd"></div>
-      <div class="config-row"><span class="config-key">BTC → USD</span><input type="number" class="config-input" id="tc-btc-usd"></div>
-      <div class="config-row"><span class="config-key">PAXG → USD</span><input type="number" class="config-input" id="tc-paxg-usd"></div>
-      <div class="config-row"><span class="config-key">NVDA → USD</span><input type="number" class="config-input" id="tc-nvda-usd"></div>
-      <div class="config-row"><span class="config-key">AGRO → USD</span><input type="number" class="config-input" id="tc-agro-usd"></div>
-      <div class="config-row"><span class="config-key">PAMP → USD</span><input type="number" class="config-input" id="tc-pamp-usd"></div>
-      <div class="config-row"><span class="config-key">SMCI → USD</span><input type="number" class="config-input" id="tc-smci-usd"></div>
-      <div class="config-row"><span class="config-key">GTLB → USD</span><input type="number" class="config-input" id="tc-gtlb-usd"></div>
-      <div style="height:10px"></div>
-      <button class="btn btn-primary" onclick="guardarTasas()">Guardar tasas</button>
+
+    <!-- Subpanel: Conexión -->
+    <div class="subpanel active" id="subpanel-conexion">
+      <div class="config-section">
+        <div class="config-title">🔗 Conexión</div>
+        <div class="form-group">
+          <label class="form-label">URL Apps Script</label>
+          <input type="url" class="form-control" id="cfg-script-url" placeholder="https://script.google.com/...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">API Key Groq</label>
+          <input type="password" class="form-control" id="cfg-groq-key" placeholder="gsk_...">
+        </div>
+        <button class="btn btn-primary" onclick="guardarConfig()">Guardar conexión</button>
+      </div>
+    </div>
+
+    <!-- Subpanel: Pendientes (FIX 8 — clasificar EN sin categoría) -->
+    <div class="subpanel" id="subpanel-pendientes">
+      <div class="config-section">
+        <div class="config-title">🏷️ Clasificar pendientes</div>
+        <div class="pend-summary" id="pend-summary">Cargando…</div>
+        <div id="pend-list"></div>
+        <div style="height:8px"></div>
+        <button class="btn btn-primary" id="btn-guardar-pendientes" onclick="guardarPendientes()" style="display:none;">Guardar clasificaciones</button>
+      </div>
+    </div>
+
+    <!-- Subpanel: Tasas -->
+    <div class="subpanel" id="subpanel-tasas">
+      <div class="config-section">
+        <div class="config-title">💱 Tasas de cambio</div>
+        <div class="config-row"><span class="config-key">USD → ARS</span><input type="number" class="config-input" id="tc-usd-ars"></div>
+        <div class="config-row"><span class="config-key">USDT → USD</span><input type="number" class="config-input" id="tc-usdt-usd"></div>
+        <div class="config-row"><span class="config-key">BTC → USD</span><input type="number" class="config-input" id="tc-btc-usd"></div>
+        <div class="config-row"><span class="config-key">PAXG → USD</span><input type="number" class="config-input" id="tc-paxg-usd"></div>
+        <div class="config-row"><span class="config-key">NVDA → USD</span><input type="number" class="config-input" id="tc-nvda-usd"></div>
+        <div class="config-row"><span class="config-key">AGRO → USD</span><input type="number" class="config-input" id="tc-agro-usd"></div>
+        <div class="config-row"><span class="config-key">PAMP → USD</span><input type="number" class="config-input" id="tc-pamp-usd"></div>
+        <div class="config-row"><span class="config-key">SMCI → USD</span><input type="number" class="config-input" id="tc-smci-usd"></div>
+        <div class="config-row"><span class="config-key">GTLB → USD</span><input type="number" class="config-input" id="tc-gtlb-usd"></div>
+        <div style="height:10px"></div>
+        <button class="btn btn-primary" onclick="guardarTasas()">Guardar tasas</button>
+      </div>
+    </div>
+
+    <!-- Subpanel: Mantenimiento (FIX 8 — botón regenerar tablas) -->
+    <div class="subpanel" id="subpanel-mantenimiento">
+      <div class="config-section">
+        <div class="config-title">🔧 Mantenimiento del sistema</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px;">
+          Las tablas de referencia (Cuentas, Categorías, Tipos) se regeneran a partir de tus movimientos. Antes esto pasaba en cada carga (causaba lentitud). Ahora lo disparás vos cuando lo necesites: típicamente <b>después de cargar muchos gastos nuevos</b> o si agregaste cuentas/categorías nuevas que no aparecen en los dropdowns.
+        </div>
+        <button class="btn btn-primary" id="btn-regenerar" onclick="regenerarTablas()">⚙️ Regenerar tablas de referencia</button>
+        <div id="regenerar-result" style="font-size:12px;color:var(--muted);margin-top:8px;"></div>
+      </div>
     </div>
   </div>
 
@@ -514,6 +570,19 @@ td{padding:8px 10px;color:var(--text)}
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="cancelarGuardado()">Cancelar y revisar</button>
       <button class="btn btn-primary" onclick="confirmarGuardado()">Confirmar y guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIX 8: modal de confirmación de propagación de categorías -->
+<div class="modal-overlay" id="modal-propagacion">
+  <div class="modal-box">
+    <div class="modal-title">📊 Confirmar clasificación</div>
+    <div class="modal-subtitle" id="modal-prop-mensaje">Vas a aplicar estas categorías a las filas históricas también.</div>
+    <div class="modal-detail" id="modal-prop-detail"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="cancelarPropagacion()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarPropagacion()">Sí, aplicar</button>
     </div>
   </div>
 </div>
@@ -1712,6 +1781,192 @@ function renderIgChart(meses, byTipoMes){
 
 document.getElementById('txInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();procesarTx();} });
 
+/* ════════════════════════════════════════════════════════
+   FIX 8 — Sub-tabs de Config + Clasificar pendientes + Regenerar tablas
+   ════════════════════════════════════════════════════════ */
+
+const SUBTABS = ['conexion','pendientes','tasas','mantenimiento'];
+
+function showSubtab(id){
+  SUBTABS.forEach(t => {
+    document.getElementById('subpanel-'+t)?.classList.toggle('active', t===id);
+    document.getElementById('subtab-'+t)?.classList.toggle('active', t===id);
+  });
+  if(id==='pendientes') cargarPendientes();
+}
+
+let _pendientesCache = []; /* {en, count, monto_ars, monto_usd, categoria_actual} */
+let _pendientesCambios = {}; /* en -> nueva categoria */
+
+async function cargarPendientes(){
+  const url = config.scriptUrl;
+  if(!url){ showToast('Configurá la URL del Script en Conexión'); return; }
+  const summary = document.getElementById('pend-summary');
+  const list = document.getElementById('pend-list');
+  const btn = document.getElementById('btn-guardar-pendientes');
+  summary.textContent = 'Cargando…';
+  list.innerHTML = '';
+  btn.style.display = 'none';
+  _pendientesCambios = {};
+  try{
+    const r = await fetch(url + '?action=pendientes');
+    const d = await r.json();
+    if(d.status !== 'ok'){ summary.textContent = 'Error al cargar: ' + (d.message||'?'); return; }
+    _pendientesCache = d.rows || [];
+    if(_pendientesCache.length === 0){
+      summary.textContent = '';
+      list.innerHTML = '<div class="pend-empty">🎉 No hay destinos sin clasificar</div>';
+      return;
+    }
+    const totalTrx = _pendientesCache.reduce((s,p) => s + p.count, 0);
+    summary.innerHTML = `<b>${_pendientesCache.length}</b> destinos sin categoría · <b>${totalTrx}</b> transacciones afectadas. Asigná una categoría y se aplicará a todas las filas con ese destino.`;
+    renderPendientesList();
+    btn.style.display = 'block';
+  }catch(e){
+    console.error(e);
+    summary.textContent = 'Error de conexión';
+  }
+}
+
+function renderPendientesList(){
+  const list = document.getElementById('pend-list');
+  /* Categorías disponibles desde tablasCategorias, descartando los valores "pendientes" */
+  const catsBlacklist = new Set(['', 'TBD', 'Varios / TBD', 'Cuenta Balance']);
+  const cats = [...new Set(tablasCategorias.map(c => c.categoria).filter(c => c && !catsBlacklist.has(c)))].sort();
+  if(cats.length === 0){
+    list.innerHTML = '<div class="pend-empty">No hay categorías cargadas. Agregá categorías a algún EN primero.</div>';
+    return;
+  }
+  list.innerHTML = _pendientesCache.map((p, idx) => {
+    const opciones = ['<option value="">— Elegir —</option>']
+      .concat(cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`))
+      .join('');
+    const montoTxt = p.monto_ars > 0 ? `${fmtNum(p.monto_ars)} ARS` : '';
+    const montoUsdTxt = p.monto_usd > 0 ? `${fmtNum(p.monto_usd)} USD` : '';
+    const montoFinal = [montoTxt, montoUsdTxt].filter(x=>x).join(' · ');
+    return `
+      <div class="pend-row">
+        <div class="pend-info">
+          <div class="pend-name">${esc(p.en)}</div>
+          <div class="pend-stats">${p.count} trx${montoFinal ? ' · ' + montoFinal : ''}</div>
+        </div>
+        <select class="pend-select" data-en="${esc(p.en)}" onchange="onPendienteChange(this)">
+          ${opciones}
+        </select>
+      </div>`;
+  }).join('');
+}
+
+function onPendienteChange(sel){
+  const en = sel.dataset.en;
+  const cat = sel.value;
+  if(cat){
+    _pendientesCambios[en] = cat;
+    sel.classList.add('changed');
+  } else {
+    delete _pendientesCambios[en];
+    sel.classList.remove('changed');
+  }
+  /* Actualizar contador en el botón */
+  const n = Object.keys(_pendientesCambios).length;
+  const btn = document.getElementById('btn-guardar-pendientes');
+  btn.textContent = n > 0 ? `Guardar ${n} clasificación${n>1?'es':''}` : 'Guardar clasificaciones';
+  btn.disabled = n === 0;
+}
+
+let _pendientesPendingPropagacion = null;
+
+async function guardarPendientes(){
+  const url = config.scriptUrl;
+  if(!url) return;
+  const ens = Object.keys(_pendientesCambios);
+  if(ens.length === 0){ showToast('No hay cambios para guardar'); return; }
+  /* Pedir contador de propagación al backend */
+  showToast('Calculando impacto…');
+  try{
+    const data = encodeURIComponent(JSON.stringify(ens));
+    const r = await fetch(url + '?action=contarPropagacion&data=' + data);
+    const d = await r.json();
+    if(d.status !== 'ok'){ showToast('Error al contar: ' + (d.message||'?')); return; }
+    /* Mostrar modal de confirmación */
+    mostrarModalPropagacion(ens.length, d.count);
+  }catch(e){
+    console.error(e);
+    showToast('Error de conexión');
+  }
+}
+
+function mostrarModalPropagacion(ensCount, filasCount){
+  const det = document.getElementById('modal-prop-detail');
+  const cambiosHTML = Object.keys(_pendientesCambios).slice(0, 5).map(en =>
+    `<div class="modal-detail-row"><span class="modal-detail-label">${esc(en)}</span><span class="modal-detail-value">${esc(_pendientesCambios[en])}</span></div>`
+  ).join('');
+  const masTxt = ensCount > 5 ? `<div class="modal-detail-row"><span class="modal-detail-label">+ ${ensCount - 5} más…</span><span class="modal-detail-value"></span></div>` : '';
+  det.innerHTML = cambiosHTML + masTxt;
+  document.getElementById('modal-prop-mensaje').innerHTML =
+    `Vas a clasificar <b>${ensCount} destino${ensCount>1?'s':''}</b>. Esto va a actualizar la categoría de <b>${filasCount} transacciones históricas</b>. ¿Continuar?`;
+  document.getElementById('modal-propagacion').classList.add('active');
+}
+
+function cancelarPropagacion(){
+  document.getElementById('modal-propagacion').classList.remove('active');
+}
+
+async function confirmarPropagacion(){
+  document.getElementById('modal-propagacion').classList.remove('active');
+  const url = config.scriptUrl;
+  const updates = Object.keys(_pendientesCambios).map(en => ({ en: en, categoria: _pendientesCambios[en] }));
+  const btn = document.getElementById('btn-guardar-pendientes');
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+  try{
+    const data = encodeURIComponent(JSON.stringify(updates));
+    const r = await fetch(url + '?action=updateCategorias&data=' + data);
+    const d = await r.json();
+    if(d.status === 'ok'){
+      showToast(`✓ ${d.cats_actualizadas} categorías · ${d.movimientos_actualizados} filas`);
+      _pendientesCambios = {};
+      /* Refrescar todo */
+      await cargarSheet();
+      cargarPendientes();
+    } else {
+      showToast('Error: ' + (d.message||'?'));
+      btn.disabled = false;
+    }
+  }catch(e){
+    console.error(e);
+    showToast('Error de conexión');
+    btn.disabled = false;
+  }
+}
+
+async function regenerarTablas(){
+  const url = config.scriptUrl;
+  if(!url){ showToast('Configurá la URL del Script'); return; }
+  const btn = document.getElementById('btn-regenerar');
+  const result = document.getElementById('regenerar-result');
+  btn.disabled = true;
+  btn.textContent = '⏳ Procesando… (puede tardar 10-30s)';
+  result.textContent = '';
+  try{
+    const r = await fetch(url + '?action=regenerarTablas');
+    const d = await r.json();
+    if(d.status === 'ok'){
+      const res = d.result || {};
+      result.innerHTML = `✓ Listo: ${res.cuentas||0} cuentas · ${res.categorias||0} categorías · ${res.tipos||0} tipos`;
+      showToast('Tablas regeneradas ✓');
+      await cargarSheet();
+    } else {
+      result.textContent = 'Error: ' + (d.message||'?');
+    }
+  }catch(e){
+    console.error(e);
+    result.textContent = 'Error de conexión';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚙️ Regenerar tablas de referencia';
+  }
+}
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
