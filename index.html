@@ -104,6 +104,43 @@ input,select,textarea{font-family:inherit;outline:none}
 .pend-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;}
 .pend-summary{font-size:13px;color:var(--muted);margin-bottom:12px;}
 .pend-summary b{color:var(--accent);}
+/* FIX 9: pestaña Patrimonio */
+.pn-resumen{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.pn-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.pn-total{font-size:26px;font-weight:600;color:var(--text);line-height:1.1;margin-bottom:2px;}
+.pn-total-alt{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.pn-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.pn-card{background:var(--card2);border-radius:var(--r2);padding:8px 10px;}
+.pn-card-danger{background:#3a1f1f;}
+.pn-card-label{font-size:11px;color:var(--muted);}
+.pn-card-danger .pn-card-label{color:var(--danger);}
+.pn-card-value{font-size:15px;font-weight:600;color:var(--text);margin-top:2px;}
+.pn-card-danger .pn-card-value{color:var(--danger);}
+.pn-flujos{font-size:12px;color:var(--muted);padding-top:9px;border-top:1px solid var(--border);}
+.pn-flujos .up{color:var(--green);}
+.pn-flujos .down{color:#ff8c42;}
+.pn-filtros{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.pn-fecha{flex:1;min-width:130px;font-size:12px;padding:7px 9px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--text);}
+.pn-moneda-toggle{display:flex;gap:3px;}
+.pn-moneda-btn{font-size:11px;padding:7px 12px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-weight:500;}
+.pn-moneda-btn.active{background:var(--accent);color:#0a0c10;border-color:var(--accent);}
+.pn-bloque{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;}
+.pn-bloque-titulo{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.pn-tabla-wrap{overflow-x:auto;}
+.pn-tabla{width:100%;font-size:12px;border-collapse:collapse;}
+.pn-tabla th{text-align:left;padding:5px 4px;color:var(--muted);font-weight:400;font-size:11px;border-bottom:1px solid var(--border);}
+.pn-tabla th.num{text-align:right;}
+.pn-tabla td{padding:7px 4px;border-bottom:1px solid var(--border);color:var(--text);}
+.pn-tabla td.num{text-align:right;font-variant-numeric:tabular-nums;}
+.pn-tabla td.up{color:var(--green);}
+.pn-tabla td.down{color:#ff8c42;}
+.pn-tabla td.danger{color:var(--danger);font-weight:600;}
+.pn-tabla td.bal{font-weight:600;}
+.pn-tabla tr.subtotal{background:var(--card2);font-weight:600;}
+.pn-tabla tr.subtotal td{padding:8px 4px;}
+.pn-mon-tag{font-size:10px;color:var(--muted);margin-left:6px;font-weight:400;}
+.pn-warn{color:var(--warn);font-size:11px;}
+.pn-empty{padding:14px;text-align:center;color:var(--muted);font-size:12px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 textarea.form-control{resize:vertical;min-height:70px}
 select.form-control{cursor:pointer}
@@ -223,7 +260,7 @@ td{padding:8px 10px;color:var(--text)}
 .ms-option .ms-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
 </style>
 </head>
-<body class="staging-mode">
+<body>
 <!-- STAGING: banner de ambiente de prueba -->
 <div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
 <div id="app">
@@ -244,6 +281,7 @@ td{padding:8px 10px;color:var(--text)}
     <button class="tab"        onclick="showTab('creditos')"  id="tab-creditos">💳 Créditos</button>
     <button class="tab"        onclick="showTab('egresos')"   id="tab-egresos">💸 Egresos</button>
     <button class="tab"        onclick="showTab('ingresos')" id="tab-ingresos">💰 Ingresos</button>
+    <button class="tab"        onclick="showTab('patrimonio')" id="tab-patrimonio">🏦 Patrimonio</button>
     <button class="tab"        onclick="showTab('config')"    id="tab-config">⚙️ Config</button>
   </nav>
 
@@ -490,6 +528,50 @@ td{padding:8px 10px;color:var(--text)}
 
   </div>
 
+  <!-- PATRIMONIO (FIX 9) -->
+  <div class="panel" id="panel-patrimonio">
+    <!-- Resumen ejecutivo -->
+    <div class="pn-resumen" id="pn-resumen">
+      <div class="pn-label">Patrimonio neto</div>
+      <div class="pn-total" id="pn-total">—</div>
+      <div class="pn-total-alt" id="pn-total-alt">—</div>
+      <div class="pn-cards">
+        <div class="pn-card"><div class="pn-card-label">Líquido</div><div class="pn-card-value" id="pn-sub-liquido">—</div></div>
+        <div class="pn-card"><div class="pn-card-label">Inversiones</div><div class="pn-card-value" id="pn-sub-inversiones">—</div></div>
+        <div class="pn-card pn-card-danger"><div class="pn-card-label">Deuda</div><div class="pn-card-value" id="pn-sub-pasivos">—</div></div>
+      </div>
+      <div class="pn-flujos" id="pn-flujos">—</div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="pn-filtros">
+      <input type="date" class="pn-fecha" id="pn-desde">
+      <input type="date" class="pn-fecha" id="pn-hasta">
+      <div class="pn-moneda-toggle">
+        <button class="pn-moneda-btn active" id="pn-mon-ars" onclick="setPNMoneda('ARS')">ARS</button>
+        <button class="pn-moneda-btn" id="pn-mon-usd" onclick="setPNMoneda('USD')">USD</button>
+      </div>
+    </div>
+
+    <!-- Bloque Líquido -->
+    <div class="pn-bloque" id="pn-liquido-wrap">
+      <div class="pn-bloque-titulo">💧 Líquido</div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-liquido"></table></div>
+    </div>
+
+    <!-- Bloque Inversiones -->
+    <div class="pn-bloque" id="pn-inversiones-wrap">
+      <div class="pn-bloque-titulo">📈 Inversiones</div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-inversiones"></table></div>
+    </div>
+
+    <!-- Bloque Pasivos -->
+    <div class="pn-bloque" id="pn-pasivos-wrap">
+      <div class="pn-bloque-titulo">💳 Pasivos (deuda)</div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-pasivos"></table></div>
+    </div>
+  </div>
+
   <!-- CONFIG -->
   <div class="panel" id="panel-config">
     <!-- FIX 8: sub-pestañas dentro de Config -->
@@ -616,7 +698,7 @@ function guardarTasas(){
   showToast('Tasas guardadas ✓');
 }
 
-const TABS=['cargar','historial','tracker','creditos','egresos','ingresos','config'];
+const TABS=['cargar','historial','tracker','creditos','egresos','ingresos','patrimonio','config'];
 function showTab(id){
   TABS.forEach(t=>{ document.getElementById('panel-'+t).classList.toggle('active',t===id); const b=document.getElementById('tab-'+t); if(b) b.classList.toggle('active',t===id); });
   if(id==='historial') renderHistorial();
@@ -624,6 +706,7 @@ function showTab(id){
   if(id==='creditos')  renderCreditos();
   if(id==='egresos')   renderEgresos();
   if(id==='ingresos')  renderIngresos();
+  if(id==='patrimonio') renderPatrimonio();
 }
 
 async function syncSheet(){
@@ -638,6 +721,7 @@ async function syncSheet(){
   else if(tabActiva==='creditos') renderCreditos();
   else if(tabActiva==='egresos') renderEgresos();
   else if(tabActiva==='ingresos') renderIngresos();
+  else if(tabActiva==='patrimonio') renderPatrimonio();
   b.style.animation='';
 }
 
@@ -1780,6 +1864,438 @@ function renderIgChart(meses, byTipoMes){
 }
 
 document.getElementById('txInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();procesarTx();} });
+
+/* ════════════════════════════════════════════════════════
+   FIX 9 — Pestaña Patrimonio (PN)
+   Calcula saldos por cuenta+moneda, separa Líquido / Inversiones / Pasivos
+   con filtros de fecha y moneda. Muestra resumen ejecutivo arriba.
+   ════════════════════════════════════════════════════════ */
+
+let pnMoneda = 'ARS';
+let pnSaldosIniciales = []; /* [{cuenta, moneda, saldo}] */
+let _pnSaldosCargados = false;
+
+/* Cuentas de inversión (resto Balance = Líquido) */
+const CUENTAS_INVERSION = ['Buenbit','Binance','Lemon','IOL'];
+/* Activos cuya unidad nativa NO es ARS/USD — necesitan tasa para mostrar Saldo USD */
+const ACTIVOS_CON_TASA = {
+  'USDT':'tc-usdt-usd',
+  'BTC':'tc-btc-usd',
+  'PAXG':'tc-paxg-usd',
+  'NVDA':'tc-nvda-usd',
+  'AGRO':'tc-agro-usd',
+  'PAMP':'tc-pamp-usd',
+  'SMCI':'tc-smci-usd',
+  'GTLB':'tc-gtlb-usd',
+  'BABA':null /* sin tasa configurada → N/A */
+};
+
+function setPNMoneda(mon){
+  pnMoneda = mon;
+  document.getElementById('pn-mon-ars').classList.toggle('active', mon==='ARS');
+  document.getElementById('pn-mon-usd').classList.toggle('active', mon==='USD');
+  renderPatrimonio();
+}
+
+/* Cargar saldos iniciales una vez al entrar a la pestaña */
+async function cargarSaldosIniciales(){
+  if(_pnSaldosCargados) return;
+  const url = config.scriptUrl;
+  if(!url) return;
+  try{
+    const r = await fetch(url + '?action=saldos');
+    const d = await r.json();
+    if(d.status==='ok') pnSaldosIniciales = d.rows || [];
+    _pnSaldosCargados = true;
+  } catch(e){ console.error('Error saldos iniciales:', e); }
+}
+
+/* Helper: tasa de cambio de una moneda hacia USD */
+function tasaAUSD(moneda){
+  const m = String(moneda||'').toUpperCase();
+  if(m==='USD') return 1;
+  if(m==='ARS'){
+    const t = parseFloat(tasas['usd-ars'])||0;
+    return t > 0 ? (1/t) : 0; /* 1 ARS = 1/tasa USD */
+  }
+  /* Activos */
+  const tasaKey = ACTIVOS_CON_TASA[m];
+  if(tasaKey === null) return null; /* sin tasa configurada → N/A */
+  if(!tasaKey) return null;
+  const cleanKey = tasaKey.replace('tc-',''); /* tc-usdt-usd → usdt-usd */
+  const t = parseFloat(tasas[cleanKey])||0;
+  return t > 0 ? t : null;
+}
+
+/* Conversor a moneda elegida (ARS o USD) */
+function convertirA(monto, monedaOrigen, monedaDestino){
+  if(!monto) return 0;
+  const t = tasaAUSD(monedaOrigen);
+  if(t===null) return null;
+  const enUSD = monto * t;
+  if(monedaDestino==='USD') return enUSD;
+  /* ARS */
+  const usdArs = parseFloat(tasas['usd-ars'])||0;
+  return usdArs > 0 ? enUSD * usdArs : null;
+}
+
+/* Setear fechas por defecto del filtro: mes corriente */
+function inicializarFiltrosPN(){
+  const hoy = new Date();
+  const desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const hasta = hoy;
+  const fmt = d => d.toISOString().split('T')[0];
+  const inputDesde = document.getElementById('pn-desde');
+  const inputHasta = document.getElementById('pn-hasta');
+  if(!inputDesde.value) inputDesde.value = fmt(desde);
+  if(!inputHasta.value) inputHasta.value = fmt(hasta);
+  /* Listeners para re-render */
+  inputDesde.onchange = renderPatrimonio;
+  inputHasta.onchange = renderPatrimonio;
+}
+
+/* Detectar a qué bloque pertenece una cuenta:
+   - Pasivo si rol = Crédito
+   - Inversión si nombre está en CUENTAS_INVERSION
+   - Líquido en otro caso (Balance / Egreso / Ingreso) */
+function bloqueDeCuenta(nombreCuenta){
+  /* Buscar info en tablasCuentas */
+  const info = tablasCuentas.find(c => c.nombre === nombreCuenta);
+  if(info){
+    const rol = String(info.tipo_cuenta||'').toLowerCase();
+    if(rol==='crédito' || rol==='credito') return 'pasivo';
+  }
+  if(CUENTAS_INVERSION.indexOf(nombreCuenta) >= 0) return 'inversion';
+  return 'liquido';
+}
+
+/* Conjunto de cuentas Balance (que tienen movimientos en ambas direcciones) */
+function esCuentaBalance(nombreCuenta){
+  const info = tablasCuentas.find(c => c.nombre === nombreCuenta);
+  if(!info) return false;
+  const rol = String(info.tipo_cuenta||'').toLowerCase();
+  return rol === 'balance';
+}
+
+/* Conjunto de tarjetas de crédito */
+function esCuentaCredito(nombreCuenta){
+  const info = tablasCuentas.find(c => c.nombre === nombreCuenta);
+  if(!info) return false;
+  const rol = String(info.tipo_cuenta||'').toLowerCase();
+  return rol === 'crédito' || rol === 'credito';
+}
+
+/* Calcula saldo, ingresos y egresos de TODAS las (cuenta, moneda)
+   Devuelve estructura: { 'CuentaName|MONEDA': { cuenta, moneda, saldoTotal, ingresoPeriodo, egresoPeriodo } } */
+function calcularStatsPorCuentaMoneda(desde, hasta){
+  const stats = {};
+
+  /* Helper para asegurar que existe la entrada */
+  const k = (cuenta, moneda) => {
+    const key = cuenta + '|' + moneda;
+    if(!stats[key]) stats[key] = {
+      cuenta: cuenta, moneda: moneda,
+      saldoTotal: 0, ingresoPeriodo: 0, egresoPeriodo: 0
+    };
+    return stats[key];
+  };
+
+  /* Saldos iniciales como base del saldoTotal */
+  pnSaldosIniciales.forEach(s => {
+    const moneda = String(s.moneda||'ARS').toUpperCase();
+    k(s.cuenta, moneda).saldoTotal += parseFloat(s.saldo)||0;
+  });
+
+  /* Recorrer todas las filas */
+  allRows.forEach(r => {
+    const monto = parseFloat(r.monto)||0;
+    if(!monto) return;
+    const moneda = String(r.moneda||'ARS').toUpperCase();
+    const en = String(r.descripcion||'').trim();
+    const con = String(r.medio_pago||'').trim();
+    const fecha = r.fecha ? new Date(r.fecha) : null;
+    const enRango = fecha && desde && hasta ? (fecha >= desde && fecha <= hasta) : false;
+
+    /* CON: la plata sale de esta cuenta (resta saldo) */
+    if(con){
+      const e = k(con, moneda);
+      e.saldoTotal -= monto;
+      if(enRango) e.egresoPeriodo += monto;
+    }
+    /* EN: la plata entra a esta cuenta (suma saldo) */
+    if(en){
+      const e = k(en, moneda);
+      e.saldoTotal += monto;
+      if(enRango) e.ingresoPeriodo += monto;
+    }
+  });
+
+  return stats;
+}
+
+/* Calcula deuda neta de una tarjeta de crédito.
+   En tu modelo: cuando comprás, la tarjeta es CON (saldoTotal cae en negativo).
+   Cuando pagás, "Pago Visa" es EN sobre la tarjeta (saldoTotal sube hacia 0).
+   La deuda real = -saldoTotal (positivo si debés). */
+function calcularDeudaTarjeta(stats, nombreTarjeta){
+  /* Sumar todos los saldos de esa tarjeta en todas sus monedas */
+  const result = {};
+  Object.keys(stats).forEach(key => {
+    const e = stats[key];
+    if(e.cuenta === nombreTarjeta){
+      if(!result[e.moneda]) result[e.moneda] = { saldo:0, pagosPeriodo:0, comprasPeriodo:0 };
+      /* En la tarjeta: ingresoPeriodo = pagos hechos, egresoPeriodo = compras */
+      result[e.moneda].saldo = e.saldoTotal;
+      result[e.moneda].pagosPeriodo = e.ingresoPeriodo;
+      result[e.moneda].comprasPeriodo = e.egresoPeriodo;
+    }
+  });
+  return result; /* { 'ARS': {saldo, pagosPeriodo, comprasPeriodo}, ... } */
+}
+
+function renderPatrimonio(){
+  cargarSaldosIniciales().then(() => {
+    inicializarFiltrosPN();
+    _renderPatrimonioCore();
+  });
+}
+
+function _renderPatrimonioCore(){
+  const desde = document.getElementById('pn-desde').value;
+  const hasta = document.getElementById('pn-hasta').value;
+  const fechaDesde = desde ? new Date(desde + 'T00:00:00') : null;
+  const fechaHasta = hasta ? new Date(hasta + 'T23:59:59') : null;
+
+  const stats = calcularStatsPorCuentaMoneda(fechaDesde, fechaHasta);
+
+  /* Separar por bloque */
+  const liquido = [];
+  const inversiones = [];
+  const tarjetasUnicas = new Set();
+
+  Object.keys(stats).forEach(key => {
+    const e = stats[key];
+    const bloque = bloqueDeCuenta(e.cuenta);
+    if(bloque === 'pasivo'){
+      tarjetasUnicas.add(e.cuenta);
+    } else if(bloque === 'inversion'){
+      inversiones.push(e);
+    } else {
+      /* Líquido — solo cuentas Balance reales (no destinos puros) */
+      if(esCuentaBalance(e.cuenta)) liquido.push(e);
+    }
+  });
+
+  /* Filtrar líquido: solo monedas con saldo o movimiento del período */
+  const liquidoFiltrado = liquido.filter(e => Math.abs(e.saldoTotal) > 0.01 || e.ingresoPeriodo > 0 || e.egresoPeriodo > 0);
+  liquidoFiltrado.sort((a,b) => a.cuenta.localeCompare(b.cuenta) || a.moneda.localeCompare(b.moneda));
+
+  const inversionesFiltradas = inversiones.filter(e => Math.abs(e.saldoTotal) > 0.01 || e.ingresoPeriodo > 0 || e.egresoPeriodo > 0);
+  inversionesFiltradas.sort((a,b) => a.cuenta.localeCompare(b.cuenta) || a.moneda.localeCompare(b.moneda));
+
+  /* Renderizar bloques */
+  renderBloqueLiquido(liquidoFiltrado);
+  renderBloqueInversiones(inversionesFiltradas);
+  renderBloquePasivos(stats, tarjetasUnicas);
+
+  /* Resumen ejecutivo */
+  renderResumenPN(liquidoFiltrado, inversionesFiltradas, stats, tarjetasUnicas);
+}
+
+function renderBloqueLiquido(filas){
+  const tabla = document.getElementById('pn-liquido');
+  if(filas.length === 0){
+    tabla.innerHTML = '<tr><td class="pn-empty" colspan="4">Sin movimientos</td></tr>';
+    return;
+  }
+  let subIng = 0, subSaldo = 0, subEgr = 0;
+  let warnFalta = false;
+  const filasHTML = filas.map(e => {
+    /* Saldo en moneda elegida */
+    const saldoConv = convertirA(e.saldoTotal, e.moneda, pnMoneda);
+    if(saldoConv === null) warnFalta = true;
+    else subSaldo += saldoConv;
+    /* Ingresos/Egresos en moneda original (no se convierten) */
+    subIng += e.ingresoPeriodo; /* ojo: solo suma si misma moneda — abajo aclaramos */
+    subEgr += e.egresoPeriodo;
+    return `<tr>
+      <td>${esc(e.cuenta)}<span class="pn-mon-tag">${e.moneda}</span></td>
+      <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
+      <td class="num bal">${fmtNum(e.saldoTotal)}</td>
+      <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
+    </tr>`;
+  }).join('');
+  /* Subtotal: convertimos saldoTotal a moneda elegida fila por fila.
+     Los flujos no se convierten — sumarlos sería sumar peras con manzanas. Mostramos "—". */
+  tabla.innerHTML = `
+    <thead><tr>
+      <th>Cuenta</th>
+      <th class="num">Ingresos</th>
+      <th class="num">Saldo real</th>
+      <th class="num">Egresos</th>
+    </tr></thead>
+    <tbody>${filasHTML}
+      <tr class="subtotal">
+        <td>Subtotal (en ${pnMoneda})</td>
+        <td class="num">—</td>
+        <td class="num bal">${warnFalta ? '<span class="pn-warn">⚠ N/A</span>' : fmtNum(subSaldo)}</td>
+        <td class="num">—</td>
+      </tr>
+    </tbody>`;
+}
+
+function renderBloqueInversiones(filas){
+  const tabla = document.getElementById('pn-inversiones');
+  if(filas.length === 0){
+    tabla.innerHTML = '<tr><td class="pn-empty" colspan="5">Sin inversiones</td></tr>';
+    return;
+  }
+  let subSaldoUSD = 0;
+  let warnFalta = false;
+  const filasHTML = filas.map(e => {
+    const saldoUSD = convertirA(e.saldoTotal, e.moneda, 'USD');
+    let saldoUsdTxt;
+    if(saldoUSD === null){
+      saldoUsdTxt = '<span class="pn-warn">⚠ N/A</span>';
+      warnFalta = true;
+    } else {
+      saldoUsdTxt = fmtNum(saldoUSD);
+      subSaldoUSD += saldoUSD;
+    }
+    return `<tr>
+      <td>${esc(e.cuenta)}<span class="pn-mon-tag">${e.moneda}</span></td>
+      <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
+      <td class="num bal">${fmtNum(e.saldoTotal)}</td>
+      <td class="num bal">${saldoUsdTxt}</td>
+      <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
+    </tr>`;
+  }).join('');
+  tabla.innerHTML = `
+    <thead><tr>
+      <th>Cuenta</th>
+      <th class="num">Ingresos</th>
+      <th class="num">Saldo</th>
+      <th class="num">Saldo USD</th>
+      <th class="num">Egresos</th>
+    </tr></thead>
+    <tbody>${filasHTML}
+      <tr class="subtotal">
+        <td>Subtotal (en USD)</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+        <td class="num bal">${warnFalta ? '<span class="pn-warn">⚠ parcial</span> ' : ''}${fmtNum(subSaldoUSD)}</td>
+        <td class="num">—</td>
+      </tr>
+    </tbody>`;
+}
+
+function renderBloquePasivos(stats, tarjetasUnicas){
+  const tabla = document.getElementById('pn-pasivos');
+  if(tarjetasUnicas.size === 0){
+    tabla.innerHTML = '<tr><td class="pn-empty" colspan="4">Sin tarjetas</td></tr>';
+    return;
+  }
+  let subPagos = 0, subDeuda = 0, subCompras = 0;
+  let warnFalta = false;
+  const filasHTML = [];
+  /* Para pasivos: por simplicidad mostramos UNA fila por tarjeta consolidada en moneda elegida.
+     Si una tarjeta tiene movimientos en varias monedas, las sumamos convirtiendo. */
+  Array.from(tarjetasUnicas).sort().forEach(tarjeta => {
+    const monedasData = calcularDeudaTarjeta(stats, tarjeta);
+    /* Convertir y sumar todas las monedas a la moneda elegida */
+    let pagosTotal = 0, deudaTotal = 0, comprasTotal = 0;
+    let alguna = false;
+    Object.keys(monedasData).forEach(moneda => {
+      const m = monedasData[moneda];
+      const pagos = convertirA(m.pagosPeriodo, moneda, pnMoneda);
+      const deuda = convertirA(m.saldo, moneda, pnMoneda);
+      const compras = convertirA(m.comprasPeriodo, moneda, pnMoneda);
+      if(pagos === null || deuda === null || compras === null){ warnFalta = true; return; }
+      pagosTotal += pagos;
+      deudaTotal += deuda;
+      comprasTotal += compras;
+      alguna = true;
+    });
+    if(!alguna) return;
+    /* En tu modelo: saldoTotal de tarjeta es NEGATIVO (deuda).
+       deudaReal = -saldoTotal. Si saldoTotal=-620k, deudaReal=620k pero la mostramos con signo "-" para indicar pasivo. */
+    const deudaMostrar = deudaTotal; /* ya tiene signo negativo */
+    subPagos += pagosTotal;
+    subDeuda += deudaMostrar;
+    subCompras += comprasTotal;
+    filasHTML.push(`<tr>
+      <td>${esc(tarjeta)}</td>
+      <td class="num up">${fmtNum(pagosTotal)}</td>
+      <td class="num danger">${fmtNum(deudaMostrar)}</td>
+      <td class="num down">${fmtNum(comprasTotal)}</td>
+    </tr>`);
+  });
+  tabla.innerHTML = `
+    <thead><tr>
+      <th>Tarjeta</th>
+      <th class="num">Pagos</th>
+      <th class="num">Deuda real</th>
+      <th class="num">Compras</th>
+    </tr></thead>
+    <tbody>${filasHTML.join('')}
+      <tr class="subtotal">
+        <td>Subtotal (en ${pnMoneda})</td>
+        <td class="num">${fmtNum(subPagos)}</td>
+        <td class="num danger">${warnFalta ? '<span class="pn-warn">⚠ parcial</span> ' : ''}${fmtNum(subDeuda)}</td>
+        <td class="num">${fmtNum(subCompras)}</td>
+      </tr>
+    </tbody>`;
+}
+
+function renderResumenPN(liquidoFiltrado, inversionesFiltradas, stats, tarjetasUnicas){
+  /* Subtotales en moneda elegida */
+  let subLiquido = 0, subInversionesUSD = 0, subDeuda = 0;
+  let subIngPeriodo = 0, subEgrPeriodo = 0;
+
+  liquidoFiltrado.forEach(e => {
+    const conv = convertirA(e.saldoTotal, e.moneda, pnMoneda);
+    if(conv !== null) subLiquido += conv;
+    /* Para flujos: convertimos también para mostrar suma uniforme */
+    const ing = convertirA(e.ingresoPeriodo, e.moneda, pnMoneda);
+    const egr = convertirA(e.egresoPeriodo, e.moneda, pnMoneda);
+    if(ing !== null) subIngPeriodo += ing;
+    if(egr !== null) subEgrPeriodo += egr;
+  });
+  inversionesFiltradas.forEach(e => {
+    const conv = convertirA(e.saldoTotal, e.moneda, 'USD');
+    if(conv !== null) subInversionesUSD += conv;
+  });
+  Array.from(tarjetasUnicas).forEach(tarjeta => {
+    const md = calcularDeudaTarjeta(stats, tarjeta);
+    Object.keys(md).forEach(moneda => {
+      const conv = convertirA(md[moneda].saldo, moneda, pnMoneda);
+      if(conv !== null) subDeuda += conv;
+    });
+  });
+
+  /* Inversiones está en USD; convertir a moneda elegida si es ARS */
+  const subInversiones = pnMoneda === 'USD' ? subInversionesUSD : convertirA(subInversionesUSD, 'USD', 'ARS');
+  const pnTotal = subLiquido + (subInversiones||0) + subDeuda; /* deuda viene negativa */
+
+  /* Total alt: si moneda elegida es ARS, mostrar también USD */
+  let pnTotalAlt = '';
+  if(pnMoneda === 'ARS'){
+    const enUSD = convertirA(pnTotal, 'ARS', 'USD');
+    pnTotalAlt = enUSD !== null ? `USD ${fmtNum(enUSD)}` : '';
+  } else {
+    const enARS = convertirA(pnTotal, 'USD', 'ARS');
+    pnTotalAlt = enARS !== null ? `ARS ${fmtNum(enARS)}` : '';
+  }
+
+  document.getElementById('pn-total').textContent = `${pnMoneda} ${fmtNum(pnTotal)}`;
+  document.getElementById('pn-total-alt').textContent = pnTotalAlt;
+  document.getElementById('pn-sub-liquido').textContent = fmtNum(subLiquido);
+  document.getElementById('pn-sub-inversiones').textContent = fmtNum(subInversiones||0);
+  document.getElementById('pn-sub-pasivos').textContent = fmtNum(subDeuda);
+  const neto = subIngPeriodo - subEgrPeriodo;
+  document.getElementById('pn-flujos').innerHTML =
+    `<span class="up">↑ ingresos ${fmtNum(subIngPeriodo)}</span> · <span class="down">↓ egresos ${fmtNum(subEgrPeriodo)}</span> · neto ${neto >= 0 ? '+' : ''}${fmtNum(neto)} en el período`;
+}
 
 /* ════════════════════════════════════════════════════════
    FIX 8 — Sub-tabs de Config + Clasificar pendientes + Regenerar tablas
