@@ -260,7 +260,7 @@ td{padding:8px 10px;color:var(--text)}
 .ms-option .ms-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
 </style>
 </head>
-<body>
+<body class="staging-mode">
 <!-- STAGING: banner de ambiente de prueba -->
 <div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
 <div id="app">
@@ -1877,6 +1877,13 @@ let _pnSaldosCargados = false;
 
 /* Cuentas de inversión (resto Balance = Líquido) */
 const CUENTAS_INVERSION = ['Buenbit','Binance','Lemon','IOL'];
+/* FIX 9b: whitelist temporal de cuentas Balance reales (líquido).
+   La hoja Cuentas tiene falsos positivos (Flores, Entradas, etc.) por la lógica
+   automática de generarTablas. Hasta resolver el modelo de edición de roles,
+   forzamos esta lista para el bloque Líquido. */
+const CUENTAS_LIQUIDAS = ['MP','Mercado Pago','Santander','Hipotecario','Buenbit','Binance','Lemon','IOL','Efectivo','Calfpay'];
+/* Nota: Buenbit aparece en ambas listas a propósito porque puede tener saldos en ARS/USD (líquido)
+   y en USDT/cripto (inversión). El bloque al que va cada fila se decide por moneda más abajo. */
 /* Activos cuya unidad nativa NO es ARS/USD — necesitan tasa para mostrar Saldo USD */
 const ACTIVOS_CON_TASA = {
   'USDT':'tc-usdt-usd',
@@ -1954,19 +1961,20 @@ function inicializarFiltrosPN(){
   inputHasta.onchange = renderPatrimonio;
 }
 
-/* Detectar a qué bloque pertenece una cuenta:
-   - Pasivo si rol = Crédito
-   - Inversión si nombre está en CUENTAS_INVERSION
-   - Líquido en otro caso (Balance / Egreso / Ingreso) */
-function bloqueDeCuenta(nombreCuenta){
-  /* Buscar info en tablasCuentas */
-  const info = tablasCuentas.find(c => c.nombre === nombreCuenta);
-  if(info){
-    const rol = String(info.tipo_cuenta||'').toLowerCase();
-    if(rol==='crédito' || rol==='credito') return 'pasivo';
-  }
-  if(CUENTAS_INVERSION.indexOf(nombreCuenta) >= 0) return 'inversion';
-  return 'liquido';
+/* Detectar a qué bloque pertenece una fila (cuenta + moneda):
+   - Si cuenta NO está en whitelist de líquidas → descartar (no es cuenta real)
+   - Si rol = Crédito → pasivo
+   - Si moneda es ARS o USD → líquido
+   - Si moneda es otra (USDT, BTC, NVDA, etc.) → inversión */
+function bloqueDeFila(nombreCuenta, moneda){
+  /* Crédito tiene prioridad — chequeo por rol porque las tarjetas son confiables en tablasCuentas */
+  if(esCuentaCredito(nombreCuenta)) return 'pasivo';
+  /* Si no está en la whitelist de líquidas, descartar */
+  if(CUENTAS_LIQUIDAS.indexOf(nombreCuenta) < 0) return null;
+  /* Por moneda */
+  const m = String(moneda||'').toUpperCase();
+  if(m === 'ARS' || m === 'USD') return 'liquido';
+  return 'inversion';
 }
 
 /* Conjunto de cuentas Balance (que tienen movimientos en ambas direcciones) */
@@ -1977,12 +1985,22 @@ function esCuentaBalance(nombreCuenta){
   return rol === 'balance';
 }
 
-/* Conjunto de tarjetas de crédito */
+/* Conjunto de tarjetas de crédito.
+   FIX 9c: detección por whitelist + lookup en tablasTipos (no en tablasCuentas).
+   Razón: la hoja Cuentas clasifica mal a las tarjetas porque solo aparecen en CON
+   (mientras que "Pago Visa Santander" aparece en EN como nombre distinto, no se cruzan).
+   La hoja Tipos sí las marca como "Crédito" gracias a REGLAS_TIPO. */
+const TARJETAS_CREDITO = ['Visa Santander', 'AMEX Santander'];
 function esCuentaCredito(nombreCuenta){
-  const info = tablasCuentas.find(c => c.nombre === nombreCuenta);
-  if(!info) return false;
-  const rol = String(info.tipo_cuenta||'').toLowerCase();
-  return rol === 'crédito' || rol === 'credito';
+  /* Camino B: whitelist hardcoded — siempre gana */
+  if(TARJETAS_CREDITO.indexOf(nombreCuenta) >= 0) return true;
+  /* Camino A: lookup en tablasTipos (campo medio_pago) */
+  const tipo = tablasTipos.find(t => t.medio_pago === nombreCuenta);
+  if(tipo){
+    const t = String(tipo.tipo||'').toLowerCase();
+    if(t === 'crédito' || t === 'credito') return true;
+  }
+  return false;
 }
 
 /* Calcula saldo, ingresos y egresos de TODAS las (cuenta, moneda)
@@ -2037,19 +2055,40 @@ function calcularStatsPorCuentaMoneda(desde, hasta){
    En tu modelo: cuando comprás, la tarjeta es CON (saldoTotal cae en negativo).
    Cuando pagás, "Pago Visa" es EN sobre la tarjeta (saldoTotal sube hacia 0).
    La deuda real = -saldoTotal (positivo si debés). */
+/* Calcula deuda neta de una tarjeta de crédito.
+   FIX 9c: combinar el registro de la tarjeta (donde están las compras como CON)
+   con el registro "Pago [Tarjeta]" (donde están los pagos como EN).
+   En tu modelo:
+   - Compra con tarjeta → CON = "Visa Santander" → resta saldo de "Visa Santander|MONEDA"
+   - Pago de tarjeta → EN = "Pago Visa Santander" → suma saldo de "Pago Visa Santander|MONEDA"
+   Hay que combinarlos para obtener la deuda neta real. */
 function calcularDeudaTarjeta(stats, nombreTarjeta){
-  /* Sumar todos los saldos de esa tarjeta en todas sus monedas */
   const result = {};
+  const nombrePago = 'Pago ' + nombreTarjeta;
+
   Object.keys(stats).forEach(key => {
     const e = stats[key];
+    /* Caso 1: la entrada es la tarjeta misma (compras como CON) */
     if(e.cuenta === nombreTarjeta){
       if(!result[e.moneda]) result[e.moneda] = { saldo:0, pagosPeriodo:0, comprasPeriodo:0 };
-      /* En la tarjeta: ingresoPeriodo = pagos hechos, egresoPeriodo = compras */
-      result[e.moneda].saldo = e.saldoTotal;
-      result[e.moneda].pagosPeriodo = e.ingresoPeriodo;
-      result[e.moneda].comprasPeriodo = e.egresoPeriodo;
+      /* saldoTotal aquí es negativo o 0: lo que llevás "consumido" sin saldar.
+         egresoPeriodo: compras del período (CON tarjeta)
+         ingresoPeriodo: si la tarjeta apareciera en EN — raro pero posible (ej. devolución) */
+      result[e.moneda].saldo += e.saldoTotal;
+      result[e.moneda].comprasPeriodo += e.egresoPeriodo;
+      /* Si hubo refund/devolución cargada como EN tarjeta, contar como reducción de compras */
+      result[e.moneda].comprasPeriodo -= e.ingresoPeriodo;
+    }
+    /* Caso 2: la entrada es "Pago [Tarjeta]" (los pagos hechos hacia la tarjeta) */
+    if(e.cuenta === nombrePago){
+      if(!result[e.moneda]) result[e.moneda] = { saldo:0, pagosPeriodo:0, comprasPeriodo:0 };
+      /* Cuando pagás la tarjeta, "Pago X" aparece como EN (suma saldo de "Pago X").
+         Eso refleja exactamente la cantidad pagada. */
+      result[e.moneda].saldo += e.saldoTotal;
+      result[e.moneda].pagosPeriodo += e.ingresoPeriodo;
     }
   });
+
   return result; /* { 'ARS': {saldo, pagosPeriodo, comprasPeriodo}, ... } */
 }
 
@@ -2075,14 +2114,14 @@ function _renderPatrimonioCore(){
 
   Object.keys(stats).forEach(key => {
     const e = stats[key];
-    const bloque = bloqueDeCuenta(e.cuenta);
+    const bloque = bloqueDeFila(e.cuenta, e.moneda);
+    if(bloque === null) return; /* No es cuenta real, descartar */
     if(bloque === 'pasivo'){
       tarjetasUnicas.add(e.cuenta);
     } else if(bloque === 'inversion'){
       inversiones.push(e);
-    } else {
-      /* Líquido — solo cuentas Balance reales (no destinos puros) */
-      if(esCuentaBalance(e.cuenta)) liquido.push(e);
+    } else if(bloque === 'liquido'){
+      liquido.push(e);
     }
   });
 
