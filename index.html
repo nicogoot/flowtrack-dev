@@ -126,6 +126,16 @@ input,select,textarea{font-family:inherit;outline:none}
 .pn-moneda-btn.active{background:var(--accent);color:#0a0c10;border-color:var(--accent);}
 .pn-bloque{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;}
 .pn-bloque-titulo{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+/* FIX 10: header con título y total a la derecha */
+.pn-bloque-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.pn-bloque-header-titulo{font-size:14px;font-weight:600;color:var(--text);}
+.pn-bloque-header-total{font-size:13px;font-weight:600;color:var(--accent);}
+.pn-bloque-header-total.danger{color:var(--danger);}
+.pn-subtabla{margin-bottom:14px;}
+.pn-subtabla-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.pn-subtabla-titulo{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.pn-subtabla-total{font-size:12px;font-weight:600;color:var(--text);}
+.pn-subtabla-total.danger{color:var(--danger);}
 .pn-tabla-wrap{overflow-x:auto;}
 .pn-tabla{width:100%;font-size:12px;border-collapse:collapse;}
 .pn-tabla th{text-align:left;padding:5px 4px;color:var(--muted);font-weight:400;font-size:11px;border-bottom:1px solid var(--border);}
@@ -277,11 +287,11 @@ td{padding:8px 10px;color:var(--text)}
   <nav class="tabnav">
     <button class="tab active" onclick="showTab('cargar')"   id="tab-cargar">📝 Cargar</button>
     <button class="tab"        onclick="showTab('historial')" id="tab-historial">📋 Historial</button>
+    <button class="tab"        onclick="showTab('patrimonio')" id="tab-patrimonio">🏦 Patrimonio</button>
     <button class="tab"        onclick="showTab('tracker')"   id="tab-tracker">📊 Tracker</button>
     <button class="tab"        onclick="showTab('creditos')"  id="tab-creditos">💳 Créditos</button>
     <button class="tab"        onclick="showTab('egresos')"   id="tab-egresos">💸 Egresos</button>
     <button class="tab"        onclick="showTab('ingresos')" id="tab-ingresos">💰 Ingresos</button>
-    <button class="tab"        onclick="showTab('patrimonio')" id="tab-patrimonio">🏦 Patrimonio</button>
     <button class="tab"        onclick="showTab('config')"    id="tab-config">⚙️ Config</button>
   </nav>
 
@@ -528,9 +538,9 @@ td{padding:8px 10px;color:var(--text)}
 
   </div>
 
-  <!-- PATRIMONIO (FIX 9) -->
+  <!-- PATRIMONIO (FIX 9 + FIX 10) -->
   <div class="panel" id="panel-patrimonio">
-    <!-- Resumen ejecutivo -->
+    <!-- Resumen ejecutivo (sigue afectado por filtro ARS/USD) -->
     <div class="pn-resumen" id="pn-resumen">
       <div class="pn-label">Patrimonio neto</div>
       <div class="pn-total" id="pn-total">—</div>
@@ -543,35 +553,21 @@ td{padding:8px 10px;color:var(--text)}
       <div class="pn-flujos" id="pn-flujos">—</div>
     </div>
 
-    <!-- Filtros -->
+    <!-- Filtros (ARS/USD afecta SOLO al resumen ejecutivo) -->
     <div class="pn-filtros">
       <input type="date" class="pn-fecha" id="pn-desde">
       <input type="date" class="pn-fecha" id="pn-hasta">
-      <div class="pn-moneda-toggle">
+      <div class="pn-moneda-toggle" title="Filtra solo el resumen ejecutivo de arriba">
         <button class="pn-moneda-btn active" id="pn-mon-ars" onclick="setPNMoneda('ARS')">ARS</button>
         <button class="pn-moneda-btn" id="pn-mon-usd" onclick="setPNMoneda('USD')">USD</button>
       </div>
-      <!-- FIX 9d: botón refrescar saldos iniciales desde el Sheet -->
       <button class="pn-moneda-btn" onclick="refrescarPN()" title="Refrescar saldos iniciales y movimientos desde el Sheet">↻</button>
     </div>
 
-    <!-- Bloque Líquido -->
-    <div class="pn-bloque" id="pn-liquido-wrap">
-      <div class="pn-bloque-titulo">💧 Líquido</div>
-      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-liquido"></table></div>
-    </div>
-
-    <!-- Bloque Inversiones -->
-    <div class="pn-bloque" id="pn-inversiones-wrap">
-      <div class="pn-bloque-titulo">📈 Inversiones</div>
-      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-inversiones"></table></div>
-    </div>
-
-    <!-- Bloque Pasivos -->
-    <div class="pn-bloque" id="pn-pasivos-wrap">
-      <div class="pn-bloque-titulo">💳 Pasivos (deuda)</div>
-      <div class="pn-tabla-wrap"><table class="pn-tabla" id="pn-pasivos"></table></div>
-    </div>
+    <!-- Bloques se generan dinámicamente desde JS -->
+    <div id="pn-bloque-liquido"></div>
+    <div id="pn-bloque-inversiones"></div>
+    <div id="pn-bloque-pasivos"></div>
   </div>
 
   <!-- CONFIG -->
@@ -700,7 +696,7 @@ function guardarTasas(){
   showToast('Tasas guardadas ✓');
 }
 
-const TABS=['cargar','historial','tracker','creditos','egresos','ingresos','patrimonio','config'];
+const TABS=['cargar','historial','patrimonio','tracker','creditos','egresos','ingresos','config'];
 function showTab(id){
   TABS.forEach(t=>{ document.getElementById('panel-'+t).classList.toggle('active',t===id); const b=document.getElementById('tab-'+t); if(b) b.classList.toggle('active',t===id); });
   if(id==='historial') renderHistorial();
@@ -1049,6 +1045,7 @@ function renderTablaHistorial(rows,col='fecha',dir='desc'){
         <th class="sortable" onclick="setSortState('h','con',getSortDir('h','con'));renderTablaHistorial(window._hRows||[])">CON${sortIcon('h','con')}</th>
         <th class="sortable" onclick="setSortState('h','cat',getSortDir('h','cat'));renderTablaHistorial(window._hRows||[])">Categoría Destino${sortIcon('h','cat')}</th>
         <th class="sortable" onclick="setSortState('h','tipo',getSortDir('h','tipo'));renderTablaHistorial(window._hRows||[])">Categoría Origen${sortIcon('h','tipo')}</th>
+        <th>Comentario</th>
       </tr></thead><tbody>${s.map(r=>`<tr>
         <td class="td-mono td-muted" style="white-space:nowrap">${esc(fmtFecha(r))}</td>
         <td class="td-mono">${esc(fmtMonto(parseFloat(r.monto)||0))}</td>
@@ -1057,6 +1054,7 @@ function renderTablaHistorial(rows,col='fecha',dir='desc'){
         <td class="td-muted">${esc(str(r.medio_pago))}</td>
         <td>${r.categoria?`<span class="badge badge-muted" style="font-size:9px">${esc(str(r.categoria))}</span>`:''}</td>
         <td>${r.tipo?`<span class="badge badge-muted" style="font-size:9px">${esc(str(r.tipo))}</span>`:''}</td>
+        <td class="td-muted" style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(str(r.comentario))}">${esc(str(r.comentario))}</td>
       </tr>`).join('')}</tbody></table>`
     :'<div class="empty">Sin registros con estos filtros</div>';
 }
@@ -2153,148 +2151,239 @@ function _renderPatrimonioCore(){
 }
 
 function renderBloqueLiquido(filas){
-  const tabla = document.getElementById('pn-liquido');
+  const wrap = document.getElementById('pn-bloque-liquido');
+  /* Agrupar por moneda */
+  const porMoneda = {};
+  filas.forEach(e => {
+    if(!porMoneda[e.moneda]) porMoneda[e.moneda] = [];
+    porMoneda[e.moneda].push(e);
+  });
+  /* Calcular total general en USD para el header del bloque */
+  let totalUSD = 0;
+  let warnTotal = false;
+  filas.forEach(e => {
+    const conv = convertirA(e.saldoTotal, e.moneda, 'USD');
+    if(conv === null) warnTotal = true;
+    else totalUSD += conv;
+  });
+  const totalTxt = warnTotal ? '<span class="pn-warn">⚠ parcial</span> USD ' + fmtNum(totalUSD) : 'USD ' + fmtNum(totalUSD);
+
   if(filas.length === 0){
-    tabla.innerHTML = '<tr><td class="pn-empty" colspan="4">Sin movimientos</td></tr>';
+    wrap.innerHTML = `<div class="pn-bloque">
+      <div class="pn-bloque-header">
+        <div class="pn-bloque-header-titulo">💧 Líquido</div>
+        <div class="pn-bloque-header-total">USD 0</div>
+      </div>
+      <div class="pn-empty">Sin movimientos</div>
+    </div>`;
     return;
   }
-  let subIng = 0, subSaldo = 0, subEgr = 0;
-  let warnFalta = false;
-  const filasHTML = filas.map(e => {
-    /* Saldo en moneda elegida */
-    const saldoConv = convertirA(e.saldoTotal, e.moneda, pnMoneda);
-    if(saldoConv === null) warnFalta = true;
-    else subSaldo += saldoConv;
-    /* Ingresos/Egresos en moneda original (no se convierten) */
-    subIng += e.ingresoPeriodo; /* ojo: solo suma si misma moneda — abajo aclaramos */
-    subEgr += e.egresoPeriodo;
-    return `<tr>
-      <td>${esc(e.cuenta)}<span class="pn-mon-tag">${e.moneda}</span></td>
-      <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
-      <td class="num bal">${fmtNum(e.saldoTotal)}</td>
-      <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
-    </tr>`;
+
+  /* Una sub-tabla por moneda, ordenadas: ARS primero, USD después, resto alfabético */
+  const ordenMoneda = m => m === 'ARS' ? 0 : m === 'USD' ? 1 : 2;
+  const monedas = Object.keys(porMoneda).sort((a,b) => ordenMoneda(a) - ordenMoneda(b) || a.localeCompare(b));
+
+  const subTablasHTML = monedas.map(moneda => {
+    const filasM = porMoneda[moneda].sort((a,b) => a.cuenta.localeCompare(b.cuenta));
+    let subTotal = 0;
+    const filasHTML = filasM.map(e => {
+      subTotal += e.saldoTotal;
+      return `<tr>
+        <td>${esc(e.cuenta)}</td>
+        <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
+        <td class="num bal">${fmtNum(e.saldoTotal)}</td>
+        <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="pn-subtabla">
+      <div class="pn-subtabla-header">
+        <div class="pn-subtabla-titulo">${moneda}</div>
+        <div class="pn-subtabla-total">${moneda} ${fmtNum(subTotal)}</div>
+      </div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla">
+        <thead><tr>
+          <th>Cuenta</th>
+          <th class="num">Ingresos</th>
+          <th class="num">Saldo real</th>
+          <th class="num">Egresos</th>
+        </tr></thead>
+        <tbody>${filasHTML}</tbody>
+      </table></div>
+    </div>`;
   }).join('');
-  /* Subtotal: convertimos saldoTotal a moneda elegida fila por fila.
-     Los flujos no se convierten — sumarlos sería sumar peras con manzanas. Mostramos "—". */
-  tabla.innerHTML = `
-    <thead><tr>
-      <th>Cuenta</th>
-      <th class="num">Ingresos</th>
-      <th class="num">Saldo real</th>
-      <th class="num">Egresos</th>
-    </tr></thead>
-    <tbody>${filasHTML}
-      <tr class="subtotal">
-        <td>Subtotal (en ${pnMoneda})</td>
-        <td class="num">—</td>
-        <td class="num bal">${warnFalta ? '<span class="pn-warn">⚠ N/A</span>' : fmtNum(subSaldo)}</td>
-        <td class="num">—</td>
-      </tr>
-    </tbody>`;
+
+  wrap.innerHTML = `<div class="pn-bloque">
+    <div class="pn-bloque-header">
+      <div class="pn-bloque-header-titulo">💧 Líquido</div>
+      <div class="pn-bloque-header-total">${totalTxt}</div>
+    </div>
+    ${subTablasHTML}
+  </div>`;
 }
 
 function renderBloqueInversiones(filas){
-  const tabla = document.getElementById('pn-inversiones');
+  const wrap = document.getElementById('pn-bloque-inversiones');
+  /* Agrupar por cuenta (Buenbit, Binance, Lemon, IOL) */
+  const porCuenta = {};
+  filas.forEach(e => {
+    if(!porCuenta[e.cuenta]) porCuenta[e.cuenta] = [];
+    porCuenta[e.cuenta].push(e);
+  });
+  /* Total general del bloque en USD */
+  let totalUSD = 0;
+  let warnTotal = false;
+  filas.forEach(e => {
+    const conv = convertirA(e.saldoTotal, e.moneda, 'USD');
+    if(conv === null) warnTotal = true;
+    else totalUSD += conv;
+  });
+  const totalTxt = warnTotal ? '<span class="pn-warn">⚠ parcial</span> USD ' + fmtNum(totalUSD) : 'USD ' + fmtNum(totalUSD);
+
   if(filas.length === 0){
-    tabla.innerHTML = '<tr><td class="pn-empty" colspan="5">Sin inversiones</td></tr>';
+    wrap.innerHTML = `<div class="pn-bloque">
+      <div class="pn-bloque-header">
+        <div class="pn-bloque-header-titulo">📈 Inversiones</div>
+        <div class="pn-bloque-header-total">USD 0</div>
+      </div>
+      <div class="pn-empty">Sin inversiones</div>
+    </div>`;
     return;
   }
-  let subSaldoUSD = 0;
-  let warnFalta = false;
-  const filasHTML = filas.map(e => {
-    const saldoUSD = convertirA(e.saldoTotal, e.moneda, 'USD');
-    let saldoUsdTxt;
-    if(saldoUSD === null){
-      saldoUsdTxt = '<span class="pn-warn">⚠ N/A</span>';
-      warnFalta = true;
-    } else {
-      saldoUsdTxt = fmtNum(saldoUSD);
-      subSaldoUSD += saldoUSD;
-    }
-    return `<tr>
-      <td>${esc(e.cuenta)}<span class="pn-mon-tag">${e.moneda}</span></td>
-      <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
-      <td class="num bal">${fmtNum(e.saldoTotal)}</td>
-      <td class="num bal">${saldoUsdTxt}</td>
-      <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
-    </tr>`;
+
+  /* Orden de cuentas: alfabético */
+  const cuentas = Object.keys(porCuenta).sort();
+  const subTablasHTML = cuentas.map(cuenta => {
+    const filasC = porCuenta[cuenta].sort((a,b) => a.moneda.localeCompare(b.moneda));
+    let subUSD = 0;
+    let warnSub = false;
+    const filasHTML = filasC.map(e => {
+      const saldoUSD = convertirA(e.saldoTotal, e.moneda, 'USD');
+      let saldoUsdTxt;
+      if(saldoUSD === null){
+        saldoUsdTxt = '<span class="pn-warn">⚠ N/A</span>';
+        warnSub = true;
+      } else {
+        saldoUsdTxt = fmtNum(saldoUSD);
+        subUSD += saldoUSD;
+      }
+      return `<tr>
+        <td>${esc(e.moneda)}</td>
+        <td class="num up">${e.ingresoPeriodo > 0 ? fmtNum(e.ingresoPeriodo) : '0'}</td>
+        <td class="num bal">${fmtNum(e.saldoTotal)}</td>
+        <td class="num bal">${saldoUsdTxt}</td>
+        <td class="num down">${e.egresoPeriodo > 0 ? fmtNum(e.egresoPeriodo) : '0'}</td>
+      </tr>`;
+    }).join('');
+    const subTotalTxt = warnSub ? '<span class="pn-warn">⚠ parcial</span> USD ' + fmtNum(subUSD) : 'USD ' + fmtNum(subUSD);
+    return `<div class="pn-subtabla">
+      <div class="pn-subtabla-header">
+        <div class="pn-subtabla-titulo">${esc(cuenta)}</div>
+        <div class="pn-subtabla-total">${subTotalTxt}</div>
+      </div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla">
+        <thead><tr>
+          <th>Activo</th>
+          <th class="num">Ingresos</th>
+          <th class="num">Saldo</th>
+          <th class="num">Saldo USD</th>
+          <th class="num">Egresos</th>
+        </tr></thead>
+        <tbody>${filasHTML}</tbody>
+      </table></div>
+    </div>`;
   }).join('');
-  tabla.innerHTML = `
-    <thead><tr>
-      <th>Cuenta</th>
-      <th class="num">Ingresos</th>
-      <th class="num">Saldo</th>
-      <th class="num">Saldo USD</th>
-      <th class="num">Egresos</th>
-    </tr></thead>
-    <tbody>${filasHTML}
-      <tr class="subtotal">
-        <td>Subtotal (en USD)</td>
-        <td class="num">—</td>
-        <td class="num">—</td>
-        <td class="num bal">${warnFalta ? '<span class="pn-warn">⚠ parcial</span> ' : ''}${fmtNum(subSaldoUSD)}</td>
-        <td class="num">—</td>
-      </tr>
-    </tbody>`;
+
+  wrap.innerHTML = `<div class="pn-bloque">
+    <div class="pn-bloque-header">
+      <div class="pn-bloque-header-titulo">📈 Inversiones</div>
+      <div class="pn-bloque-header-total">${totalTxt}</div>
+    </div>
+    ${subTablasHTML}
+  </div>`;
 }
 
 function renderBloquePasivos(stats, tarjetasUnicas){
-  const tabla = document.getElementById('pn-pasivos');
-  if(tarjetasUnicas.size === 0){
-    tabla.innerHTML = '<tr><td class="pn-empty" colspan="4">Sin tarjetas</td></tr>';
+  const wrap = document.getElementById('pn-bloque-pasivos');
+
+  /* Para cada tarjeta, juntar sus monedas usando calcularDeudaTarjeta.
+     Después agruparlas por moneda para mostrar tabla por moneda. */
+  const porMoneda = {}; /* { 'ARS': [{tarjeta, saldo, pagos, compras}, ...], 'USD': [...] } */
+  Array.from(tarjetasUnicas).sort().forEach(tarjeta => {
+    const md = calcularDeudaTarjeta(stats, tarjeta);
+    Object.keys(md).forEach(moneda => {
+      if(!porMoneda[moneda]) porMoneda[moneda] = [];
+      porMoneda[moneda].push({
+        tarjeta: tarjeta,
+        saldo: md[moneda].saldo,
+        pagosPeriodo: md[moneda].pagosPeriodo,
+        comprasPeriodo: md[moneda].comprasPeriodo
+      });
+    });
+  });
+
+  /* Total general en USD */
+  let totalUSD = 0;
+  let warnTotal = false;
+  Object.keys(porMoneda).forEach(moneda => {
+    porMoneda[moneda].forEach(t => {
+      const conv = convertirA(t.saldo, moneda, 'USD');
+      if(conv === null) warnTotal = true;
+      else totalUSD += conv;
+    });
+  });
+  const totalTxt = warnTotal ? '<span class="pn-warn">⚠ parcial</span> USD ' + fmtNum(totalUSD) : 'USD ' + fmtNum(totalUSD);
+
+  if(tarjetasUnicas.size === 0 || Object.keys(porMoneda).length === 0){
+    wrap.innerHTML = `<div class="pn-bloque">
+      <div class="pn-bloque-header">
+        <div class="pn-bloque-header-titulo">💳 Pasivos (deuda)</div>
+        <div class="pn-bloque-header-total danger">USD 0</div>
+      </div>
+      <div class="pn-empty">Sin tarjetas</div>
+    </div>`;
     return;
   }
-  let subPagos = 0, subDeuda = 0, subCompras = 0;
-  let warnFalta = false;
-  const filasHTML = [];
-  /* Para pasivos: por simplicidad mostramos UNA fila por tarjeta consolidada en moneda elegida.
-     Si una tarjeta tiene movimientos en varias monedas, las sumamos convirtiendo. */
-  Array.from(tarjetasUnicas).sort().forEach(tarjeta => {
-    const monedasData = calcularDeudaTarjeta(stats, tarjeta);
-    /* Convertir y sumar todas las monedas a la moneda elegida */
-    let pagosTotal = 0, deudaTotal = 0, comprasTotal = 0;
-    let alguna = false;
-    Object.keys(monedasData).forEach(moneda => {
-      const m = monedasData[moneda];
-      const pagos = convertirA(m.pagosPeriodo, moneda, pnMoneda);
-      const deuda = convertirA(m.saldo, moneda, pnMoneda);
-      const compras = convertirA(m.comprasPeriodo, moneda, pnMoneda);
-      if(pagos === null || deuda === null || compras === null){ warnFalta = true; return; }
-      pagosTotal += pagos;
-      deudaTotal += deuda;
-      comprasTotal += compras;
-      alguna = true;
-    });
-    if(!alguna) return;
-    /* En tu modelo: saldoTotal de tarjeta es NEGATIVO (deuda).
-       deudaReal = -saldoTotal. Si saldoTotal=-620k, deudaReal=620k pero la mostramos con signo "-" para indicar pasivo. */
-    const deudaMostrar = deudaTotal; /* ya tiene signo negativo */
-    subPagos += pagosTotal;
-    subDeuda += deudaMostrar;
-    subCompras += comprasTotal;
-    filasHTML.push(`<tr>
-      <td>${esc(tarjeta)}</td>
-      <td class="num up">${fmtNum(pagosTotal)}</td>
-      <td class="num danger">${fmtNum(deudaMostrar)}</td>
-      <td class="num down">${fmtNum(comprasTotal)}</td>
-    </tr>`);
-  });
-  tabla.innerHTML = `
-    <thead><tr>
-      <th>Tarjeta</th>
-      <th class="num">Pagos</th>
-      <th class="num">Deuda real</th>
-      <th class="num">Compras</th>
-    </tr></thead>
-    <tbody>${filasHTML.join('')}
-      <tr class="subtotal">
-        <td>Subtotal (en ${pnMoneda})</td>
-        <td class="num">${fmtNum(subPagos)}</td>
-        <td class="num danger">${warnFalta ? '<span class="pn-warn">⚠ parcial</span> ' : ''}${fmtNum(subDeuda)}</td>
-        <td class="num">${fmtNum(subCompras)}</td>
-      </tr>
-    </tbody>`;
+
+  /* Orden ARS, USD, resto */
+  const ordenMoneda = m => m === 'ARS' ? 0 : m === 'USD' ? 1 : 2;
+  const monedas = Object.keys(porMoneda).sort((a,b) => ordenMoneda(a) - ordenMoneda(b) || a.localeCompare(b));
+
+  const subTablasHTML = monedas.map(moneda => {
+    const filasM = porMoneda[moneda].sort((a,b) => a.tarjeta.localeCompare(b.tarjeta));
+    let subSaldo = 0;
+    const filasHTML = filasM.map(t => {
+      subSaldo += t.saldo;
+      return `<tr>
+        <td>${esc(t.tarjeta)}</td>
+        <td class="num up">${fmtNum(t.pagosPeriodo)}</td>
+        <td class="num danger">${fmtNum(t.saldo)}</td>
+        <td class="num down">${fmtNum(t.comprasPeriodo)}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="pn-subtabla">
+      <div class="pn-subtabla-header">
+        <div class="pn-subtabla-titulo">${moneda}</div>
+        <div class="pn-subtabla-total danger">${moneda} ${fmtNum(subSaldo)}</div>
+      </div>
+      <div class="pn-tabla-wrap"><table class="pn-tabla">
+        <thead><tr>
+          <th>Tarjeta</th>
+          <th class="num">Pagos</th>
+          <th class="num">Deuda real</th>
+          <th class="num">Compras</th>
+        </tr></thead>
+        <tbody>${filasHTML}</tbody>
+      </table></div>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `<div class="pn-bloque">
+    <div class="pn-bloque-header">
+      <div class="pn-bloque-header-titulo">💳 Pasivos (deuda)</div>
+      <div class="pn-bloque-header-total danger">${totalTxt}</div>
+    </div>
+    ${subTablasHTML}
+  </div>`;
 }
 
 function renderResumenPN(liquidoFiltrado, inversionesFiltradas, stats, tarjetasUnicas){
