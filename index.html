@@ -151,6 +151,22 @@ input,select,textarea{font-family:inherit;outline:none}
 .pn-mon-tag{font-size:10px;color:var(--muted);margin-left:6px;font-weight:400;}
 .pn-warn{color:var(--warn);font-size:11px;}
 .pn-empty{padding:14px;text-align:center;color:var(--muted);font-size:12px;}
+
+/* FIX 12: widget última carga */
+.ultima-carga{margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.ultima-carga-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;cursor:pointer;user-select:none;transition:background .15s;}
+.ultima-carga-header:hover{background:var(--card2);}
+.ultima-carga-resumen{font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ultima-carga-resumen .uc-label{color:var(--muted);margin-right:6px;}
+.ultima-carga-resumen .uc-monto{color:var(--accent);font-weight:600;}
+.ultima-carga-toggle{font-size:14px;color:var(--muted);margin-left:8px;flex-shrink:0;transition:transform .2s;}
+.ultima-carga.expanded .ultima-carga-toggle{transform:rotate(180deg);}
+.ultima-carga-detalle{display:none;padding:0 12px 10px 12px;border-top:1px solid var(--border);}
+.ultima-carga.expanded .ultima-carga-detalle{display:block;}
+.uc-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid var(--border);}
+.uc-row:last-child{border-bottom:none;}
+.uc-key{color:var(--muted);}
+.uc-val{color:var(--text);font-weight:500;text-align:right;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 textarea.form-control{resize:vertical;min-height:70px}
 select.form-control{cursor:pointer}
@@ -307,6 +323,15 @@ td{padding:8px 10px;color:var(--text)}
       <button class="btn btn-secondary" onclick="cargarManual()" style="flex:1">✍️ Manual</button>
     </div>
     <div id="groq-loader" class="loader" style="display:none"><span class="spinner"></span>Procesando…</div>
+
+    <!-- FIX 12: widget "última carga" — sutil, debajo de los botones de acción -->
+    <div id="ultima-carga-widget" class="ultima-carga" style="display:none;">
+      <div class="ultima-carga-header" onclick="toggleUltimaCarga()">
+        <div class="ultima-carga-resumen" id="ultima-carga-resumen">—</div>
+        <div class="ultima-carga-toggle" id="ultima-carga-toggle">▾</div>
+      </div>
+      <div class="ultima-carga-detalle" id="ultima-carga-detalle"></div>
+    </div>
     <div id="form-resultado" style="display:none;margin-top:16px">
       <div class="divider"></div>
       <div class="card-title" style="margin-bottom:12px">Confirmá los datos</div>
@@ -667,7 +692,7 @@ let allRows=[], tablasCuentas=[], tablasCategorias=[], tablasTipos=[];
 let config={}, tasas={}, sortState={}, trackerPeriod='mes';
 const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
-window.addEventListener('DOMContentLoaded',()=>{ cargarConfig(); cargarTasas(); cargarSheet(); });
+window.addEventListener('DOMContentLoaded',()=>{ cargarConfig(); cargarTasas(); cargarSheet().then(()=>actualizarUltimaCarga()); });
 
 function cargarConfig(){
   config=JSON.parse(localStorage.getItem('ft_config')||'{}');
@@ -742,6 +767,8 @@ async function cargarSheet(){
     tablasTipos=resCuentas.value.tipos||[];
     poblarDropdowns();
   }
+  /* FIX 12: actualizar widget última carga */
+  actualizarUltimaCarga();
 }
 
 function poblarFiltros(){
@@ -1007,6 +1034,17 @@ async function _ejecutarGuardado(){
     });
     showToast(`✓ ${rows.length} guardada(s)`);
     setSyncDot('ok');
+    /* FIX 12: agregar las filas guardadas a allRows local para actualizar widget al instante.
+       Mapeo del array al objeto que usa el frontend (mismo shape que action=read devuelve). */
+    rows.forEach(r => {
+      allRows.push({
+        fecha: r[0]||'', monto: r[1]||0, moneda: r[2]||'ARS',
+        descripcion: r[3]||'', comentario: r[4]||'', medio_pago: r[5]||'',
+        tipo: r[6]||'', categoria: r[7]||'',
+        cuota: r[8]||'', cuotas: r[9]||''
+      });
+    });
+    actualizarUltimaCarga();
     resetForm();
   } catch(e){
     showToast('Error al guardar');
@@ -1921,6 +1959,84 @@ function renderIgChart(meses, byTipoMes){
 }
 
 document.getElementById('txInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();procesarTx();} });
+
+/* ════════════════════════════════════════════════════════
+   FIX 12 — Widget "última carga"
+   Muestra la última fila del Sheet en la pestaña Cargar, debajo de los botones.
+   Asume que el Sheet conserva orden de inserción (sin reordenes manuales).
+   ════════════════════════════════════════════════════════ */
+
+function actualizarUltimaCarga(){
+  const widget = document.getElementById('ultima-carga-widget');
+  if(!widget) return;
+  if(!allRows || allRows.length === 0){
+    widget.style.display = 'none';
+    return;
+  }
+  /* Última fila = la última que devolvió el backend (orden natural del Sheet) */
+  const tx = allRows[allRows.length - 1];
+  if(!tx || (!tx.descripcion && !tx.medio_pago)){
+    widget.style.display = 'none';
+    return;
+  }
+
+  /* Resumen 1 línea */
+  const fechaFmt = formatearFechaCorta(tx.fecha);
+  const montoFmt = fmtNum(parseFloat(tx.monto)||0);
+  const moneda = String(tx.moneda||'ARS');
+  const en = String(tx.descripcion||'').trim() || '—';
+  const resumen = document.getElementById('ultima-carga-resumen');
+  resumen.innerHTML = `<span class="uc-label">Última:</span>${esc(fechaFmt)} · ${esc(en)} <span class="uc-monto">${montoFmt} ${moneda}</span>`;
+
+  /* Detalle expandido */
+  const detalle = document.getElementById('ultima-carga-detalle');
+  const con = String(tx.medio_pago||'').trim();
+  const cat = String(tx.categoria||'').trim();
+  const tipo = String(tx.tipo||'').trim();
+  const com = String(tx.comentario||'').trim();
+  const cuota = tx.cuota ? `${tx.cuota}/${tx.cuotas||'?'}` : '';
+  const filas = [
+    ['Fecha', fechaFmt],
+    ['Monto', `${montoFmt} ${moneda}`],
+    ['EN (destino)', en],
+    ['CON (origen)', con || '—'],
+    ['Categoría', cat || '—'],
+    ['Tipo', tipo || '—'],
+  ];
+  if(cuota) filas.push(['Cuota', cuota]);
+  if(com) filas.push(['Comentario', com]);
+  detalle.innerHTML = filas.map(([k,v]) =>
+    `<div class="uc-row"><span class="uc-key">${esc(k)}</span><span class="uc-val">${esc(v)}</span></div>`
+  ).join('');
+
+  widget.style.display = 'block';
+}
+
+function toggleUltimaCarga(){
+  const w = document.getElementById('ultima-carga-widget');
+  if(w) w.classList.toggle('expanded');
+}
+
+/* Helper: convierte fecha a formato corto dd/mm/yy */
+function formatearFechaCorta(fechaStr){
+  if(!fechaStr) return '—';
+  const s = String(fechaStr);
+  /* Formato YYYY-MM-DD */
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m) return `${m[3]}/${m[2]}/${m[1].slice(2)}`;
+  /* Formato DD/MM/YYYY */
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m) return `${m[1].padStart(2,'0')}/${m[2].padStart(2,'0')}/${m[3].slice(2)}`;
+  /* Caer a Date parsing */
+  const d = new Date(s);
+  if(!isNaN(d.getTime())){
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = String(d.getFullYear()).slice(2);
+    return `${dd}/${mm}/${yy}`;
+  }
+  return s;
+}
 
 /* ════════════════════════════════════════════════════════
    FIX 9 — Pestaña Patrimonio (PN)
