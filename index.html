@@ -551,6 +551,8 @@ td{padding:8px 10px;color:var(--text)}
         <button class="pn-moneda-btn active" id="pn-mon-ars" onclick="setPNMoneda('ARS')">ARS</button>
         <button class="pn-moneda-btn" id="pn-mon-usd" onclick="setPNMoneda('USD')">USD</button>
       </div>
+      <!-- FIX 9d: botón refrescar saldos iniciales desde el Sheet -->
+      <button class="pn-moneda-btn" onclick="refrescarPN()" title="Refrescar saldos iniciales y movimientos desde el Sheet">↻</button>
     </div>
 
     <!-- Bloque Líquido -->
@@ -1873,7 +1875,8 @@ document.getElementById('txInput').addEventListener('keydown',e=>{ if(e.key==='E
 
 let pnMoneda = 'ARS';
 let pnSaldosIniciales = []; /* [{cuenta, moneda, saldo}] */
-let _pnSaldosCargados = false;
+/* FIX 9d: removido _pnSaldosCargados — ahora siempre se refresca al renderizar Patrimonio.
+   El costo es 1 fetch extra por re-render, pero garantiza datos frescos sin tener que recargar la app. */
 
 /* Cuentas de inversión (resto Balance = Líquido) */
 const CUENTAS_INVERSION = ['Buenbit','Binance','Lemon','IOL'];
@@ -1906,14 +1909,13 @@ function setPNMoneda(mon){
 
 /* Cargar saldos iniciales una vez al entrar a la pestaña */
 async function cargarSaldosIniciales(){
-  if(_pnSaldosCargados) return;
+  /* FIX 9d: siempre refrescar (sin cache) para que cambios en el Sheet aparezcan al instante */
   const url = config.scriptUrl;
   if(!url) return;
   try{
     const r = await fetch(url + '?action=saldos');
     const d = await r.json();
     if(d.status==='ok') pnSaldosIniciales = d.rows || [];
-    _pnSaldosCargados = true;
   } catch(e){ console.error('Error saldos iniciales:', e); }
 }
 
@@ -2097,6 +2099,15 @@ function renderPatrimonio(){
     inicializarFiltrosPN();
     _renderPatrimonioCore();
   });
+}
+
+/* FIX 9d: refresca movimientos + saldos iniciales desde el Sheet, después re-renderiza */
+async function refrescarPN(){
+  showToast('Refrescando…');
+  await cargarSheet(); /* refresca allRows + tablasCuentas + tablasCategorias + tablasTipos */
+  await cargarSaldosIniciales(); /* refresca pnSaldosIniciales */
+  _renderPatrimonioCore();
+  showToast('✓ Patrimonio actualizado');
 }
 
 function _renderPatrimonioCore(){
