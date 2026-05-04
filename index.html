@@ -353,11 +353,6 @@ td{padding:8px 10px;color:var(--text)}
           <input type="number" class="form-control" id="f-cuotas" min="1">
         </div>
       </div>
-      <!-- FIX 6: aviso cuando Groq detecta que hay una segunda tx implícita -->
-      <div id="aviso-segunda-tx" style="display:none;background:#2a2416;border:1px solid var(--warn);border-radius:var(--r2);padding:10px 12px;margin-bottom:12px;font-size:13px;line-height:1.4;color:var(--text);">
-        <div style="font-weight:600;color:var(--warn);margin-bottom:4px;">📌 Detecté una operación compuesta</div>
-        <div style="color:var(--muted);">Guardá primero esta transacción y cargá la complementaria después. Ejemplo: compra de USD → guardar egreso ARS ahora, ingreso USD en la siguiente carga.</div>
-      </div>
       <button class="btn btn-primary" id="btnGuardar" onclick="guardarTx()">💾 Guardar en Sheets</button>
       <div style="height:8px"></div>
       <button class="btn btn-secondary" onclick="resetForm()">Cancelar</button>
@@ -820,16 +815,14 @@ REGLAS DE DATOS:
 3. Si el nombre se parece a uno de la lista aunque esté mal escrito, usá el de la lista.
 4. Monto SIEMPRE positivo.
 5. Sin fecha → ${hoy}. Moneda default: ARS.
-6. SIEMPRE devolvé UNA SOLA transacción. NUNCA devuelvas dos. Si detectás compra de activos (USD, USDT, BTC, NVDA, ETF, etc.), transferencia entre cuentas, o devolución, devolvé SOLO la transacción principal mencionada y marcá "requiere_segunda_tx": true.
-7. Para compra de activos: la transacción principal es el EGRESO de la moneda que pagás (ej: "compré 100 USD a 1480 desde Buenbit" → monto=148000, moneda=ARS, descripcion=USD, medio_pago=Buenbit).
-8. Para devoluciones: la transacción principal es el INGRESO del monto devuelto (EN = cuenta que recibe, CON = comercio que devuelve).
+6. SIEMPRE devolvé UNA SOLA transacción. NUNCA devuelvas dos.
 
 Nombres válidos para EN: ${listaEN}
 Nombres válidos para CON: ${listaCON}
 Categorías válidas: ${listaCat}
 
 Respondé con JSON OBJECT (no array):
-{"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"nombre exacto EN","medio_pago":"nombre exacto CON","categoria":"categoría exacta","comentario":"","cuota":null,"cuotas":null,"requiere_segunda_tx":false}`;
+{"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"nombre exacto EN","medio_pago":"nombre exacto CON","categoria":"categoría exacta","comentario":"","cuota":null,"cuotas":null}`;
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:500})});
     /* FIX 7a: manejo robusto de errores HTTP de Groq */
@@ -876,10 +869,6 @@ Respondé con JSON OBJECT (no array):
     document.getElementById('form-resultado').style.display='block';
     /* FIX 5: chequear UI de fecha inmediatamente después de autocompletar */
     chequearFechaUI();
-    /* FIX 6: aviso cuando Groq detecta que hay una segunda tx implícita */
-    if(tx.requiere_segunda_tx){
-      mostrarAvisoSegundaTx();
-    }
   } catch(e){
     /* FIX 7a: error de red o inesperado — fallback a carga manual */
     console.error('[procesarTx] error inesperado:', e);
@@ -901,26 +890,29 @@ function cargarManual(){
   document.getElementById('f-cuota').value='';
   document.getElementById('f-cuotas').value='';
   document.getElementById('form-resultado').style.display='block';
-  ocultarAvisoSegundaTx();
   chequearFechaUI();
   document.getElementById('f-monto').focus();
-}
-
-/* FIX 6: aviso discreto cuando se detecta compra de activos / devolución / transferencia */
-function mostrarAvisoSegundaTx(){
-  const div=document.getElementById('aviso-segunda-tx');
-  if(div) div.style.display='block';
-}
-function ocultarAvisoSegundaTx(){
-  const div=document.getElementById('aviso-segunda-tx');
-  if(div) div.style.display='none';
 }
 
 async function guardarTx(){
   const url=config.scriptUrl;
   if(!url){ showToast('Configurá la URL del Script ⚙️'); return; }
-  /* FIX 5: chequear fecha sospechosa ANTES de guardar; si lo es, popup de confirmación */
+
   const fecha=document.getElementById('f-fecha').value;
+  const cuotaInicial=parseInt(document.getElementById('f-cuota').value)||1;
+  const totalCuotas=parseInt(document.getElementById('f-cuotas').value)||1;
+  const cuotasAGenerar=Math.max(0, totalCuotas - cuotaInicial + 1);
+
+  /* FIX 11: si hay más de 1 cuota a generar, mostrar modal específico de cuotas
+     (no el de fecha sospechosa, porque esas fechas futuras son legítimas). */
+  if(cuotasAGenerar > 1){
+    document.getElementById('btnGuardar').disabled=true;
+    _guardadoPendiente=_ejecutarGuardado;
+    mostrarModalCuotas(fecha, cuotaInicial, totalCuotas, cuotasAGenerar);
+    return;
+  }
+
+  /* FIX 5: chequear fecha sospechosa SOLO si no hay cuotas a generar */
   const estado=chequearFechaSospechosa(fecha);
   if(estado==='mes-anterior' || estado==='año-distinto'){
     document.getElementById('btnGuardar').disabled=true;
@@ -931,7 +923,6 @@ async function guardarTx(){
       document.getElementById('f-moneda').value,
       document.getElementById('f-en').value.trim(),
       document.getElementById('f-con').value.trim(),
-      /* categoría no existe como input; se deriva en backend. Pasamos EN como hint para contexto visual. */
       '(auto)',
       estado
     );
@@ -941,25 +932,71 @@ async function guardarTx(){
   await _ejecutarGuardado();
 }
 
+/* FIX 11: modal específico para confirmación de cuotas auto-generadas */
+function mostrarModalCuotas(fechaBase, cuotaInicial, totalCuotas, cuotasAGenerar){
+  const en=document.getElementById('f-en').value.trim();
+  const monto=parseFloat(document.getElementById('f-monto').value)||0;
+  const moneda=document.getElementById('f-moneda').value;
+  /* Calcular fecha de la última cuota a generar */
+  const offsetUltima=cuotasAGenerar-1;
+  const fechaUltima=offsetUltima===0 ? fechaBase : sumarMesesPreservandoDia(fechaBase, offsetUltima);
+  const [yU,mU,dU]=fechaUltima.split('-');
+  const fechaUltimaFmt=`${dU}/${mU}/${yU}`;
+  const [yB,mB,dB]=fechaBase.split('-');
+  const fechaBaseFmt=`${dB}/${mB}/${yB}`;
+  const totalMonto=monto*cuotasAGenerar;
+
+  const det=document.getElementById('modal-detail');
+  document.querySelector('#modal-confirmar .modal-title').textContent='💳 Confirmar cuotas';
+  document.getElementById('modal-mensaje').innerHTML=
+    `Se van a generar <b>${cuotasAGenerar} filas</b> en el Sheet, una por cada cuota desde la <b>cuota ${cuotaInicial}</b> hasta la <b>cuota ${totalCuotas}</b>.`;
+  det.innerHTML=`
+    <div class="modal-detail-row"><span class="modal-detail-label">Concepto</span><span class="modal-detail-value">${esc(en)||'—'}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Monto por cuota</span><span class="modal-detail-value">${fmtNum(monto)} ${moneda}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Total a pagar</span><span class="modal-detail-value highlight">${fmtNum(totalMonto)} ${moneda}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Primera cuota</span><span class="modal-detail-value">${fechaBaseFmt}</span></div>
+    <div class="modal-detail-row"><span class="modal-detail-label">Última cuota</span><span class="modal-detail-value highlight">${fechaUltimaFmt}</span></div>`;
+  document.getElementById('modal-confirmar').classList.add('active');
+}
+
 async function _ejecutarGuardado(){
   const url=config.scriptUrl;
   document.getElementById('btnGuardar').disabled=true;
   setSyncDot('loading');
-  const fila=[
-    document.getElementById('f-fecha').value,
-    parseFloat(document.getElementById('f-monto').value)||0,
-    document.getElementById('f-moneda').value,
-    document.getElementById('f-en').value.trim(),
-    document.getElementById('f-comentario').value.trim(),
-    document.getElementById('f-con').value.trim(),
-    '',
-    '',
-    document.getElementById('f-cuota').value||'',
-    document.getElementById('f-cuotas').value||'',
-    '','',
-  ];
-  const rows=[fila];
-  /* FIX 6: ya no hay _pendingTx2, siempre 1 sola transacción por vez */
+
+  /* FIX 11: leer datos del form una sola vez */
+  const fechaBase=document.getElementById('f-fecha').value;
+  const monto=parseFloat(document.getElementById('f-monto').value)||0;
+  const moneda=document.getElementById('f-moneda').value;
+  const en=document.getElementById('f-en').value.trim();
+  const comentario=document.getElementById('f-comentario').value.trim();
+  const con=document.getElementById('f-con').value.trim();
+  const cuotaInicial=parseInt(document.getElementById('f-cuota').value)||1;
+  const totalCuotas=parseInt(document.getElementById('f-cuotas').value)||1;
+
+  /* FIX 11: si totalCuotas > 1, generar todas las cuotas automáticamente.
+     Cuota 1 mantiene fecha original; cada siguiente suma 1 mes preservando el día.
+     Ejemplo: 6 cuotas desde 2 mayo → 2 jun / 2 jul / 2 ago / 2 sep / 2 nov */
+  const rows=[];
+  const cuotasAGenerar=Math.max(1, totalCuotas);
+  for(let i=cuotaInicial; i<=cuotasAGenerar; i++){
+    const offset=i-cuotaInicial; /* 0 para la primera cuota a generar */
+    const fechaCuota=offset===0 ? fechaBase : sumarMesesPreservandoDia(fechaBase, offset);
+    rows.push([
+      fechaCuota,
+      monto,
+      moneda,
+      en,
+      comentario,
+      con,
+      '',
+      '',
+      i,
+      totalCuotas,
+      '','',
+    ]);
+  }
+
   try{
     // no-cors: Apps Script acepta esto, no podemos leer la respuesta pero los datos se guardan
     await fetch(url, {
@@ -993,7 +1030,7 @@ function jsonpPost(url, payload){
   });
 }
 
-function resetForm(){ document.getElementById('txInput').value=''; document.getElementById('form-resultado').style.display='none'; ocultarAvisoSegundaTx(); }
+function resetForm(){ document.getElementById('txInput').value=''; document.getElementById('form-resultado').style.display='none'; }
 
 function renderHistorial(){
   let rows=allRows;
@@ -1126,6 +1163,22 @@ function toggleCat(h){ const it=h.closest('.cat-item'); const was=it.classList.c
 
 function str(v){ return String(v||'').trim(); }
 
+/* FIX 11: suma N meses a una fecha preservando el día.
+   Si el día no existe en el mes destino (ej: 31 de febrero), usa el último día del mes.
+   Ejemplos: 2 mayo + 1 mes = 2 junio; 31 enero + 1 mes = 28 (o 29) feb */
+function sumarMesesPreservandoDia(fechaStr, n){
+  const m=fechaStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return fechaStr;
+  const y=parseInt(m[1]), mes=parseInt(m[2]), dia=parseInt(m[3]);
+  const target=new Date(y, mes-1+n, 1);
+  const ultimoDiaTarget=new Date(target.getFullYear(), target.getMonth()+1, 0).getDate();
+  const diaFinal=Math.min(dia, ultimoDiaTarget);
+  const yFinal=target.getFullYear();
+  const mesFinal=String(target.getMonth()+1).padStart(2,'0');
+  const dFinal=String(diaFinal).padStart(2,'0');
+  return `${yFinal}-${mesFinal}-${dFinal}`;
+}
+
 /* FIX 1: sanitiza fechas mal parseadas por la IA — si quedan muy en el pasado/futuro, las acerca al año actual */
 function sanitizarFecha(f){
   if(!f || typeof f!=='string') return f;
@@ -1189,6 +1242,8 @@ function chequearFechaUI(){
 let _guardadoPendiente=null;
 function confirmarGuardado(){
   document.getElementById('modal-confirmar').classList.remove('active');
+  /* FIX 11: restaurar título por defecto */
+  document.querySelector('#modal-confirmar .modal-title').textContent='⚠️ Confirmá la fecha';
   if(_guardadoPendiente){
     const fn=_guardadoPendiente;
     _guardadoPendiente=null;
@@ -1197,6 +1252,8 @@ function confirmarGuardado(){
 }
 function cancelarGuardado(){
   document.getElementById('modal-confirmar').classList.remove('active');
+  /* FIX 11: restaurar título por defecto */
+  document.querySelector('#modal-confirmar .modal-title').textContent='⚠️ Confirmá la fecha';
   _guardadoPendiente=null;
   document.getElementById('btnGuardar').disabled=false;
   setSyncDot('ok');
