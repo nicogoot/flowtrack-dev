@@ -15,6 +15,10 @@
   --accent:#00d4aa;--danger:#ff4757;--warn:#ffa502;--green:#2ed573;
   --font:'DM Sans',system-ui,sans-serif;--mono:'DM Mono','Fira Code',monospace;
   --r:12px;--r2:8px;
+  /* FIX 23: tokens para fondos de estado y header (tema oscuro = valores originales) */
+  --warn-bg:#3a2d1a;--danger-bg:#3a1f1a;--ok-bg:#1a3a2d;--ok-border:#2f5142;
+  --header-bg:var(--bg);--header-text:var(--text);--header-logo:var(--accent);--header-line:var(--border);
+  --on-accent:#000;--accent-fill:var(--accent);--chart-grid:rgba(255,255,255,0.05);
   /* STAGING: variables del ambiente de prueba */
   --staging-orange:#ff8c42;
   --staging-beige:#d4a574;
@@ -68,8 +72,8 @@ input,select,textarea{font-family:inherit;outline:none}
 .form-control{width:100%;padding:10px 12px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--text);font-size:14px;transition:border .15s}
 .form-control:focus{border-color:var(--accent)}
 /* FIX 5: highlight visual en fecha sospechosa */
-.form-control.fecha-warning{background:#3a2d1a;border-color:var(--warn);border-width:2px;}
-.form-control.fecha-danger{background:#3a1f1a;border-color:var(--danger);border-width:2px;}
+.form-control.fecha-warning{background:var(--warn-bg);border-color:var(--warn);border-width:2px;}
+.form-control.fecha-danger{background:var(--danger-bg);border-color:var(--danger);border-width:2px;}
 .fecha-warning-label{font-size:11px;color:var(--warn);margin-top:4px;display:none;}
 .fecha-danger-label{font-size:11px;color:var(--danger);margin-top:4px;display:none;font-weight:600;}
 .fecha-warning-label.show, .fecha-danger-label.show{display:block;}
@@ -100,7 +104,7 @@ input,select,textarea{font-family:inherit;outline:none}
 .pend-name{font-size:14px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pend-stats{font-size:11px;color:var(--muted);margin-top:2px;}
 .pend-select{flex:0 0 140px;font-size:12px;padding:6px 8px;border-radius:var(--r2);background:var(--card2);border:1px solid var(--border);color:var(--text);}
-.pend-select.changed{background:#1a3a2d;border-color:var(--green);}
+.pend-select.changed{background:var(--ok-bg);border-color:var(--green);}
 .pend-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;}
 .pend-summary{font-size:13px;color:var(--muted);margin-bottom:12px;}
 .pend-summary b{color:var(--accent);}
@@ -111,7 +115,7 @@ input,select,textarea{font-family:inherit;outline:none}
 .pn-total-alt{font-size:13px;color:var(--muted);margin-bottom:12px;}
 .pn-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
 .pn-card{background:var(--card2);border-radius:var(--r2);padding:8px 10px;}
-.pn-card-danger{background:#3a1f1f;}
+.pn-card-danger{background:var(--danger-bg);}
 .pn-card-label{font-size:11px;color:var(--muted);}
 .pn-card-danger .pn-card-label{color:var(--danger);}
 .pn-card-value{font-size:15px;font-weight:600;color:var(--text);margin-top:2px;}
@@ -123,7 +127,7 @@ input,select,textarea{font-family:inherit;outline:none}
 .pn-fecha{flex:1;min-width:130px;font-size:12px;padding:7px 9px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--text);}
 .pn-moneda-toggle{display:flex;gap:3px;}
 .pn-moneda-btn{font-size:11px;padding:7px 12px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-weight:500;}
-.pn-moneda-btn.active{background:var(--accent);color:#0a0c10;border-color:var(--accent);}
+.pn-moneda-btn.active{background:var(--accent-fill);color:var(--on-accent);border-color:var(--accent-fill);}
 .pn-bloque{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;}
 .pn-bloque-titulo{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
 /* FIX 10: header con título y total a la derecha */
@@ -169,8 +173,8 @@ input,select,textarea{font-family:inherit;outline:none}
 .uc-val{color:var(--text);font-weight:500;text-align:right;}
 
 /* FIX 15: duplicados — botón activo + filas agrupadas por color */
-#btn-toggle-duplicados.active{background:var(--warn);color:#0a0c10;border-color:var(--warn);font-weight:600;}
-.dup-banner{background:#3a2d1a;border:1px solid var(--warn);color:var(--warn);padding:8px 12px;border-radius:var(--r2);font-size:12px;margin-bottom:10px;font-weight:500;}
+#btn-toggle-duplicados.active{background:var(--warn);color:var(--on-warn,#0a0c10);border-color:var(--warn);font-weight:600;}
+.dup-banner{background:var(--warn-bg);border:1px solid var(--warn);color:var(--warn);padding:8px 12px;border-radius:var(--r2);font-size:12px;margin-bottom:10px;font-weight:500;}
 .dup-banner b{color:var(--text);}
 tr.dup-grupo-0{background:rgba(255,165,2,0.08)!important;}
 tr.dup-grupo-1{background:rgba(46,213,115,0.08)!important;}
@@ -186,12 +190,12 @@ tr.dup-del td:first-child{border-left:3px solid var(--danger)!important;}
 /* FIX 16: Reconciliación */
 .rec-titulo-bloque{font-size:12px;font-weight:600;color:var(--text);margin:14px 0 8px;}
 .rec-row{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:10px;margin-bottom:8px;}
-.rec-row.imputable{border-color:#2f5142;}
+.rec-row.imputable{border-color:var(--ok-border);}
 .rec-row-titulo{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .rec-row-nombre{font-weight:600;font-size:13px;color:var(--text);}
 .rec-row-mon{font-size:10px;color:var(--muted);font-weight:400;margin-left:4px;}
 .rec-row-aux{font-size:10px;color:var(--muted);}
-.rec-row-aux-imputable{background:#1c2f25;border:1px solid #2f5142;color:var(--green);font-size:9px;padding:1px 5px;border-radius:4px;}
+.rec-row-aux-imputable{background:var(--ok-bg);border:1px solid var(--ok-border);color:var(--green);font-size:9px;padding:1px 5px;border-radius:4px;}
 .rec-row-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:center;}
 .rec-cell-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
 .rec-cell-val{padding:5px 7px;font-size:13px;color:var(--text);font-variant-numeric:tabular-nums;}
@@ -272,6 +276,58 @@ tr.dup-del td:first-child{border-left:3px solid var(--danger)!important;}
 .pre-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);}
 
 /* Modal: lista de EN clickeables */
+
+/* ══ FIX 23: header en franja de ancho completo ══ */
+.app-header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--header-line);}
+body.theme-lite .app-header{border-bottom-width:2px;}
+.app-header-inner{width:100%;max-width:480px;margin:0 auto;}
+.app-header .topbar{position:static;background:transparent;border-bottom:none;padding:16px 16px 8px;}
+.app-header .tabnav{position:static;background:transparent;border-bottom:none;padding:6px 12px 10px;}
+.app-header .topbar-logo{font-size:20px;color:var(--header-logo);}
+.app-header .topbar-logo span{color:var(--header-text);}
+.staging-mode .app-header{top:22px;}
+.staging-mode .app-header .topbar{border-bottom:none;}
+@media (min-width:900px){
+  .app-header-inner{max-width:none;width:80vw;}
+  .app-header .topbar{padding:22px 4px 12px;}
+  .app-header .topbar-logo{font-size:28px;letter-spacing:-1px;}
+  .app-header .btn-icon{width:42px;height:42px;font-size:18px;}
+  .app-header .tabnav{padding:4px 0 14px;gap:6px;}
+  .app-header .tab{font-size:14px;padding:9px 18px;}
+  #app{max-width:820px;}
+}
+
+/* ══ FIX 23: tema Lite (grises, blancos, negros, verde lima y dorado) ══ */
+body.theme-lite{
+  --bg:#f2f2ee;--surface:#fafaf7;--card:#ffffff;--card2:#efefe9;
+  --border:#e0e0d7;--border2:#c9c9be;
+  --text:#151515;--muted:#6b6b62;
+  --accent:#4d7c0f;        /* lima oscuro: legible como texto sobre blanco */
+  --accent-fill:#a3e635;   /* lima brillante: rellenos de botones */
+  --on-accent:#111111;
+  --gold:#b8860b;--gold-soft:#f6edd3;
+  --green:#3f7d10;--danger:#c53030;--warn:#b7791f;--on-warn:#ffffff;
+  --warn-bg:#fbf3dc;--danger-bg:#fdecec;--ok-bg:#eef7dd;--ok-border:#b9d98a;
+  --header-bg:#111111;--header-text:#f5f5f0;--header-logo:#a3e635;--header-line:#b8860b;
+  --chart-grid:rgba(0,0,0,0.07);
+}
+body.theme-lite .app-header .btn-icon{background:#1e1e1e;border-color:#333;color:#f5f5f0;}
+body.theme-lite .app-header .btn-icon:hover{background:#2a2a2a;}
+body.theme-lite .app-header .tab{color:#a8a89c;}
+body.theme-lite .app-header .tab:hover:not(.active){color:#f5f5f0;}
+body.theme-lite .app-header .tab.active{background:#a3e635;color:#111;border-color:#a3e635;font-weight:600;}
+body.theme-lite .card,body.theme-lite .mov-card{box-shadow:0 1px 2px rgba(0,0,0,0.04);}
+body.theme-lite .cred-tarjeta-header{background:#1a1a1a!important;color:#f5f5f0!important;}
+body.theme-lite .cred-tarjeta-header td{color:#f5f5f0!important;}
+body.theme-lite .badge-accent{background:#eef7dd;color:var(--accent);}
+body.theme-lite .mov-chip.on{background:#eef7dd;border-color:var(--accent);color:var(--accent);}
+body.theme-lite .bar-fill{background:var(--accent-fill);}
+body.theme-lite h2,body.theme-lite .config-title{color:var(--text);}
+body.theme-lite .config-title::after{content:'';display:block;width:28px;height:2px;background:var(--gold);margin-top:6px;border-radius:1px;}
+.tema-opciones{display:flex;gap:8px;}
+.tema-opciones button{flex:1;padding:10px;border-radius:var(--r2);border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-weight:600;}
+.tema-opciones button.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
+
 /* FIX 21: Últimos movimientos por cuenta */
 .mov-seccion{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;font-weight:600;}
 .mov-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;}
@@ -319,7 +375,7 @@ select.form-control{cursor:pointer}
 select.form-control option{background:var(--card)}
 
 .btn{width:100%;padding:12px;border-radius:var(--r2);font-size:14px;font-weight:600;transition:all .15s}
-.btn-primary{background:var(--accent);color:#000}
+.btn-primary{background:var(--accent-fill);color:var(--on-accent)}
 .btn-primary:hover{opacity:.9}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
@@ -366,7 +422,7 @@ td{padding:8px 10px;color:var(--text)}
 /* TRACKER */
 .tracker-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .period-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--card);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
-.period-chip.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.period-chip.active{background:var(--accent-fill);color:var(--on-accent);border-color:var(--accent-fill)}
 .tracker-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
 .tr-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:12px 8px;text-align:center}
 .tr-stat-lbl{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
@@ -433,10 +489,11 @@ td{padding:8px 10px;color:var(--text)}
 </style>
 </head>
 <body>
+<script>/* FIX 23: tema guardado (default Lite) */try{if((localStorage.getItem('ft_tema')||'lite')==='lite')document.body.classList.add('theme-lite');}catch(e){document.body.classList.add('theme-lite');}</script>
 <!-- STAGING: banner de ambiente de prueba -->
 <div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
-<div id="app">
-
+<!-- FIX 23: franja superior de ancho completo (fuera del contenedor angosto) -->
+<header class="app-header"><div class="app-header-inner">
   <div class="topbar">
     <div class="topbar-logo">Flow<span>Track</span></div>
     <div class="topbar-actions">
@@ -457,6 +514,10 @@ td{padding:8px 10px;color:var(--text)}
     <button class="tab"        onclick="showTab('presupuestos')" id="tab-presupuestos">🎯 Presupuestos</button>
     <button class="tab"        onclick="showTab('config')"    id="tab-config">⚙️ Config</button>
   </nav>
+</div></header>
+
+<div id="app">
+
 
   <!-- CARGAR -->
   <div class="panel active" id="panel-cargar">
@@ -475,7 +536,7 @@ td{padding:8px 10px;color:var(--text)}
     <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
       <label class="form-label" style="display:flex;justify-content:space-between;align-items:center;">
         <span>📷 O cargá una foto (resumen, ticket)</span>
-        <span style="font-size:10px;color:var(--muted);font-weight:400;">Claude Haiku 4.5</span>
+        <span style="font-size:10px;color:var(--muted);font-weight:400;">Claude Haiku 5.5</span>
       </label>
       <div style="display:flex;gap:8px;margin-top:6px;">
         <button class="btn btn-secondary" onclick="document.getElementById('photo-input').click()" style="flex:1;">📷 Cargar foto</button>
@@ -894,6 +955,14 @@ td{padding:8px 10px;color:var(--text)}
         </div>
         <button class="btn btn-primary" onclick="guardarConfig()">Guardar conexión</button>
       </div>
+      <!-- FIX 23: apariencia -->
+      <div class="config-section">
+        <div class="config-title">🎨 Apariencia</div>
+        <div class="tema-opciones">
+          <button id="tema-btn-lite" onclick="setTema('lite')">☀️ Lite</button>
+          <button id="tema-btn-oscuro" onclick="setTema('oscuro')">🌙 Oscuro</button>
+        </div>
+      </div>
     </div>
 
     <!-- Subpanel: Pendientes (FIX 8 — clasificar EN sin categoría) -->
@@ -988,7 +1057,24 @@ const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
 
 window.addEventListener('DOMContentLoaded',()=>{ cargarConfig(); cargarTasas(); cargarSheet().then(()=>actualizarUltimaCarga()); });
 
+/* FIX 23: tema Lite / Oscuro, guardado en este navegador */
+function setTema(t){
+  try{ localStorage.setItem('ft_tema', t); }catch(e){}
+  document.body.classList.toggle('theme-lite', t === 'lite');
+  marcarTema();
+  /* los gráficos toman el color de grilla al dibujarse: refrescar la pestaña activa */
+  const activa = document.querySelector('.tab.active');
+  if(activa && activa.id && activa.id !== 'tab-config'){ try{ activa.click(); }catch(e){} }
+}
+function marcarTema(){
+  const lite = document.body.classList.contains('theme-lite');
+  document.getElementById('tema-btn-lite')?.classList.toggle('on', lite);
+  document.getElementById('tema-btn-oscuro')?.classList.toggle('on', !lite);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', lite ? '#111111' : '#1a1b20');
+}
+
 function cargarConfig(){
+  marcarTema();
   config=JSON.parse(localStorage.getItem('ft_config')||'{}');
   if(config.scriptUrl) document.getElementById('cfg-script-url').value=config.scriptUrl;
   if(config.groqKey)   document.getElementById('cfg-groq-key').value=config.groqKey;
@@ -1106,6 +1192,33 @@ function poblarDropdowns(){
   const hCat=document.getElementById('h-cat'); if(hCat&&cats.length){ hCat.innerHTML='<option value="">Cat. Destino (todas)</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join(''); hCat.value=curHCat; }
 }
 
+/* FIX 22: helpers para la API de Claude (Haiku 5.5).
+   - Haiku 5.5 rechaza temperature != 1 / top_p / top_k con un 400: no se mandan.
+   - El 400 trae el motivo real en error.message: se muestra en vez de un texto genérico.
+   - Se toma el primer bloque de tipo "text" (la respuesta puede traer otros bloques). */
+/* FIX 23: color de grilla de Chart.js según el tema activo */
+function chartGrid(){ return getComputedStyle(document.body).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.05)'; }
+
+async function claudeErrorMsg(res){
+  let detalle = '';
+  try { const j = await res.json(); detalle = j?.error?.message || ''; } catch(e){}
+  console.error('[Claude] HTTP', res.status, detalle);
+  if(res.status===401) return 'API key de Claude inválida o vencida — revisá Config';
+  if(res.status===429) return 'Límite de Claude alcanzado (¿créditos o spending cap?)';
+  if(res.status===529 || res.status>=500) return 'Claude saturado o fuera de servicio — probá en un rato';
+  return `Error Claude ${res.status}: ${detalle || 'pedido inválido'}`.slice(0,160);
+}
+function claudeTexto(d){
+  const b = (d?.content || []).find(x => x.type === 'text');
+  return b ? b.text : '';
+}
+/* Extrae el JSON aunque el modelo agregue texto alrededor */
+function extraerJSON(raw, abre, cierra){
+  const s = String(raw||'').replace(/```json|```/g,'').trim();
+  const i = s.indexOf(abre), j = s.lastIndexOf(cierra);
+  return (i >= 0 && j > i) ? s.slice(i, j+1) : s;
+}
+
 async function procesarTx(){
   const txt=document.getElementById('txInput').value.trim();
   if(!txt){ showToast('Escribí una transacción'); return; }
@@ -1163,23 +1276,17 @@ Respondé con JSON OBJECT (no array):
         },
         body:JSON.stringify({
           model:'claude-haiku-5-5',
-          max_tokens:500,
-          temperature:0.1,
+          max_tokens:1500, /* FIX 22: Haiku 5.5 tokeniza ~30% más; sin temperature (400) */
           messages:[{role:'user',content:prompt}]
         })
       });
       if(!res.ok){
-        let msg='Error con Claude';
-        if(res.status===429) msg='Límite de Claude alcanzado (spending cap?) — carga manual';
-        else if(res.status===401) msg='API key de Claude inválida — verificá en Config';
-        else if(res.status>=500) msg='Claude fuera de servicio — carga manual';
-        else msg=`Error Claude (${res.status}) — carga manual`;
-        showToast(msg);
+        showToast(await claudeErrorMsg(res));
         cargarManual();
         return;
       }
       const d=await res.json();
-      raw=d?.content?.[0]?.text;
+      raw=claudeTexto(d);
     } else {
       /* Fallback Groq (legacy) */
       const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+groqKey},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:500})});
@@ -1201,7 +1308,7 @@ Respondé con JSON OBJECT (no array):
       cargarManual();
       return;
     }
-    const clean=raw.replace(/```json|```/g,'').trim();
+    const clean=extraerJSON(raw,'{','}'); /* FIX 22 */
     let tx;
     try{
       tx=JSON.parse(clean);
@@ -1328,23 +1435,38 @@ let _txsAprobador = [];   /* transacciones detectadas por la IA, editables antes
 function onFotoSeleccionada(event){
   const file = event.target.files[0];
   if(!file) return;
-  if(file.size > 5 * 1024 * 1024){
-    showToast('La foto supera 5MB. Sacala de menor resolución.');
+  if(file.size > 25 * 1024 * 1024){
+    showToast('La imagen supera 25MB. Usá una captura o una foto más chica.');
     return;
   }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    /* e.target.result es "data:image/jpeg;base64,XXXX" */
-    const fullDataUrl = e.target.result;
-    const match = fullDataUrl.match(/^data:([^;]+);base64,(.+)$/);
-    if(!match){ showToast('No pude leer la imagen'); return; }
-    _fotoMime = match[1];
-    _fotoBase64 = match[2];
-    document.getElementById('foto-preview').src = fullDataUrl;
+  /* FIX 22: se redimensiona y convierte a JPEG en el navegador antes de enviar.
+     Lado largo máx. 2576 px (resolución máxima que Haiku 5.5 usa sin achicar):
+     menos tokens, envío más rápido y siempre un formato aceptado (jpeg). */
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const MAX = 2576;
+    const escala = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.round(img.naturalWidth * escala), h = Math.round(img.naturalHeight * escala);
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h;
+    const ctx = cv.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); /* PNG con transparencia → fondo blanco */
+    ctx.drawImage(img, 0, 0, w, h);
+    URL.revokeObjectURL(url);
+    const dataUrl = cv.toDataURL('image/jpeg', 0.9);
+    _fotoMime = 'image/jpeg';
+    _fotoBase64 = dataUrl.split(',')[1];
+    document.getElementById('foto-preview').src = dataUrl;
     document.getElementById('foto-preview-wrap').style.display = 'block';
     document.getElementById('btnAnalizarFoto').style.display = 'block';
   };
-  reader.readAsDataURL(file);
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    showToast('Formato no compatible. Usá JPG, PNG o WEBP (no HEIC ni PDF).');
+    document.getElementById('photo-input').value = '';
+  };
+  img.src = url;
 }
 
 function quitarFoto(){
@@ -1417,8 +1539,7 @@ Si la imagen no contiene transacciones visibles, respondé: []`;
       },
       body:JSON.stringify({
         model:'claude-haiku-5-5',
-        max_tokens:4000,
-        temperature:0.1,
+        max_tokens:16000, /* FIX 22: resúmenes largos + tokenización de Haiku 5.5; sin temperature (400) */
         messages:[{
           role:'user',
           content:[
@@ -1430,21 +1551,16 @@ Si la imagen no contiene transacciones visibles, respondé: []`;
     });
 
     if(!res.ok){
-      let msg='Error con Claude';
-      if(res.status===429) msg='Límite de Claude alcanzado (spending cap?)';
-      else if(res.status===401) msg='API key de Claude inválida';
-      else if(res.status===400) msg='Imagen no soportada o payload inválido';
-      else if(res.status>=500) msg='Claude fuera de servicio';
-      else msg=`Error Claude (${res.status})`;
-      showToast(msg);
+      showToast(await claudeErrorMsg(res));
       return;
     }
 
     const d = await res.json();
-    const raw = d?.content?.[0]?.text;
+    if(d?.stop_reason === 'max_tokens') showToast('Resumen muy largo: puede faltar alguna fila al final, revisalo');
+    const raw = claudeTexto(d);
     if(!raw){ showToast('Claude no devolvió texto'); return; }
 
-    const clean = raw.replace(/```json|```/g, '').trim();
+    const clean = extraerJSON(raw, '[', ']'); /* FIX 22 */
     let txs;
     try{
       txs = JSON.parse(clean);
@@ -2488,8 +2604,8 @@ function renderCredChart(meses, tarjetas, monedas, gastosData){
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{ display:datasets.length>1, labels:{ color:'#8a8d9a', font:{size:11}, boxWidth:10 } } },
       scales:{
-        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} },
-        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}, callback:v=>'$'+fmtNum(v)}, grid:{color:'rgba(255,255,255,0.05)'} }
+        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:chartGrid()} },
+        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}, callback:v=>'$'+fmtNum(v)}, grid:{color:chartGrid()} }
       }
     }
   });
@@ -2712,8 +2828,8 @@ function renderEgChart(meses, byCatMes){
         legend:{ display:true, position:'bottom', labels:{ color:'#8a8d9a', font:{size:10}, boxWidth:10, padding:8 } }
       },
       scales:{
-        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} },
-        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10},callback:v=>'$'+fmtNum(v)}, grid:{color:'rgba(255,255,255,0.05)'} }
+        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:chartGrid()} },
+        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10},callback:v=>'$'+fmtNum(v)}, grid:{color:chartGrid()} }
       }
     }
   });
@@ -2929,8 +3045,8 @@ function renderIgChart(meses, byTipoMes){
         legend:{ display:true, position:'bottom', labels:{ color:'#8a8d9a', font:{size:10}, boxWidth:10, padding:8 } }
       },
       scales:{
-        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:'rgba(255,255,255,0.05)'} },
-        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10},callback:v=>'$'+fmtNum(v)}, grid:{color:'rgba(255,255,255,0.05)'} }
+        x:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10}}, grid:{color:chartGrid()} },
+        y:{ stacked:true, ticks:{color:'#8a8d9a',font:{size:10},callback:v=>'$'+fmtNum(v)}, grid:{color:chartGrid()} }
       }
     }
   });
@@ -2964,7 +3080,7 @@ function actualizarUltimaCarga(){
   if(fechaTx && !isNaN(fechaTx.getTime())){
     const diffDias = (Date.now() - fechaTx.getTime()) / (1000*60*60*24);
     if(diffDias > 7){
-      staleWarning = `<div style="background:#3a1f1a;border:1px solid var(--danger);color:var(--danger);padding:8px 12px;font-size:11px;font-weight:600;border-bottom:1px solid var(--border);">⚠ La última fila del Sheet tiene más de ${Math.floor(diffDias)} días. Si cargaste cosas recientemente, abrí el Sheet directo y verificá que no haya filtros activos.</div>`;
+      staleWarning = `<div style="background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger);padding:8px 12px;font-size:11px;font-weight:600;border-bottom:1px solid var(--border);">⚠ La última fila del Sheet tiene más de ${Math.floor(diffDias)} días. Si cargaste cosas recientemente, abrí el Sheet directo y verificá que no haya filtros activos.</div>`;
     }
   }
   /* Insertar el warning al principio del widget si corresponde */
