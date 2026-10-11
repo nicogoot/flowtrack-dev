@@ -298,6 +298,7 @@ body.theme-lite .app-header{border-bottom-width:2px;}
 }
 
 /* ══ FIX 23: tema Lite (grises, blancos, negros, verde lima y dorado) ══ */
+html.theme-lite{background:#f2f2ee;}
 body.theme-lite{
   --bg:#f2f2ee;--surface:#fafaf7;--card:#ffffff;--card2:#efefe9;
   --border:#e0e0d7;--border2:#c9c9be;
@@ -328,6 +329,41 @@ body.theme-lite .config-title::after{content:'';display:block;width:28px;height:
 .tema-opciones button{flex:1;padding:10px;border-radius:var(--r2);border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-weight:600;}
 .tema-opciones button.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
 
+/* FIX 25: balance por cuenta (puente inicial → entradas → salidas → final) */
+.bal-filtros{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.bal-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.bal-chips button{font-size:12px;padding:6px 11px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:var(--muted);}
+.bal-chips button.on{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent);font-weight:600;}
+.bal-fechas{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);}
+.bal-fechas input{padding:6px 8px;font-size:12px;width:auto;}
+.bal-nota{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:6px;}
+.bal-mon{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.5px;margin:10px 0 4px;}
+.bal-row{display:grid;grid-template-columns:96px 1fr 104px;gap:8px;align-items:center;font-size:12px;padding:3px 0;}
+.bal-row .lbl{color:var(--muted);white-space:nowrap;}
+.bal-row .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap;}
+.bal-row.total .lbl,.bal-row.total .val{color:var(--text);font-weight:700;}
+.bal-row.total{border-top:1px solid var(--border);margin-top:2px;padding-top:6px;}
+.bal-track{position:relative;height:14px;}
+.bal-track .zero{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--border2);}
+.bal-bar{position:absolute;top:0;height:14px;border-radius:4px;min-width:2px;}
+.bal-bar.ini,.bal-bar.fin{background:var(--muted);opacity:.45;}
+.bal-bar.fin{opacity:.85;background:var(--text);}
+.bal-bar.in{background:var(--green);}
+.bal-bar.out{background:var(--danger);}
+.bal-det{margin-top:8px;font-size:12px;}
+.bal-det summary{cursor:pointer;color:var(--accent);font-size:11px;}
+.bal-det-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
+.bal-det-grid h4{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;}
+.bal-det-grid div.it{display:flex;justify-content:space-between;gap:6px;padding:2px 0;}
+.bal-det-grid div.it span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bal-det-grid div.it span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted);}
+@media (max-width:420px){ .bal-row{grid-template-columns:78px 1fr 92px;} .bal-det-grid{grid-template-columns:1fr;} }
+/* FIX 24: miniaturas de capturas */
+.foto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;}
+.foto-thumb{position:relative;aspect-ratio:3/5;border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);background:var(--card2);}
+.foto-thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.foto-thumb button{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.65);color:#fff;font-size:11px;line-height:22px;padding:0;}
+.foto-thumb span{position:absolute;bottom:4px;left:4px;font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,0.65);border-radius:8px;padding:1px 6px;}
 /* FIX 21: Últimos movimientos por cuenta */
 .mov-seccion{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;font-weight:600;}
 .mov-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;}
@@ -489,7 +525,7 @@ td{padding:8px 10px;color:var(--text)}
 </style>
 </head>
 <body>
-<script>/* FIX 23: tema guardado (default Lite) */try{if((localStorage.getItem('ft_tema')||'lite')==='lite')document.body.classList.add('theme-lite');}catch(e){document.body.classList.add('theme-lite');}</script>
+<script>/* FIX 23: tema guardado (default Lite) */try{if((localStorage.getItem('ft_tema')||'lite')==='lite'){document.body.classList.add('theme-lite');document.documentElement.classList.add('theme-lite');}}catch(e){document.body.classList.add('theme-lite');document.documentElement.classList.add('theme-lite');}</script>
 <!-- STAGING: banner de ambiente de prueba -->
 <div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
 <!-- FIX 23: franja superior de ancho completo (fuera del contenedor angosto) -->
@@ -535,19 +571,27 @@ td{padding:8px 10px;color:var(--text)}
     <!-- FIX 20: Foto de resumen de tarjeta / ticket → batch de transacciones -->
     <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
       <label class="form-label" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>📷 O cargá una foto (resumen, ticket)</span>
+        <span>📷 O cargá fotos o capturas (resumen, ticket)</span>
         <span style="font-size:10px;color:var(--muted);font-weight:400;">Claude Haiku 5.5</span>
       </label>
       <div style="display:flex;gap:8px;margin-top:6px;">
-        <button class="btn btn-secondary" onclick="document.getElementById('photo-input').click()" style="flex:1;">📷 Cargar foto</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('photo-input').click()" style="flex:1;">📷 Cargar fotos</button>
         <button class="btn btn-secondary" id="btnAnalizarFoto" onclick="analizarFotoConIA()" style="flex:1;display:none;">🔍 Analizar</button>
       </div>
-      <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none;" onchange="onFotoSeleccionada(event)">
-      <div id="foto-preview-wrap" style="display:none;margin-top:8px;position:relative;">
-        <img id="foto-preview" style="max-width:100%;border-radius:var(--r);border:1px solid var(--border);">
-        <button onclick="quitarFoto()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;">✕</button>
+      <!-- FIX 24: sin capture="environment" (en el celu forzaba la cámara): ahora ofrece galería/archivos/cámara. multiple = varias capturas -->
+      <input type="file" id="photo-input" accept="image/*" multiple style="display:none;" onchange="onFotoSeleccionada(event)">
+      <div id="foto-preview-wrap" style="display:none;margin-top:8px;">
+        <div class="foto-grid" id="foto-grid"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+          <label for="foto-cuenta" style="font-size:11px;color:var(--muted);white-space:nowrap;">¿De qué cuenta o tarjeta?</label>
+          <select id="foto-cuenta" class="form-control" style="padding:6px 8px;font-size:13px;"></select>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;">
+          <button onclick="document.getElementById('photo-input').click()" style="background:none;color:var(--accent);padding:0;font-size:11px;">＋ Agregar más capturas</button>
+          <button onclick="quitarFoto()" style="background:none;color:var(--muted);padding:0;font-size:11px;">Quitar todas</button>
+        </div>
       </div>
-      <div id="foto-loader" class="loader" style="display:none;margin-top:8px;"><span class="spinner"></span>Analizando imagen con Claude…</div>
+      <div id="foto-loader" class="loader" style="display:none;margin-top:8px;"><span class="spinner"></span>Analizando con Claude… (varias capturas pueden tardar unos segundos)</div>
     </div>
 
     <!-- FIX 12: widget "última carga" — sutil, debajo de los botones de acción -->
@@ -819,6 +863,7 @@ td{padding:8px 10px;color:var(--text)}
       <button class="subtab active" onclick="showPNSubtab('resumen')" id="pnsubtab-resumen">📊 Resumen</button>
       <button class="subtab" onclick="showPNSubtab('reconciliacion')" id="pnsubtab-reconciliacion">⚖️ Reconciliación</button>
       <button class="subtab" onclick="showPNSubtab('movimientos')" id="pnsubtab-movimientos">🕒 Últimos movimientos</button>
+      <button class="subtab" onclick="showPNSubtab('balance')" id="pnsubtab-balance">⚖️ Balance por cuenta</button>
     </div>
 
     <!-- Sub-panel: Resumen (lo que existía antes) -->
@@ -875,6 +920,25 @@ td{padding:8px 10px;color:var(--text)}
       </div>
       <div id="mov-editor" style="display:none;"></div>
       <div id="mov-lista"></div>
+    </div>
+
+    <!-- Sub-panel: Balance por cuenta (FIX 25) -->
+    <div class="subpanel" id="pnsubpanel-balance">
+      <div class="bal-filtros">
+        <div class="bal-chips" id="bal-chips">
+          <button data-r="mes" onclick="setBalRango('mes')">Este mes</button>
+          <button data-r="mesant" onclick="setBalRango('mesant')">Mes anterior</button>
+          <button data-r="3m" onclick="setBalRango('3m')">3 meses</button>
+          <button data-r="anio" onclick="setBalRango('anio')">Este año</button>
+        </div>
+        <div class="bal-fechas">
+          <input type="date" class="form-control" id="bal-desde" onchange="setBalRango('custom')" aria-label="Desde">
+          <span>a</span>
+          <input type="date" class="form-control" id="bal-hasta" onchange="setBalRango('custom')" aria-label="Hasta">
+        </div>
+      </div>
+      <div class="bal-nota">Saldo inicial + entradas − salidas = saldo final. Las cuentas son las mismas que elegiste en Últimos movimientos. Las transferencias entre tus cuentas aparecen como salida en una y entrada en la otra.</div>
+      <div id="bal-lista"></div>
     </div>
   </div>
 
@@ -1061,6 +1125,7 @@ window.addEventListener('DOMContentLoaded',()=>{ cargarConfig(); cargarTasas(); 
 function setTema(t){
   try{ localStorage.setItem('ft_tema', t); }catch(e){}
   document.body.classList.toggle('theme-lite', t === 'lite');
+  document.documentElement.classList.toggle('theme-lite', t === 'lite'); /* FIX 25: fondo de <html> al hacer scroll */
   marcarTema();
   /* los gráficos toman el color de grilla al dibujarse: refrescar la pestaña activa */
   const activa = document.querySelector('.tab.active');
@@ -1428,58 +1493,72 @@ function mostrarModalCuotas(fechaBase, cuotaInicial, totalCuotas, cuotasAGenerar
    → JSON de transacciones → modal aprobador → batch write al Sheet
    ══════════════════════════════════════════════════════════ */
 
-let _fotoBase64 = null;   /* base64 de la foto seleccionada, sin prefijo data: */
-let _fotoMime   = null;   /* image/jpeg | image/png | image/webp */
+/* FIX 24: varias capturas. Cada una ya redimensionada a JPEG: {b64, dataUrl} */
+let _fotos = [];
+const MAX_FOTOS = 10;
 let _txsAprobador = [];   /* transacciones detectadas por la IA, editables antes de commit */
 
-function onFotoSeleccionada(event){
-  const file = event.target.files[0];
-  if(!file) return;
-  if(file.size > 25 * 1024 * 1024){
-    showToast('La imagen supera 25MB. Usá una captura o una foto más chica.');
-    return;
-  }
-  /* FIX 22: se redimensiona y convierte a JPEG en el navegador antes de enviar.
-     Lado largo máx. 2576 px (resolución máxima que Haiku 5.5 usa sin achicar):
-     menos tokens, envío más rápido y siempre un formato aceptado (jpeg). */
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = () => {
-    const MAX = 2576;
-    const escala = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
-    const w = Math.round(img.naturalWidth * escala), h = Math.round(img.naturalHeight * escala);
-    const cv = document.createElement('canvas');
-    cv.width = w; cv.height = h;
-    const ctx = cv.getContext('2d');
-    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); /* PNG con transparencia → fondo blanco */
-    ctx.drawImage(img, 0, 0, w, h);
-    URL.revokeObjectURL(url);
-    const dataUrl = cv.toDataURL('image/jpeg', 0.9);
-    _fotoMime = 'image/jpeg';
-    _fotoBase64 = dataUrl.split(',')[1];
-    document.getElementById('foto-preview').src = dataUrl;
-    document.getElementById('foto-preview-wrap').style.display = 'block';
-    document.getElementById('btnAnalizarFoto').style.display = 'block';
-  };
-  img.onerror = () => {
-    URL.revokeObjectURL(url);
-    showToast('Formato no compatible. Usá JPG, PNG o WEBP (no HEIC ni PDF).');
-    document.getElementById('photo-input').value = '';
-  };
-  img.src = url;
+/* Redimensiona a JPEG (lado largo máx. 2576 px, FIX 22) y devuelve {b64, dataUrl} */
+function _prepararImagen(file){
+  return new Promise((resolve, reject) => {
+    if(file.size > 25 * 1024 * 1024){ reject(new Error('grande')); return; }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 2576;
+      const escala = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.round(img.naturalWidth * escala), h = Math.round(img.naturalHeight * escala);
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      const dataUrl = cv.toDataURL('image/jpeg', 0.9);
+      resolve({ b64: dataUrl.split(',')[1], dataUrl });
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('formato')); };
+    img.src = url;
+  });
 }
 
-function quitarFoto(){
-  _fotoBase64 = null;
-  _fotoMime = null;
-  document.getElementById('photo-input').value = '';
-  document.getElementById('foto-preview').src = '';
-  document.getElementById('foto-preview-wrap').style.display = 'none';
-  document.getElementById('btnAnalizarFoto').style.display = 'none';
+async function onFotoSeleccionada(event){
+  const files = Array.from(event.target.files || []);
+  event.target.value = ''; /* permite volver a elegir el mismo archivo */
+  if(!files.length) return;
+  let rechazadas = 0, sobrantes = 0;
+  for(const f of files){
+    if(_fotos.length >= MAX_FOTOS){ sobrantes++; continue; }
+    try { _fotos.push(await _prepararImagen(f)); } catch(e){ rechazadas++; }
+  }
+  if(rechazadas) showToast(`${rechazadas} archivo(s) no compatibles (usá JPG, PNG o WEBP; no HEIC ni PDF)`);
+  else if(sobrantes) showToast(`Máximo ${MAX_FOTOS} capturas por análisis`);
+  renderFotos();
 }
+
+function renderFotos(){
+  const wrap = document.getElementById('foto-preview-wrap');
+  const btn = document.getElementById('btnAnalizarFoto');
+  if(!_fotos.length){ wrap.style.display = 'none'; btn.style.display = 'none'; return; }
+  document.getElementById('foto-grid').innerHTML = _fotos.map((f, i) =>
+    `<div class="foto-thumb"><img src="${f.dataUrl}" alt="Captura ${i+1}"><span>${i+1}</span><button onclick="quitarUnaFoto(${i})" aria-label="Quitar captura ${i+1}">✕</button></div>`
+  ).join('');
+  /* selector de cuenta: se llena una vez, conserva la elección */
+  const sel = document.getElementById('foto-cuenta');
+  if(!sel.options.length){
+    const ops = [...new Set([...TARJETAS_CREDITO, ...TARJETAS_IMPUTABLES, ...CUENTAS_LIQUIDAS])];
+    sel.innerHTML = '<option value="">Que lo detecte Claude</option>' + ops.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('');
+  }
+  wrap.style.display = 'block';
+  btn.style.display = 'block';
+  btn.textContent = _fotos.length > 1 ? `🔍 Analizar ${_fotos.length}` : '🔍 Analizar';
+}
+function quitarUnaFoto(i){ _fotos.splice(i, 1); renderFotos(); }
+function quitarFoto(){ _fotos = []; renderFotos(); }
 
 async function analizarFotoConIA(){
-  if(!_fotoBase64){ showToast('Cargá una foto primero'); return; }
+  if(!_fotos.length){ showToast('Cargá una foto primero'); return; }
+  const cuentaFija = document.getElementById('foto-cuenta')?.value || ''; /* FIX 24 */
   const claudeKey = config.claudeKey;
   if(!claudeKey){
     showToast('Necesitás API Key de Claude para analizar fotos ⚙️');
@@ -1504,7 +1583,11 @@ CONTEXTO TEMPORAL:
 - Si aparece solo DD/MM sin año, asumí ${añoActual} salvo que sea clara la ambigüedad.
 - Si detectás que es un resumen de tarjeta de crédito, la fecha de cada gasto es la que figura junto al ítem (fecha de compra), NO la fecha de vencimiento.
 
-REGLAS DE DATOS:
+${_fotos.length > 1 ? `VARIAS IMÁGENES (${_fotos.length}): son capturas sucesivas de una misma lista o resumen, en orden. Pueden solaparse: si un movimiento aparece en dos capturas (misma fecha, monto y comercio), incluilo UNA sola vez. Dos compras iguales en la misma captura sí son dos filas.
+
+` : ''}${cuentaFija ? `CUENTA INDICADA POR EL USUARIO: todos los movimientos son de "${cuentaFija}". Usá exactamente "${cuentaFija}" como medio_pago en todas las filas.
+
+` : ''}REGLAS DE DATOS:
 1. EN = destino del dinero (donde gastaste). CON = origen del dinero (con qué pagaste).
 2. Si es resumen de tarjeta: CON = nombre exacto de la tarjeta (Visa Santander, AMEX Santander, Visa ICBC, Master MP, Master CencoPay). Usá lista.
 3. EN debe salir de la lista si coincide o se parece; sino, ponelo como aparece en el ticket/resumen.
@@ -1543,7 +1626,7 @@ Si la imagen no contiene transacciones visibles, respondé: []`;
         messages:[{
           role:'user',
           content:[
-            {type:'image', source:{type:'base64', media_type:_fotoMime, data:_fotoBase64}},
+            ..._fotos.map(f => ({type:'image', source:{type:'base64', media_type:'image/jpeg', data:f.b64}})),
             {type:'text', text:prompt}
           ]
         }]
@@ -1582,7 +1665,7 @@ Si la imagen no contiene transacciones visibles, respondé: []`;
       monto: parseFloat(tx.monto) || 0,
       moneda: (tx.moneda || 'ARS').toUpperCase(),
       descripcion: String(tx.descripcion || '').trim(),
-      medio_pago: String(tx.medio_pago || '').trim(),
+      medio_pago: cuentaFija || String(tx.medio_pago || '').trim(), /* FIX 24 */
       categoria: String(tx.categoria || 'Varios / TBD').trim(),
       comentario: String(tx.comentario || '').trim(),
       cuota: tx.cuota ? parseInt(tx.cuota) : null,
@@ -3390,6 +3473,141 @@ function _movCardTarjeta(tarjeta, porEN, porCON){
   </div>`;
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   FIX 25 — Balance por cuenta en un rango de fechas
+   Cuenta:  saldo inicial (saldos iniciales + todo lo anterior a "desde") + entradas (EN) − salidas (CON) = final
+   Tarjeta: deuda inicial + gastos (CON = tarjeta) − pagos (EN = "Pago <tarjeta>") = deuda al "hasta"
+   Las cuotas con fecha posterior a "hasta" no entran (son deuda futura).
+   ══════════════════════════════════════════════════════════ */
+const LS_BAL_RANGO = 'ft_balance_rango';
+
+function _isoDe(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function _rangoPreset(r){
+  const h = new Date(); const y = h.getFullYear(), m = h.getMonth();
+  if(r === 'mesant') return [_isoDe(new Date(y, m-1, 1)), _isoDe(new Date(y, m, 0))];
+  if(r === '3m')     return [_isoDe(new Date(y, m-2, 1)), _isoDe(h)];
+  if(r === 'anio')   return [_isoDe(new Date(y, 0, 1)),   _isoDe(h)];
+  return [_isoDe(new Date(y, m, 1)), _isoDe(h)]; /* 'mes' */
+}
+function getBalRango(){
+  let s = null; try{ s = JSON.parse(localStorage.getItem(LS_BAL_RANGO) || 'null'); }catch(e){}
+  if(!s || !s.r) s = { r:'mes' };
+  if(s.r !== 'custom'){ const [d,h] = _rangoPreset(s.r); s.desde = d; s.hasta = h; }
+  return s;
+}
+function setBalRango(r){
+  let s;
+  if(r === 'custom'){
+    const d = document.getElementById('bal-desde').value, h = document.getElementById('bal-hasta').value;
+    if(!d || !h) return;
+    s = { r:'custom', desde: d <= h ? d : h, hasta: d <= h ? h : d };
+  } else s = { r };
+  try{ localStorage.setItem(LS_BAL_RANGO, JSON.stringify(s)); }catch(e){}
+  renderBalanceCuentas();
+}
+
+function _isoKey(iso){ const [y,m,d] = iso.split('-').map(Number); return y*10000 + m*100 + d; }
+
+/* Una fila del puente: barra flotante entre a y b sobre una escala [lo, hi] común a la tarjeta */
+function _balFila(lbl, a, b, clase, val, tip, lo, hi){
+  const span = (hi - lo) || 1;
+  const x1 = (Math.min(a,b) - lo) / span * 100, x2 = (Math.max(a,b) - lo) / span * 100;
+  const z = (0 - lo) / span * 100;
+  const zero = (lo < 0 && hi > 0) ? `<div class="zero" style="left:${z}%"></div>` : '';
+  const bar = (a === b) ? '' : `<div class="bal-bar ${clase}" style="left:${x1}%;width:${Math.max(x2 - x1, 0.6)}%"></div>`;
+  return `<div class="bal-row${clase === 'fin' ? ' total' : ''}" title="${esc(tip)}">
+    <span class="lbl">${lbl}</span>
+    <div class="bal-track">${zero}${bar}</div>
+    <span class="val">${val}</span>
+  </div>`;
+}
+
+function _balTop(mapa, n){
+  return Object.entries(mapa).sort((a,b) => b[1] - a[1]).slice(0, n);
+}
+
+/* esTarjeta: inicial/final son DEUDA (positiva = debés); "entradas" = gastos (suben la deuda), "salidas" = pagos */
+function _balBloque(mon, ini, ent, sal, nEnt, nSal, origenes, destinos, esTarjeta){
+  const fin = ini + ent - sal;
+  const p1 = ini, p2 = ini + ent, p3 = fin;
+  const lo = Math.min(0, p1, p2, p3), hi = Math.max(0, p1, p2, p3);
+  const f = n => (n < 0 ? '−' : '') + '$' + fmtNum(Math.abs(n));
+  const L = esTarjeta
+    ? ['Deuda inicial', '+ Gastos', '− Pagos', '= Deuda final']
+    : ['Saldo inicial', '+ Entradas', '− Salidas', '= Saldo final'];
+  /* En tarjetas, los gastos suben la deuda (rojo) y los pagos la bajan (verde) */
+  const cEnt = esTarjeta ? 'out' : 'in', cSal = esTarjeta ? 'in' : 'out';
+  const filas =
+    _balFila(L[0], 0, p1, 'ini', f(ini), `${L[0]}: ${f(ini)}`, lo, hi) +
+    _balFila(L[1], p1, p2, cEnt, ent ? '+' + f(ent) : '$0', `${nEnt} movimiento(s) · ${f(ent)}`, lo, hi) +
+    _balFila(L[2], p2, p3, cSal, sal ? '−' + f(sal) : '$0', `${nSal} movimiento(s) · ${f(sal)}`, lo, hi) +
+    _balFila(L[3], 0, p3, 'fin', f(fin), `${L[3]}: ${f(fin)}`, lo, hi);
+  const lista = arr => arr.length ? arr.map(([k,v]) => `<div class="it"><span>${esc(k)}</span><span>${f(v)}</span></div>`).join('') : '<div class="it"><span>—</span><span></span></div>';
+  const det = (nEnt + nSal) ? `<details class="bal-det"><summary>${esTarjeta ? 'En qué se gastó y desde dónde se pagó' : 'De dónde vino y a dónde fue'}</summary>
+      <div class="bal-det-grid">
+        <div><h4>${esTarjeta ? 'Gastos en' : 'Entró desde'}</h4>${lista(_balTop(origenes, 5))}</div>
+        <div><h4>${esTarjeta ? 'Pagado desde' : 'Salió hacia'}</h4>${lista(_balTop(destinos, 5))}</div>
+      </div></details>` : '';
+  return `<div class="bal-mon">${mon}</div>${filas}${det}`;
+}
+
+function renderBalanceCuentas(){
+  const cont = document.getElementById('bal-lista'); if(!cont) return;
+  const rg = getBalRango();
+  document.querySelectorAll('#bal-chips button').forEach(b => b.classList.toggle('on', b.dataset.r === rg.r));
+  document.getElementById('bal-desde').value = rg.desde;
+  document.getElementById('bal-hasta').value = rg.hasta;
+
+  if(!allRows || !allRows.length){
+    cont.innerHTML = '<div class="mov-sub" style="padding:20px 0;text-align:center;">Todavía no se cargaron los movimientos. Tocá ↻ arriba.</div>';
+    return;
+  }
+  const kD = _isoKey(rg.desde), kH = _isoKey(rg.hasta);
+  const favs = getMovFavoritas();
+  const esTarj = c => TARJETAS_CREDITO.includes(c) || TARJETAS_IMPUTABLES.includes(c);
+  const cuentas  = getCuentasCandidatasMov().filter(c => favs.includes(c) && !esTarj(c));
+  const tarjetas = getCuentasCandidatasMov().filter(c => favs.includes(c) &&  esTarj(c));
+
+  /* Acumuladores: acc[cuenta][moneda] = {ini, ent, sal, nEnt, nSal, origenes{}, destinos{}} */
+  const acc = {};
+  const slot = (c, mon) => ((acc[c] = acc[c] || {})[mon] = acc[c][mon] || { ini:0, ent:0, sal:0, nEnt:0, nSal:0, origenes:{}, destinos:{} });
+  const setCuentas = new Set(cuentas), setTarj = new Set(tarjetas);
+  const pagoDe = {}; tarjetas.forEach(t => pagoDe['Pago ' + t] = t);
+
+  (typeof pnSaldosIniciales !== 'undefined' ? pnSaldosIniciales : []).forEach(s => {
+    if(setCuentas.has(s.cuenta)){ const mon = String(s.moneda||'ARS').toUpperCase(); if(mon==='ARS'||mon==='USD') slot(s.cuenta, mon).ini += parseFloat(s.saldo)||0; }
+  });
+
+  allRows.forEach(r => {
+    const monto = parseFloat(r.monto)||0; if(!monto) return;
+    const mon = _movMon(r); if(mon !== 'ARS' && mon !== 'USD') return;
+    const k = _movFechaKey(r); if(!k || k > kH) return; /* después del rango: no cuenta (cuotas futuras incluidas) */
+    const antes = k < kD;
+    const en = str(r.descripcion).trim(), con = str(r.medio_pago).trim();
+    /* Cuentas: EN = entra, CON = sale */
+    if(setCuentas.has(en)){ const s = slot(en, mon); if(antes) s.ini += monto; else { s.ent += monto; s.nEnt++; s.origenes[con||'—'] = (s.origenes[con||'—']||0) + monto; } }
+    if(setCuentas.has(con)){ const s = slot(con, mon); if(antes) s.ini -= monto; else { s.sal += monto; s.nSal++; s.destinos[en||'—'] = (s.destinos[en||'—']||0) + monto; } }
+    /* Tarjetas: gasto = CON tarjeta (sube deuda), pago = EN "Pago X" (baja deuda) */
+    if(setTarj.has(con)){ const s = slot(con, mon); if(antes) s.ini += monto; else { s.ent += monto; s.nEnt++; s.origenes[en||'—'] = (s.origenes[en||'—']||0) + monto; } }
+    if(pagoDe[en]){ const t = pagoDe[en], s = slot(t, mon); if(antes) s.ini -= monto; else { s.sal += monto; s.nSal++; s.destinos[con||'—'] = (s.destinos[con||'—']||0) + monto; } }
+  });
+
+  const card = (c, esTarjeta) => {
+    const porMon = acc[c] || {};
+    const bloques = ['ARS','USD'].filter(m => porMon[m] && (porMon[m].ini || porMon[m].nEnt || porMon[m].nSal))
+      .map(m => { const s = porMon[m]; return _balBloque(m, s.ini, s.ent, s.sal, s.nEnt, s.nSal, s.origenes, s.destinos, esTarjeta); });
+    const dot = esTarjeta ? `<span class="mov-dot" style="background:${TARJETA_COLORS[c] || 'var(--muted)'}"></span>` : '';
+    return `<div class="mov-card"><div class="mov-card-head"><div class="mov-card-nombre">${dot}${esc(c)}</div></div>
+      ${bloques.length ? bloques.join('') : '<div class="mov-sub">Sin saldo ni movimientos en este período.</div>'}</div>`;
+  };
+
+  let html = '';
+  if(cuentas.length)  html += `<div class="mov-seccion">💧 Cuentas</div>` + cuentas.map(c => card(c, false)).join('');
+  if(tarjetas.length) html += `<div class="mov-seccion">💳 Tarjetas</div>` + tarjetas.map(t => card(t, true)).join('');
+  cont.innerHTML = html || '<div class="mov-sub" style="padding:20px 0;text-align:center;">No hay cuentas elegidas. Elegilas en Últimos movimientos → ⚙.</div>';
+}
+
 function renderMovimientosRecientes(){
   const cont = document.getElementById('mov-lista');
   const editor = document.getElementById('mov-editor');
@@ -3542,7 +3760,7 @@ function calcularDeudaTarjeta(stats, nombreTarjeta){
    Persistencia: localStorage 'ft_reconciliacion' = {fecha, valores: {key: realStr}}.
    ════════════════════════════════════════════════════════ */
 
-const PN_SUBTABS = ['resumen', 'reconciliacion', 'movimientos']; /* FIX 21: +movimientos */
+const PN_SUBTABS = ['resumen', 'reconciliacion', 'movimientos', 'balance']; /* FIX 21: +movimientos · FIX 25: +balance */
 let _pnSubtabActiva = 'resumen';
 
 function showPNSubtab(id){
@@ -3555,6 +3773,8 @@ function showPNSubtab(id){
     renderReconciliacion();
   } else if(id === 'movimientos'){
     renderMovimientosRecientes();
+  } else if(id === 'balance'){
+    renderBalanceCuentas();
   } else {
     /* Al volver al Resumen, recalcular el badge por si cambió algo */
     actualizarBadgeSalud();
