@@ -167,6 +167,152 @@ input,select,textarea{font-family:inherit;outline:none}
 .uc-row:last-child{border-bottom:none;}
 .uc-key{color:var(--muted);}
 .uc-val{color:var(--text);font-weight:500;text-align:right;}
+
+/* FIX 15: duplicados — botón activo + filas agrupadas por color */
+#btn-toggle-duplicados.active{background:var(--warn);color:#0a0c10;border-color:var(--warn);font-weight:600;}
+.dup-banner{background:#3a2d1a;border:1px solid var(--warn);color:var(--warn);padding:8px 12px;border-radius:var(--r2);font-size:12px;margin-bottom:10px;font-weight:500;}
+.dup-banner b{color:var(--text);}
+tr.dup-grupo-0{background:rgba(255,165,2,0.08)!important;}
+tr.dup-grupo-1{background:rgba(46,213,115,0.08)!important;}
+tr.dup-grupo-2{background:rgba(0,153,255,0.08)!important;}
+tr.dup-grupo-3{background:rgba(212,83,126,0.10)!important;}
+tr.dup-grupo-4{background:rgba(139,92,246,0.10)!important;}
+tr.dup-keep td:first-child{border-left:3px solid var(--green)!important;}
+tr.dup-del td:first-child{border-left:3px solid var(--danger)!important;}
+.dup-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:4px;}
+.dup-tag-keep{background:rgba(46,213,115,0.2);color:var(--green);}
+.dup-tag-del{background:rgba(255,71,87,0.2);color:var(--danger);}
+
+/* FIX 16: Reconciliación */
+.rec-titulo-bloque{font-size:12px;font-weight:600;color:var(--text);margin:14px 0 8px;}
+.rec-row{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:10px;margin-bottom:8px;}
+.rec-row.imputable{border-color:#2f5142;}
+.rec-row-titulo{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.rec-row-nombre{font-weight:600;font-size:13px;color:var(--text);}
+.rec-row-mon{font-size:10px;color:var(--muted);font-weight:400;margin-left:4px;}
+.rec-row-aux{font-size:10px;color:var(--muted);}
+.rec-row-aux-imputable{background:#1c2f25;border:1px solid #2f5142;color:var(--green);font-size:9px;padding:1px 5px;border-radius:4px;}
+.rec-row-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:center;}
+.rec-cell-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.rec-cell-val{padding:5px 7px;font-size:13px;color:var(--text);font-variant-numeric:tabular-nums;}
+.rec-cell-input{width:100%;padding:5px 7px;font-size:13px;border:1px solid var(--border2);background:var(--bg);color:var(--text);border-radius:6px;font-variant-numeric:tabular-nums;font-family:inherit;}
+.rec-cell-input:focus{border-color:var(--accent);outline:none;}
+.rec-diff-ok{color:var(--green);font-weight:600;}
+.rec-diff-warn{color:var(--warn);font-weight:600;}
+.rec-diff-danger{color:var(--danger);font-weight:600;}
+.rec-diff-empty{color:var(--muted);}
+.rec-row-aclaracion{font-size:10px;color:var(--muted);margin-bottom:6px;font-style:italic;}
+/* Badge de salud arriba del PN */
+.pn-badge-salud{padding:8px 12px;border-radius:var(--r2);font-size:12px;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.pn-badge-ok{background:rgba(46,213,115,0.1);border:1px solid var(--green);color:var(--green);}
+.pn-badge-warn{background:rgba(255,165,2,0.1);border:1px solid var(--warn);color:var(--warn);}
+
+/* FIX 18: KPI cards de Créditos */
+.cred-kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:9px 10px;}
+.cred-kpi-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;}
+.cred-kpi-value{font-size:14px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;margin-top:3px;}
+.cred-kpi-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.cred-kpi-danger .cred-kpi-value{color:var(--danger);}
+.cred-kpi-warn .cred-kpi-value{color:var(--warn);}
+.cred-kpi-ok .cred-kpi-value{color:var(--accent);}
+/* Agrupación visual ARS/USD dentro de cada tarjeta en tabla pivot */
+.cred-tarjeta-header{background:#363842!important;font-size:11px;font-weight:700;letter-spacing:0.4px;color:var(--text)!important;text-transform:uppercase;}
+.cred-tarjeta-header td{padding:6px 10px!important;}
+.cred-moneda-cell{padding-left:18px!important;font-size:11px;color:var(--muted);}
+
+/* FIX 19: Presupuestos */
+.pre-resumen{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px;}
+.pre-resumen-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.pre-resumen-total{font-size:22px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:10px;font-variant-numeric:tabular-nums;}
+.pre-resumen-total .gastado{color:var(--accent);}
+.pre-resumen-total .total{color:var(--muted);font-weight:400;font-size:18px;}
+.pre-resumen-bar-wrap{height:8px;background:var(--card2);border-radius:4px;overflow:hidden;margin-bottom:6px;}
+.pre-resumen-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:4px;transition:width .4s ease;}
+.pre-resumen-bar.warn{background:linear-gradient(90deg,var(--accent),var(--warn));}
+.pre-resumen-bar.danger{background:linear-gradient(90deg,var(--warn),var(--danger));}
+.pre-resumen-meta{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.pre-resumen-proy{font-size:12px;color:var(--text);padding-top:6px;border-top:1px solid var(--border);}
+.pre-resumen-proy .proy-ok{color:var(--green);}
+.pre-resumen-proy .proy-warn{color:var(--warn);}
+.pre-resumen-proy .proy-danger{color:var(--danger);}
+
+.pre-filtros{display:flex;gap:8px;margin-bottom:14px;}
+.pre-filtro-item{flex:1;display:flex;flex-direction:column;gap:3px;}
+.pre-filtro-item label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.pre-filtro-item select{padding:7px 9px;font-size:12px;border-radius:var(--r2);background:var(--card);border:1px solid var(--border);color:var(--text);}
+
+.pre-bloque-titulo{font-size:12px;font-weight:600;color:var(--text);margin:14px 0 8px;}
+.pre-bloque{display:flex;flex-direction:column;gap:6px;}
+
+.pre-row{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:10px;}
+.pre-row-titulo{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.pre-row-nombre{font-weight:600;font-size:13px;color:var(--text);}
+.pre-row-gastado{font-size:13px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;}
+.pre-row-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:end;}
+.pre-cell-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+.pre-cell-input-wrap{display:flex;align-items:center;gap:6px;}
+.pre-cell-input{width:100%;padding:5px 7px;font-size:13px;border:1px solid var(--border2);background:var(--bg);color:var(--text);border-radius:6px;font-variant-numeric:tabular-nums;font-family:inherit;}
+.pre-cell-input:focus{border-color:var(--accent);outline:none;}
+.pre-cell-diff{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px;display:inline-block;}
+.pre-diff-ok{background:rgba(46,213,115,0.15);color:var(--green);}
+.pre-diff-warn{background:rgba(255,165,2,0.15);color:var(--warn);}
+.pre-diff-danger{background:rgba(255,71,87,0.15);color:var(--danger);}
+.pre-diff-empty{color:var(--muted);font-size:11px;}
+
+.pre-mini-bar{height:4px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:6px;}
+.pre-mini-bar-fill{height:100%;border-radius:2px;background:var(--green);transition:width .3s;}
+.pre-mini-bar-fill.warn{background:var(--warn);}
+.pre-mini-bar-fill.danger{background:var(--danger);}
+
+.pre-row-aux{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:var(--muted);}
+.pre-row-aux .historico-val{color:var(--text);font-weight:500;}
+.pre-row-rm{background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;padding:0;}
+.pre-row-rm:hover{text-decoration:underline;}
+
+.pre-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);}
+
+/* Modal: lista de EN clickeables */
+/* FIX 21: Últimos movimientos por cuenta */
+.mov-seccion{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;font-weight:600;}
+.mov-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;}
+.mov-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;}
+.mov-card-nombre{font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;min-width:0;}
+.mov-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+.mov-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--card2);color:var(--muted);white-space:nowrap;}
+.mov-badge.stale{background:rgba(255,165,2,0.15);color:var(--warn);}
+.mov-mon{font-size:10px;color:var(--muted);font-weight:600;margin:8px 0 2px;letter-spacing:0.5px;}
+.mov-linea{padding:5px 0;border-top:1px solid var(--border);}
+.mov-mon + .mov-linea{border-top:none;}
+.mov-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;}
+.mov-lbl{color:var(--muted);}
+.mov-monto{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.mov-monto.up{color:var(--green);}
+.mov-monto.down{color:var(--danger);}
+.mov-sub{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mov-sub b{color:var(--text);font-weight:500;}
+.mov-hace.stale{color:var(--warn);}
+.mov-vacia .mov-sub{font-style:italic;}
+.mov-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:10px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r);}
+.mov-chip{font-size:12px;padding:5px 10px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;}
+.mov-chip.on{background:rgba(0,212,170,0.12);border-color:var(--accent);color:var(--accent);}
+/* FIX 20: Estilos del modal aprobador (foto → IA) */
+.aprob-row{background:var(--card2);border:1px solid var(--border);border-radius:var(--r2);padding:10px;margin-bottom:8px;transition:opacity 0.2s;}
+.aprob-descartada{opacity:0.35;}
+.aprob-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.aprob-cb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600;cursor:pointer;}
+.aprob-cb input{width:16px;height:16px;cursor:pointer;}
+.aprob-monto-preview{font-size:14px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;}
+.aprob-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.aprob-field{display:flex;flex-direction:column;gap:2px;}
+.aprob-field.aprob-full{grid-column:1/-1;}
+.aprob-field label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;}
+.aprob-field input,.aprob-field select{padding:5px 7px;font-size:12px;border:1px solid var(--border2);background:var(--bg);color:var(--text);border-radius:5px;font-family:inherit;}
+.aprob-field input:focus,.aprob-field select:focus{border-color:var(--accent);outline:none;}
+.modal-en-item{padding:8px 12px;font-size:13px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.modal-en-item:hover{background:var(--card2);}
+.modal-en-item:last-child{border-bottom:none;}
+.modal-en-item-meta{font-size:11px;color:var(--muted);}
+.modal-en-item.disabled{opacity:0.4;cursor:not-allowed;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 textarea.form-control{resize:vertical;min-height:70px}
 select.form-control{cursor:pointer}
@@ -286,7 +432,7 @@ td{padding:8px 10px;color:var(--text)}
 .ms-option .ms-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
 </style>
 </head>
-<body class="staging-mode">
+<body>
 <!-- STAGING: banner de ambiente de prueba -->
 <div class="staging-banner">⚠ Ambiente de prueba — los cambios se guardan en el Sheet real</div>
 <div id="app">
@@ -308,6 +454,7 @@ td{padding:8px 10px;color:var(--text)}
     <button class="tab"        onclick="showTab('creditos')"  id="tab-creditos">💳 Créditos</button>
     <button class="tab"        onclick="showTab('egresos')"   id="tab-egresos">💸 Egresos</button>
     <button class="tab"        onclick="showTab('ingresos')" id="tab-ingresos">💰 Ingresos</button>
+    <button class="tab"        onclick="showTab('presupuestos')" id="tab-presupuestos">🎯 Presupuestos</button>
     <button class="tab"        onclick="showTab('config')"    id="tab-config">⚙️ Config</button>
   </nav>
 
@@ -315,7 +462,7 @@ td{padding:8px 10px;color:var(--text)}
   <div class="panel active" id="panel-cargar">
     <div class="form-group">
       <label class="form-label">Describí tu transacción</label>
-      <textarea class="form-control" id="txInput" rows="3" placeholder="ej: 15000 super con visa&#10;ej: cobré 800 mil de Vision BI en Santander&#10;ej: compré 200 USDT a 1480 desde Buenbit"></textarea>
+      <textarea class="form-control" id="txInput" rows="3" placeholder="ej: 15000 super con visa&#10;ej: cobré 800 mil de Vision BI en Santander&#10;ej: compré 200 USDT a 1480 desde NEXO"></textarea>
     </div>
     <!-- FIX 7b: botones de procesar con IA + carga manual como alternativa -->
     <div style="display:flex;gap:8px;">
@@ -323,6 +470,24 @@ td{padding:8px 10px;color:var(--text)}
       <button class="btn btn-secondary" onclick="cargarManual()" style="flex:1">✍️ Manual</button>
     </div>
     <div id="groq-loader" class="loader" style="display:none"><span class="spinner"></span>Procesando…</div>
+
+    <!-- FIX 20: Foto de resumen de tarjeta / ticket → batch de transacciones -->
+    <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
+      <label class="form-label" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>📷 O cargá una foto (resumen, ticket)</span>
+        <span style="font-size:10px;color:var(--muted);font-weight:400;">Claude Haiku 4.5</span>
+      </label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('photo-input').click()" style="flex:1;">📷 Cargar foto</button>
+        <button class="btn btn-secondary" id="btnAnalizarFoto" onclick="analizarFotoConIA()" style="flex:1;display:none;">🔍 Analizar</button>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none;" onchange="onFotoSeleccionada(event)">
+      <div id="foto-preview-wrap" style="display:none;margin-top:8px;position:relative;">
+        <img id="foto-preview" style="max-width:100%;border-radius:var(--r);border:1px solid var(--border);">
+        <button onclick="quitarFoto()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;">✕</button>
+      </div>
+      <div id="foto-loader" class="loader" style="display:none;margin-top:8px;"><span class="spinner"></span>Analizando imagen con Claude…</div>
+    </div>
 
     <!-- FIX 12: widget "última carga" — sutil, debajo de los botones de acción -->
     <div id="ultima-carga-widget" class="ultima-carga" style="display:none;">
@@ -400,6 +565,10 @@ td{padding:8px 10px;color:var(--text)}
         <select id="h-con" onchange="renderHistorial()"><option value="">Todas las cuentas</option></select>
         <select id="h-moneda" onchange="renderHistorial()"><option value="">Todas las monedas</option></select>
       </div>
+      <!-- FIX 15: toggle para mostrar solo duplicados -->
+      <div class="hist-filter-row">
+        <button class="btn btn-secondary" id="btn-toggle-duplicados" onclick="toggleDuplicados()" style="font-size:13px;padding:8px 12px;">🔍 Mostrar duplicados</button>
+      </div>
     </div>
     <div class="hist-summary">
       <div class="hist-sum-box"><div class="hist-sum-label">Registros</div><div class="hist-sum-val" id="h-count">—</div></div>
@@ -435,16 +604,28 @@ td{padding:8px 10px;color:var(--text)}
         <input type="date" class="form-control" id="cred-desde" onchange="renderCreditos()" style="font-size:13px">
         <input type="date" class="form-control" id="cred-hasta" onchange="renderCreditos()" style="font-size:13px">
       </div>
-      <div class="hist-filter-row" style="flex-wrap:wrap;gap:6px">
-        <label class="cred-check"><input type="checkbox" id="ck-visa" checked onchange="renderCreditos()"> Visa Santander</label>
-        <label class="cred-check"><input type="checkbox" id="ck-amex" checked onchange="renderCreditos()"> AMEX Santander</label>
-        <label class="cred-check"><input type="checkbox" id="ck-pae"  checked onchange="renderCreditos()"> AMEX PAE</label>
+      <!-- FIX 18: multi-select de tarjetas (reemplaza los 3 checkboxes anteriores) -->
+      <div class="multi-select" id="cred-tarjetas-ms" style="margin-bottom:0;">
+        <button class="multi-select-btn" onclick="toggleMultiSelect('cred-tarjetas-ms')">
+          <span id="cred-tarjetas-label">Tarjetas (todas)</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="multi-select-dropdown" id="cred-tarjetas-dropdown">
+          <div class="multi-select-actions">
+            <button onclick="msSelectAll('cred-tarjetas-ms');renderCreditos()">Todas</button>
+            <button onclick="msSelectNone('cred-tarjetas-ms');renderCreditos()">Ninguna</button>
+          </div>
+          <div id="cred-tarjetas-options"></div>
+        </div>
       </div>
       <div class="hist-filter-row">
         <label class="cred-check"><input type="checkbox" id="ck-ars" checked onchange="renderCreditos()"> ARS</label>
         <label class="cred-check"><input type="checkbox" id="ck-usd" checked onchange="renderCreditos()"> USD</label>
       </div>
     </div>
+
+    <!-- FIX 18: KPI cards con deuda total / próximo cierre / futura -->
+    <div id="cred-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;"></div>
 
     <!-- Mini chart -->
     <div style="position:relative;width:100%;height:160px;margin-bottom:16px">
@@ -457,7 +638,19 @@ td{padding:8px 10px;color:var(--text)}
 
     <!-- Tabla pagos -->
     <div class="card-title" style="margin-bottom:8px">Pagos (EN pago tarjeta)</div>
-    <div class="tbl-wrap" id="cred-pagos-wrap"></div>
+    <div class="tbl-wrap" id="cred-pagos-wrap" style="margin-bottom:16px"></div>
+
+    <!-- FIX 18: detalle de transacciones por tarjeta + moneda + mes -->
+    <div class="card-title" style="margin-bottom:8px">🔍 Detalle de transacciones</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <select id="det-tarjeta" class="form-control" onchange="renderDetalleCreditos()" style="flex:1;min-width:130px;font-size:12px;padding:6px 8px;"></select>
+      <select id="det-moneda" class="form-control" onchange="renderDetalleCreditos()" style="flex:0 0 80px;font-size:12px;padding:6px 8px;">
+        <option value="ARS">ARS</option>
+        <option value="USD">USD</option>
+      </select>
+      <select id="det-mes" class="form-control" onchange="renderDetalleCreditos()" style="flex:1;min-width:120px;font-size:12px;padding:6px 8px;"></select>
+    </div>
+    <div class="tbl-wrap" id="cred-detalle-wrap"></div>
 
   </div>
 
@@ -558,36 +751,116 @@ td{padding:8px 10px;color:var(--text)}
 
   </div>
 
-  <!-- PATRIMONIO (FIX 9 + FIX 10) -->
+  <!-- PATRIMONIO (FIX 9 + FIX 10 + FIX 16) -->
   <div class="panel" id="panel-patrimonio">
-    <!-- Resumen ejecutivo (sigue afectado por filtro ARS/USD) -->
-    <div class="pn-resumen" id="pn-resumen">
-      <div class="pn-label">Patrimonio neto</div>
-      <div class="pn-total" id="pn-total">—</div>
-      <div class="pn-total-alt" id="pn-total-alt">—</div>
-      <div class="pn-cards">
-        <div class="pn-card"><div class="pn-card-label">Líquido</div><div class="pn-card-value" id="pn-sub-liquido">—</div></div>
-        <div class="pn-card"><div class="pn-card-label">Inversiones</div><div class="pn-card-value" id="pn-sub-inversiones">—</div></div>
-        <div class="pn-card pn-card-danger"><div class="pn-card-label">Deuda</div><div class="pn-card-value" id="pn-sub-pasivos">—</div></div>
-      </div>
-      <div class="pn-flujos" id="pn-flujos">—</div>
+    <!-- FIX 16: sub-tabs Resumen / Reconciliación -->
+    <div class="subtabs">
+      <button class="subtab active" onclick="showPNSubtab('resumen')" id="pnsubtab-resumen">📊 Resumen</button>
+      <button class="subtab" onclick="showPNSubtab('reconciliacion')" id="pnsubtab-reconciliacion">⚖️ Reconciliación</button>
+      <button class="subtab" onclick="showPNSubtab('movimientos')" id="pnsubtab-movimientos">🕒 Últimos movimientos</button>
     </div>
 
-    <!-- Filtros (ARS/USD afecta SOLO al resumen ejecutivo) -->
-    <div class="pn-filtros">
-      <input type="date" class="pn-fecha" id="pn-desde">
-      <input type="date" class="pn-fecha" id="pn-hasta">
-      <div class="pn-moneda-toggle" title="Filtra solo el resumen ejecutivo de arriba">
-        <button class="pn-moneda-btn active" id="pn-mon-ars" onclick="setPNMoneda('ARS')">ARS</button>
-        <button class="pn-moneda-btn" id="pn-mon-usd" onclick="setPNMoneda('USD')">USD</button>
+    <!-- Sub-panel: Resumen (lo que existía antes) -->
+    <div class="subpanel active" id="pnsubpanel-resumen">
+      <!-- FIX 16: badge de salud arriba del resumen -->
+      <div id="pn-badge-salud" style="display:none;"></div>
+
+      <!-- Resumen ejecutivo (sigue afectado por filtro ARS/USD) -->
+      <div class="pn-resumen" id="pn-resumen">
+        <div class="pn-label">Patrimonio neto</div>
+        <div class="pn-total" id="pn-total">—</div>
+        <div class="pn-total-alt" id="pn-total-alt">—</div>
+        <div class="pn-cards">
+          <div class="pn-card"><div class="pn-card-label">Líquido</div><div class="pn-card-value" id="pn-sub-liquido">—</div></div>
+          <div class="pn-card"><div class="pn-card-label">Inversiones</div><div class="pn-card-value" id="pn-sub-inversiones">—</div></div>
+          <div class="pn-card pn-card-danger"><div class="pn-card-label">Deuda</div><div class="pn-card-value" id="pn-sub-pasivos">—</div></div>
+        </div>
+        <div class="pn-flujos" id="pn-flujos">—</div>
       </div>
-      <button class="pn-moneda-btn" onclick="refrescarPN()" title="Refrescar saldos iniciales y movimientos desde el Sheet">↻</button>
+
+      <!-- Filtros (ARS/USD afecta SOLO al resumen ejecutivo) -->
+      <div class="pn-filtros">
+        <input type="date" class="pn-fecha" id="pn-desde">
+        <input type="date" class="pn-fecha" id="pn-hasta">
+        <div class="pn-moneda-toggle" title="Filtra solo el resumen ejecutivo de arriba">
+          <button class="pn-moneda-btn active" id="pn-mon-ars" onclick="setPNMoneda('ARS')">ARS</button>
+          <button class="pn-moneda-btn" id="pn-mon-usd" onclick="setPNMoneda('USD')">USD</button>
+        </div>
+        <button class="pn-moneda-btn" onclick="refrescarPN()" title="Refrescar saldos iniciales y movimientos desde el Sheet">↻</button>
+      </div>
+
+      <!-- Bloques se generan dinámicamente desde JS -->
+      <div id="pn-bloque-liquido"></div>
+      <div id="pn-bloque-inversiones"></div>
+      <div id="pn-bloque-pasivos"></div>
     </div>
 
-    <!-- Bloques se generan dinámicamente desde JS -->
-    <div id="pn-bloque-liquido"></div>
-    <div id="pn-bloque-inversiones"></div>
-    <div id="pn-bloque-pasivos"></div>
+    <!-- Sub-panel: Reconciliación (FIX 16) -->
+    <div class="subpanel" id="pnsubpanel-reconciliacion">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);margin-bottom:12px;">
+        <span id="rec-ultima-fecha">Sin verificaciones previas</span>
+        <button onclick="resetReconciliacion()" style="font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;">Reset valores</button>
+      </div>
+      <div id="rec-bloque-liquido"></div>
+      <div id="rec-bloque-posiciones"></div>
+      <div id="rec-bloque-tarjetas"></div>
+    </div>
+
+    <!-- Sub-panel: Últimos movimientos (FIX 21) -->
+    <div class="subpanel" id="pnsubpanel-movimientos">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+        <div style="font-size:11px;color:var(--muted);line-height:1.4;">Hasta dónde cargaste en cada cuenta. Ámbar = más de 30 días sin movimientos.</div>
+        <button id="mov-btn-editar" class="btn btn-secondary" onclick="toggleMovEditar()" style="flex:0 0 auto;width:auto;padding:6px 10px;font-size:11px;">⚙ Elegir cuentas</button>
+      </div>
+      <div id="mov-editor" style="display:none;"></div>
+      <div id="mov-lista"></div>
+    </div>
+  </div>
+
+  <!-- PRESUPUESTOS (FIX 19) -->
+  <div class="panel" id="panel-presupuestos">
+    <!-- Header: caja con barra de progreso global + proyección -->
+    <div class="pre-resumen" id="pre-resumen">
+      <div class="pre-resumen-label">PRESUPUESTO <span id="pre-mes-label">—</span></div>
+      <div class="pre-resumen-total" id="pre-resumen-total">—</div>
+      <div class="pre-resumen-bar-wrap">
+        <div class="pre-resumen-bar" id="pre-resumen-bar"></div>
+      </div>
+      <div class="pre-resumen-meta" id="pre-resumen-meta">—</div>
+      <div class="pre-resumen-proy" id="pre-resumen-proy">—</div>
+    </div>
+
+    <!-- Filtros: período histórico + cantidad de categorías -->
+    <div class="pre-filtros">
+      <div class="pre-filtro-item">
+        <label>Histórico</label>
+        <select id="pre-historico" onchange="renderPresupuestos()">
+          <option value="3">3 meses</option>
+          <option value="6" selected>6 meses</option>
+          <option value="12">12 meses</option>
+        </select>
+      </div>
+      <div class="pre-filtro-item">
+        <label>Categorías</label>
+        <select id="pre-topn" onchange="renderPresupuestos()">
+          <option value="5">Top 5</option>
+          <option value="10" selected>Top 10</option>
+          <option value="15">Top 15</option>
+          <option value="999">Todas</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Bloque categorías -->
+    <div class="pre-bloque-titulo">📁 Categorías</div>
+    <div class="pre-bloque" id="pre-bloque-cats"></div>
+
+    <!-- Bloque conceptos específicos (EN) -->
+    <div class="pre-bloque-titulo">🎯 Conceptos específicos</div>
+    <div class="pre-bloque" id="pre-bloque-ens"></div>
+    <div style="margin-top:8px;">
+      <button class="btn btn-secondary" onclick="abrirModalAgregarEN()" style="font-size:13px;padding:8px 12px;">+ Agregar concepto</button>
+    </div>
   </div>
 
   <!-- CONFIG -->
@@ -609,8 +882,15 @@ td{padding:8px 10px;color:var(--text)}
           <input type="url" class="form-control" id="cfg-script-url" placeholder="https://script.google.com/...">
         </div>
         <div class="form-group">
-          <label class="form-label">API Key Groq</label>
-          <input type="password" class="form-control" id="cfg-groq-key" placeholder="gsk_...">
+          <label class="form-label">API Key Claude (Anthropic)</label>
+          <input type="password" class="form-control" id="cfg-claude-key" placeholder="sk-ant-...">
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">
+            Configurá spending cap USD 5/mes en <a href="https://console.anthropic.com/settings/limits" target="_blank" style="color:var(--accent);">console.anthropic.com</a>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">API Key Groq <span style="color:var(--muted);font-size:11px;">(legacy fallback)</span></label>
+          <input type="password" class="form-control" id="cfg-groq-key" placeholder="gsk_... (opcional)">
         </div>
         <button class="btn btn-primary" onclick="guardarConfig()">Guardar conexión</button>
       </div>
@@ -687,8 +967,22 @@ td{padding:8px 10px;color:var(--text)}
   </div>
 </div>
 
+<!-- FIX 19: modal para agregar concepto (EN) al presupuesto -->
+<div class="modal-overlay" id="modal-agregar-en">
+  <div class="modal-box">
+    <div class="modal-title" style="color:var(--accent)">+ Agregar concepto</div>
+    <div class="modal-subtitle">Elegí un concepto para vigilar puntualmente. Vas a ver gastado del mes vs presupuesto definido por vos vs histórico.</div>
+    <input type="text" id="modal-en-search" class="form-control" placeholder="Buscar concepto..." oninput="filtrarModalEN()" style="margin-bottom:10px;">
+    <div id="modal-en-lista" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r2);"></div>
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn btn-secondary" onclick="cerrarModalAgregarEN()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let allRows=[], tablasCuentas=[], tablasCategorias=[], tablasTipos=[];
+let mostrandoDuplicados=false; /* FIX 15: toggle de vista duplicados en Historial */
 let config={}, tasas={}, sortState={}, trackerPeriod='mes';
 const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
@@ -698,10 +992,12 @@ function cargarConfig(){
   config=JSON.parse(localStorage.getItem('ft_config')||'{}');
   if(config.scriptUrl) document.getElementById('cfg-script-url').value=config.scriptUrl;
   if(config.groqKey)   document.getElementById('cfg-groq-key').value=config.groqKey;
+  if(config.claudeKey) document.getElementById('cfg-claude-key').value=config.claudeKey;
 }
 function guardarConfig(){
   config.scriptUrl=document.getElementById('cfg-script-url').value.trim();
   config.groqKey=document.getElementById('cfg-groq-key').value.trim();
+  config.claudeKey=document.getElementById('cfg-claude-key').value.trim();
   localStorage.setItem('ft_config',JSON.stringify(config));
   showToast('Configuración guardada ✓');
 }
@@ -716,7 +1012,7 @@ function guardarTasas(){
   showToast('Tasas guardadas ✓');
 }
 
-const TABS=['cargar','historial','patrimonio','tracker','creditos','egresos','ingresos','config'];
+const TABS=['cargar','historial','patrimonio','tracker','creditos','egresos','ingresos','presupuestos','config'];
 function showTab(id){
   TABS.forEach(t=>{ document.getElementById('panel-'+t).classList.toggle('active',t===id); const b=document.getElementById('tab-'+t); if(b) b.classList.toggle('active',t===id); });
   if(id==='historial') renderHistorial();
@@ -725,6 +1021,7 @@ function showTab(id){
   if(id==='egresos')   renderEgresos();
   if(id==='ingresos')  renderIngresos();
   if(id==='patrimonio') renderPatrimonio();
+  if(id==='presupuestos') renderPresupuestos();
 }
 
 async function syncSheet(){
@@ -746,11 +1043,11 @@ async function syncSheet(){
 async function cargarSheet(){
   const url=config.scriptUrl;
   if(!url){ showToast('Configurá la URL del Script ⚙️'); return; }
-  /* FIX 3: fetches en paralelo con Promise.allSettled — baja ~40% el tiempo de carga inicial.
-     Usamos allSettled y no all para que si un endpoint falla, el otro igual entregue sus datos. */
+  /* FIX 3 + FIX 13: fetches en paralelo con Promise.allSettled + cache-busting via timestamp.
+     Sin el timestamp, el navegador puede servir respuestas viejas del cache al abrir la app. */
   const [resRead, resCuentas]=await Promise.allSettled([
-    fetch(url+'?action=read').then(r=>r.json()),
-    fetch(url+'?action=cuentas').then(r=>r.json())
+    fetch(urlSinCache(url, 'action=read')).then(r=>r.json()),
+    fetch(urlSinCache(url, 'action=cuentas')).then(r=>r.json())
   ]);
   if(resRead.status==='fulfilled' && resRead.value.status==='ok'){
     allRows=resRead.value.rows||[];
@@ -812,8 +1109,10 @@ function poblarDropdowns(){
 async function procesarTx(){
   const txt=document.getElementById('txInput').value.trim();
   if(!txt){ showToast('Escribí una transacción'); return; }
-  const key=config.groqKey;
-  if(!key){ showToast('Configurá tu API Key de Groq ⚙️'); showTab('config'); return; }
+  /* FIX 20: preferimos Claude Haiku 4.5. Groq queda como fallback si no hay Claude key. */
+  const claudeKey=config.claudeKey;
+  const groqKey=config.groqKey;
+  if(!claudeKey && !groqKey){ showToast('Configurá tu API Key de Claude o Groq ⚙️'); showTab('config'); return; }
   document.getElementById('groq-loader').style.display='block';
   document.getElementById('btnProcesar').disabled=true;
   document.getElementById('form-resultado').style.display='none';
@@ -851,35 +1150,66 @@ Categorías válidas: ${listaCat}
 Respondé con JSON OBJECT (no array):
 {"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"nombre exacto EN","medio_pago":"nombre exacto CON","categoria":"categoría exacta","comentario":"","cuota":null,"cuotas":null}`;
   try{
-    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:500})});
-    /* FIX 7a: manejo robusto de errores HTTP de Groq */
-    if(!res.ok){
-      let msg='Error con Groq';
-      if(res.status===429) msg='Límite de Groq alcanzado — carga manual habilitada';
-      else if(res.status===401) msg='API key de Groq inválida — verificá en Config';
-      else if(res.status>=500) msg='Groq fuera de servicio — carga manual habilitada';
-      else msg=`Error Groq (${res.status}) — carga manual habilitada`;
-      showToast(msg);
-      cargarManual();
-      return;
+    /* FIX 20: llamada a Claude Haiku 4.5 (fallback a Groq si no hay Claude key). */
+    let raw;
+    if(claudeKey){
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key': claudeKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body:JSON.stringify({
+          model:'claude-haiku-5-5',
+          max_tokens:500,
+          temperature:0.1,
+          messages:[{role:'user',content:prompt}]
+        })
+      });
+      if(!res.ok){
+        let msg='Error con Claude';
+        if(res.status===429) msg='Límite de Claude alcanzado (spending cap?) — carga manual';
+        else if(res.status===401) msg='API key de Claude inválida — verificá en Config';
+        else if(res.status>=500) msg='Claude fuera de servicio — carga manual';
+        else msg=`Error Claude (${res.status}) — carga manual`;
+        showToast(msg);
+        cargarManual();
+        return;
+      }
+      const d=await res.json();
+      raw=d?.content?.[0]?.text;
+    } else {
+      /* Fallback Groq (legacy) */
+      const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+groqKey},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.1,max_tokens:500})});
+      if(!res.ok){
+        let msg='Error con Groq';
+        if(res.status===429) msg='Límite de Groq alcanzado — carga manual habilitada';
+        else if(res.status===401) msg='API key de Groq inválida — verificá en Config';
+        else if(res.status>=500) msg='Groq fuera de servicio — carga manual habilitada';
+        else msg=`Error Groq (${res.status}) — carga manual habilitada`;
+        showToast(msg);
+        cargarManual();
+        return;
+      }
+      const d=await res.json();
+      raw=d?.choices?.[0]?.message?.content;
     }
-    const d=await res.json();
-    const raw=d?.choices?.[0]?.message?.content;
     if(!raw){
-      showToast('Respuesta vacía de Groq — carga manual habilitada');
+      showToast('Respuesta vacía de IA — carga manual habilitada');
       cargarManual();
       return;
     }
     const clean=raw.replace(/```json|```/g,'').trim();
-    /* FIX 6: Groq ahora devuelve 1 sola transacción (object). Por retrocompat, si devuelve array, tomamos el primero. */
     let tx;
     try{
       tx=JSON.parse(clean);
       if(Array.isArray(tx)) tx=tx[0]||{};
       if(!tx || typeof tx!=='object') throw new Error('JSON inesperado');
     } catch(parseErr){
-      console.error('[procesarTx] JSON inválido de Groq:', clean);
-      showToast('Groq devolvió algo raro — carga manual habilitada');
+      console.error('[procesarTx] JSON inválido de IA:', clean);
+      showToast('IA devolvió algo raro — carga manual habilitada');
       cargarManual();
       return;
     }
@@ -986,6 +1316,317 @@ function mostrarModalCuotas(fechaBase, cuotaInicial, totalCuotas, cuotasAGenerar
   document.getElementById('modal-confirmar').classList.add('active');
 }
 
+/* ══════════════════════════════════════════════════════════
+   FIX 20 — Foto de resumen/ticket → Claude Haiku 4.5 con visión
+   → JSON de transacciones → modal aprobador → batch write al Sheet
+   ══════════════════════════════════════════════════════════ */
+
+let _fotoBase64 = null;   /* base64 de la foto seleccionada, sin prefijo data: */
+let _fotoMime   = null;   /* image/jpeg | image/png | image/webp */
+let _txsAprobador = [];   /* transacciones detectadas por la IA, editables antes de commit */
+
+function onFotoSeleccionada(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  if(file.size > 5 * 1024 * 1024){
+    showToast('La foto supera 5MB. Sacala de menor resolución.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    /* e.target.result es "data:image/jpeg;base64,XXXX" */
+    const fullDataUrl = e.target.result;
+    const match = fullDataUrl.match(/^data:([^;]+);base64,(.+)$/);
+    if(!match){ showToast('No pude leer la imagen'); return; }
+    _fotoMime = match[1];
+    _fotoBase64 = match[2];
+    document.getElementById('foto-preview').src = fullDataUrl;
+    document.getElementById('foto-preview-wrap').style.display = 'block';
+    document.getElementById('btnAnalizarFoto').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function quitarFoto(){
+  _fotoBase64 = null;
+  _fotoMime = null;
+  document.getElementById('photo-input').value = '';
+  document.getElementById('foto-preview').src = '';
+  document.getElementById('foto-preview-wrap').style.display = 'none';
+  document.getElementById('btnAnalizarFoto').style.display = 'none';
+}
+
+async function analizarFotoConIA(){
+  if(!_fotoBase64){ showToast('Cargá una foto primero'); return; }
+  const claudeKey = config.claudeKey;
+  if(!claudeKey){
+    showToast('Necesitás API Key de Claude para analizar fotos ⚙️');
+    showTab('config');
+    return;
+  }
+
+  document.getElementById('foto-loader').style.display = 'block';
+  document.getElementById('btnAnalizarFoto').disabled = true;
+
+  const hoy = new Date().toISOString().split('T')[0];
+  const añoActual = new Date().getFullYear();
+  const listaEN = tablasCuentas.filter(c=>c.tipo_cuenta==='Egreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Super, Verduleria, Alquiler, Spotify...';
+  const listaCON = tablasCuentas.filter(c=>c.tipo_cuenta==='Ingreso'||c.tipo_cuenta==='Balance').map(c=>c.nombre).filter((v,i,a)=>a.indexOf(v)===i).sort().join(', ')||'Visa Santander, MP, Efectivo, Santander...';
+  const listaCat = [...new Set(tablasCategorias.map(c=>c.categoria).filter(c=>c&&c!=='TBD'))].sort().join(', ')||'Alimentación, Vivienda, Movilidad, Salidas, Viajes, Ocio, Compras Personales, Varios / TBD';
+
+  const prompt = `Sos un asistente de finanzas argentino. Analizás una imagen de un resumen de tarjeta, ticket, factura, o extracto bancario, y extraés todas las transacciones visibles.
+
+CONTEXTO TEMPORAL:
+- Hoy es ${hoy}. Año actual: ${añoActual}.
+- Formato de fecha: YYYY-MM-DD SIEMPRE con año de 4 dígitos.
+- Si aparece solo DD/MM sin año, asumí ${añoActual} salvo que sea clara la ambigüedad.
+- Si detectás que es un resumen de tarjeta de crédito, la fecha de cada gasto es la que figura junto al ítem (fecha de compra), NO la fecha de vencimiento.
+
+REGLAS DE DATOS:
+1. EN = destino del dinero (donde gastaste). CON = origen del dinero (con qué pagaste).
+2. Si es resumen de tarjeta: CON = nombre exacto de la tarjeta (Visa Santander, AMEX Santander, Visa ICBC, Master MP, Master CencoPay). Usá lista.
+3. EN debe salir de la lista si coincide o se parece; sino, ponelo como aparece en el ticket/resumen.
+4. Monto SIEMPRE positivo, número limpio (sin miles con puntos ni símbolo).
+5. Moneda: default ARS. USD si está claro (USD, US$, u$s, o el resumen es en dólares).
+6. Categoría: usá la lista. Si no cabe, "Varios / TBD".
+7. Comentario: opcional, incluí info relevante que ayude (ej: "MERCADOLIBRE - TIENDA XYZ", "Nyc restaurante", número de cuota si aparece).
+8. Cuota / cuotas: si aparece "1/6", "3/12", ponelos como números. Sino null.
+9. IGNORÁ líneas de resumen (subtotales, IVA, totales, saldos, intereses acumulados) — SOLO transacciones individuales.
+10. Si dudás si una línea es una transacción o un subtotal, EXCLUILA.
+
+Nombres válidos EN: ${listaEN}
+Nombres válidos CON: ${listaCON}
+Categorías válidas: ${listaCat}
+
+Respondé SOLO con JSON válido, sin markdown, sin texto adicional. Formato ARRAY:
+[
+  {"fecha":"YYYY-MM-DD","monto":0,"moneda":"ARS","descripcion":"...","medio_pago":"...","categoria":"...","comentario":"","cuota":null,"cuotas":null},
+  ...
+]
+
+Si la imagen no contiene transacciones visibles, respondé: []`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': claudeKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-5-5',
+        max_tokens:4000,
+        temperature:0.1,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'image', source:{type:'base64', media_type:_fotoMime, data:_fotoBase64}},
+            {type:'text', text:prompt}
+          ]
+        }]
+      })
+    });
+
+    if(!res.ok){
+      let msg='Error con Claude';
+      if(res.status===429) msg='Límite de Claude alcanzado (spending cap?)';
+      else if(res.status===401) msg='API key de Claude inválida';
+      else if(res.status===400) msg='Imagen no soportada o payload inválido';
+      else if(res.status>=500) msg='Claude fuera de servicio';
+      else msg=`Error Claude (${res.status})`;
+      showToast(msg);
+      return;
+    }
+
+    const d = await res.json();
+    const raw = d?.content?.[0]?.text;
+    if(!raw){ showToast('Claude no devolvió texto'); return; }
+
+    const clean = raw.replace(/```json|```/g, '').trim();
+    let txs;
+    try{
+      txs = JSON.parse(clean);
+      if(!Array.isArray(txs)) txs = [txs];
+    } catch(e){
+      console.error('[analizarFoto] JSON inválido:', clean);
+      showToast('Claude devolvió algo raro. Probá con otra foto.');
+      return;
+    }
+
+    if(txs.length === 0){
+      showToast('No detecté transacciones en la imagen');
+      return;
+    }
+
+    /* Sanitización defensiva */
+    txs = txs.map(tx => ({
+      fecha: sanitizarFecha(tx.fecha || hoy),
+      monto: parseFloat(tx.monto) || 0,
+      moneda: (tx.moneda || 'ARS').toUpperCase(),
+      descripcion: String(tx.descripcion || '').trim(),
+      medio_pago: String(tx.medio_pago || '').trim(),
+      categoria: String(tx.categoria || 'Varios / TBD').trim(),
+      comentario: String(tx.comentario || '').trim(),
+      cuota: tx.cuota ? parseInt(tx.cuota) : null,
+      cuotas: tx.cuotas ? parseInt(tx.cuotas) : null,
+      _descartar: false,
+    }));
+
+    _txsAprobador = txs;
+    abrirModalAprobador();
+  } catch(err){
+    console.error(err);
+    showToast('Error de red al llamar a Claude');
+  } finally {
+    document.getElementById('foto-loader').style.display = 'none';
+    document.getElementById('btnAnalizarFoto').disabled = false;
+  }
+}
+
+/* ── Modal aprobador ── */
+function abrirModalAprobador(){
+  renderModalAprobador();
+  document.getElementById('modal-aprobador').classList.add('active');
+}
+function cerrarModalAprobador(){
+  document.getElementById('modal-aprobador').classList.remove('active');
+  _txsAprobador = [];
+}
+
+function renderModalAprobador(){
+  const cont = document.getElementById('aprobador-lista');
+  const totalDetectadas = _txsAprobador.length;
+  const activas = _txsAprobador.filter(t => !t._descartar).length;
+  document.getElementById('aprobador-header-info').textContent =
+    `${totalDetectadas} detectadas · ${activas} para cargar`;
+
+  cont.innerHTML = _txsAprobador.map((t, i) => `
+    <div class="aprob-row ${t._descartar?'aprob-descartada':''}" data-idx="${i}">
+      <div class="aprob-row-header">
+        <label class="aprob-cb">
+          <input type="checkbox" ${!t._descartar?'checked':''} onchange="toggleDescartar(${i}, !this.checked)">
+          <span>#${i+1}</span>
+        </label>
+        <div class="aprob-monto-preview">${t.moneda} ${fmtNum(t.monto)}</div>
+      </div>
+      <div class="aprob-grid">
+        <div class="aprob-field">
+          <label>Fecha</label>
+          <input type="date" value="${t.fecha}" onchange="editarTx(${i},'fecha',this.value)">
+        </div>
+        <div class="aprob-field">
+          <label>Monto</label>
+          <input type="number" step="0.01" value="${t.monto}" onchange="editarTx(${i},'monto',this.value)">
+        </div>
+        <div class="aprob-field">
+          <label>Moneda</label>
+          <select onchange="editarTx(${i},'moneda',this.value)">
+            <option value="ARS" ${t.moneda==='ARS'?'selected':''}>ARS</option>
+            <option value="USD" ${t.moneda==='USD'?'selected':''}>USD</option>
+          </select>
+        </div>
+        <div class="aprob-field aprob-full">
+          <label>EN (destino)</label>
+          <input type="text" value="${esc(t.descripcion)}" onchange="editarTx(${i},'descripcion',this.value)">
+        </div>
+        <div class="aprob-field aprob-full">
+          <label>CON (origen)</label>
+          <input type="text" value="${esc(t.medio_pago)}" onchange="editarTx(${i},'medio_pago',this.value)">
+        </div>
+        <div class="aprob-field aprob-full">
+          <label>Categoría</label>
+          <input type="text" value="${esc(t.categoria)}" onchange="editarTx(${i},'categoria',this.value)">
+        </div>
+        <div class="aprob-field aprob-full">
+          <label>Comentario</label>
+          <input type="text" value="${esc(t.comentario)}" onchange="editarTx(${i},'comentario',this.value)">
+        </div>
+        <div class="aprob-field">
+          <label>Cuota</label>
+          <input type="number" value="${t.cuota||''}" placeholder="—" onchange="editarTx(${i},'cuota',this.value)">
+        </div>
+        <div class="aprob-field">
+          <label>de</label>
+          <input type="number" value="${t.cuotas||''}" placeholder="—" onchange="editarTx(${i},'cuotas',this.value)">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editarTx(idx, campo, valor){
+  if(campo==='monto') valor = parseFloat(valor) || 0;
+  else if(campo==='cuota' || campo==='cuotas') valor = valor ? parseInt(valor) : null;
+  _txsAprobador[idx][campo] = valor;
+}
+
+function toggleDescartar(idx, descartar){
+  _txsAprobador[idx]._descartar = descartar;
+  renderModalAprobador();
+}
+
+async function confirmarCargaAprobador(){
+  const activas = _txsAprobador.filter(t => !t._descartar);
+  if(activas.length === 0){
+    showToast('No hay transacciones para cargar');
+    return;
+  }
+  if(!confirm(`¿Cargar ${activas.length} transacción${activas.length>1?'es':''} al Sheet?`)) return;
+
+  const url = config.scriptUrl;
+  if(!url){ showToast('Configurá el Script URL ⚙️'); return; }
+
+  document.getElementById('btnConfirmarAprob').disabled = true;
+  setSyncDot('loading');
+
+  const rows = activas.map(t => ([
+    t.fecha,
+    t.monto,
+    t.moneda,
+    t.descripcion,
+    t.comentario,
+    t.medio_pago,
+    '',                    /* tipo — lo completa el Apps Script */
+    t.categoria || '',
+    t.cuota || '',
+    t.cuotas || '',
+    '', '',                /* cantidad, precio */
+  ]));
+
+  try{
+    await fetch(url, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({rows}),
+    });
+    showToast(`✓ ${rows.length} guardada(s)`);
+    setSyncDot('ok');
+
+    /* Actualizar allRows local para reflejar carga inmediata */
+    rows.forEach(r => {
+      allRows.push({
+        fecha:r[0]||'', monto:r[1]||0, moneda:r[2]||'ARS',
+        descripcion:r[3]||'', comentario:r[4]||'', medio_pago:r[5]||'',
+        tipo:r[6]||'', categoria:r[7]||'',
+        cuota:r[8]||'', cuotas:r[9]||''
+      });
+    });
+    actualizarUltimaCarga();
+
+    cerrarModalAprobador();
+    quitarFoto();
+  } catch(e){
+    console.error(e);
+    showToast('Error al guardar');
+    setSyncDot('err');
+  } finally {
+    document.getElementById('btnConfirmarAprob').disabled = false;
+  }
+}
+
 async function _ejecutarGuardado(){
   const url=config.scriptUrl;
   document.getElementById('btnGuardar').disabled=true;
@@ -1055,20 +1696,83 @@ async function _ejecutarGuardado(){
   }
 }
 
-function jsonpPost(url, payload){
-  return new Promise((resolve, reject)=>{
-    const cbName='cb_'+Date.now();
-    const script=document.createElement('script');
-    const timeout=setTimeout(()=>{ cleanup(); resolve('timeout-ok'); }, 20000);
-    window[cbName]=(data)=>{ cleanup(); resolve(data); };
-    script.onerror=()=>{ cleanup(); reject(new Error('Script error')); };
-    script.src=url+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
-    document.head.appendChild(script);
-    function cleanup(){ clearTimeout(timeout); delete window[cbName]; script.parentNode?.removeChild(script); }
-  });
+/* FIX 13: helper centralizado para fetches de lectura con cache-busting.
+   Agrega un timestamp único en cada llamada para que el navegador/CDN nunca
+   sirva una respuesta cacheada. Reemplaza al jsonpPost que ya no se usaba. */
+function urlSinCache(baseUrl, params){
+  const sep = baseUrl.indexOf('?') >= 0 ? '&' : '?';
+  const t = '_t=' + Date.now();
+  return baseUrl + sep + (params ? params + '&' : '') + t;
 }
 
 function resetForm(){ document.getElementById('txInput').value=''; document.getElementById('form-resultado').style.display='none'; }
+
+/* ════════════════════════════════════════════════════════
+   FIX 15 — Detección de duplicados (Nivel 2)
+   Misma fecha + monto + moneda + EN normalizado + CON normalizado.
+   Normalización: trim + lowercase + sin tildes/diacríticos.
+   ════════════════════════════════════════════════════════ */
+
+function normalizarTextoDup(s){
+  if(s===null || s===undefined) return '';
+  let t = String(s).trim().toLowerCase();
+  /* Quitar diacríticos: descompone à → a + ◌̀ y borra los combinables */
+  t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return t;
+}
+
+function claveDuplicado(r){
+  const f = partesFecha(r);
+  const fechaStr = f.y ? `${f.y}-${String(f.m).padStart(2,'0')}-${String(f.d).padStart(2,'0')}` : str(r.fecha);
+  const monto = parseFloat(r.monto)||0;
+  const moneda = String(r.moneda||'ARS').toUpperCase();
+  const en = normalizarTextoDup(r.descripcion);
+  const con = normalizarTextoDup(r.medio_pago);
+  /* FIX 16: incluir comentario en la clave para no marcar como duplicado
+     dos gastos legítimos del mismo importe/día con descripción distinta en el comentario
+     (ej: 2 juegos PS5 distintos de USD 20 el mismo día). */
+  const com = normalizarTextoDup(r.comentario);
+  return `${fechaStr}|${monto}|${moneda}|${en}|${con}|${com}`;
+}
+
+/* Devuelve array de grupos: [[fila1, fila2, ...], [fila3, fila4], ...]
+   Cada fila lleva un metadato _dupIdx (índice original en allRows) y _dupGrupoNum (1, 2, 3...). */
+function detectarDuplicados(rows){
+  const map = new Map();
+  rows.forEach((r, idx) => {
+    const k = claveDuplicado(r);
+    if(!map.has(k)) map.set(k, []);
+    map.get(k).push({...r, _dupIdx: idx});
+  });
+  const grupos = [];
+  let grupoNum = 1;
+  for(const [, filas] of map.entries()){
+    if(filas.length > 1){
+      filas.forEach(f => f._dupGrupoNum = grupoNum);
+      grupos.push(filas);
+      grupoNum++;
+    }
+  }
+  /* Ordenar grupos por fecha descendente (más recientes primero) */
+  grupos.sort((a,b) => {
+    const fa = partesFecha(a[0]), fb = partesFecha(b[0]);
+    return ((fb.y||0)*10000 + (fb.m||0)*100 + (fb.d||0)) - ((fa.y||0)*10000 + (fa.m||0)*100 + (fa.d||0));
+  });
+  return grupos;
+}
+
+function toggleDuplicados(){
+  mostrandoDuplicados = !mostrandoDuplicados;
+  const btn = document.getElementById('btn-toggle-duplicados');
+  if(mostrandoDuplicados){
+    btn.textContent = '✕ Salir de duplicados';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = '🔍 Mostrar duplicados';
+    btn.classList.remove('active');
+  }
+  renderHistorial();
+}
 
 function renderHistorial(){
   let rows=allRows;
@@ -1105,8 +1809,74 @@ function renderHistorial(){
   const sumaARS=rows.filter(r=>!str(r.moneda)||str(r.moneda)==='ARS').reduce((s,r)=>s+(parseFloat(r.monto)||0),0);
   document.getElementById('h-count').textContent=rows.length;
   document.getElementById('h-suma').textContent='$'+fmtNum(sumaARS);
+
+  /* FIX 15: si el toggle de duplicados está activo, cambiar a vista duplicados.
+     Detectamos sobre las filas YA filtradas (respeta los filtros del usuario). */
+  if(mostrandoDuplicados){
+    const grupos = detectarDuplicados(rows);
+    renderHistorialDuplicados(grupos, rows.length);
+    return;
+  }
+
   window._hRows=[...rows].sort((a,b)=>{ const fa=partesFecha(a),fb=partesFecha(b); return(fb.y-fa.y)||(fb.m-fa.m)||(fb.d-fa.d); });
   renderTablaHistorial(window._hRows, sortState['h']?.col||'fecha', sortState['h']?.dir||'desc');
+}
+
+/* FIX 15: render especial cuando el toggle de duplicados está activo.
+   Aplana los grupos en una sola tabla pero los visualiza coloreados por grupo
+   y marca con badges qué fila conviene conservar vs cuál borrar. */
+function renderHistorialDuplicados(grupos, totalRows){
+  const wrap = document.getElementById('h-tabla');
+  /* Banner informativo arriba de la tabla */
+  let banner = '';
+  if(grupos.length === 0){
+    banner = `<div class="dup-banner" style="border-color:var(--green);color:var(--green);">✓ <b>No se detectaron duplicados</b> en las ${totalRows} filas filtradas. Tu data está limpia.</div>`;
+    wrap.innerHTML = banner + '<div class="empty">Sin duplicados</div>';
+    /* También actualizar el contador arriba */
+    document.getElementById('h-count').textContent = '0';
+    return;
+  }
+  const totalFilasDup = grupos.reduce((s,g) => s + g.length, 0);
+  const filasABorrar = totalFilasDup - grupos.length;
+  banner = `<div class="dup-banner">🔍 <b>${grupos.length} grupos de duplicados</b> detectados · <b>${totalFilasDup} filas</b> involucradas · sugerencia: borrar <b>${filasABorrar} filas</b> (conservar la primera de cada grupo)</div>`;
+  document.getElementById('h-count').textContent = totalFilasDup;
+
+  /* Aplanar grupos manteniendo orden, agregando metadatos visuales */
+  const filasPlanas = [];
+  grupos.forEach((grupo, gi) => {
+    grupo.forEach((fila, fi) => {
+      filasPlanas.push({...fila, _grupoCss: gi % 5, _esKeep: fi === 0});
+    });
+  });
+
+  /* Render tabla con clases especiales por grupo */
+  const tabla = `<table><thead><tr>
+      <th>Grupo</th>
+      <th>Fecha</th>
+      <th>Monto</th>
+      <th>Mon</th>
+      <th>EN</th>
+      <th>CON</th>
+      <th>Categoría Destino</th>
+      <th>Comentario</th>
+    </tr></thead><tbody>${filasPlanas.map(r => {
+      const tagClass = r._esKeep ? 'dup-keep' : 'dup-del';
+      const tagBadge = r._esKeep
+        ? '<span class="dup-tag dup-tag-keep">CONSERVAR</span>'
+        : '<span class="dup-tag dup-tag-del">BORRAR</span>';
+      return `<tr class="dup-grupo-${r._grupoCss} ${tagClass}">
+        <td class="td-mono"><b>#${r._dupGrupoNum}</b>${tagBadge}</td>
+        <td class="td-mono td-muted" style="white-space:nowrap">${esc(fmtFecha(r))}</td>
+        <td class="td-mono">${esc(fmtMonto(parseFloat(r.monto)||0))}</td>
+        <td class="td-muted">${esc(str(r.moneda))}</td>
+        <td>${esc(str(r.descripcion))}</td>
+        <td class="td-muted">${esc(str(r.medio_pago))}</td>
+        <td>${r.categoria?`<span class="badge badge-muted" style="font-size:9px">${esc(str(r.categoria))}</span>`:''}</td>
+        <td class="td-muted" style="font-size:11px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(str(r.comentario))}">${esc(str(r.comentario))}</td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
+
+  wrap.innerHTML = banner + tabla;
 }
 
 function renderTablaHistorial(rows,col='fecha',dir='desc'){
@@ -1333,34 +2103,55 @@ function showToast(msg){ const t=document.getElementById('toast'); t.textContent
 let credChart = null;
 
 function initCredFiltros(){
-  if(document.getElementById('cred-desde').value) return;
-  const now = new Date();
-  const desde = new Date(now.getFullYear(), now.getMonth()-5, 1);
-  document.getElementById('cred-desde').value = desde.toISOString().split('T')[0];
-  document.getElementById('cred-hasta').value = now.toISOString().split('T')[0];
+  if(!document.getElementById('cred-desde').value){
+    const now = new Date();
+    const desde = new Date(now.getFullYear(), now.getMonth()-5, 1);
+    document.getElementById('cred-desde').value = desde.toISOString().split('T')[0];
+    document.getElementById('cred-hasta').value = now.toISOString().split('T')[0];
+  }
+  /* FIX 18: poblar multi-select de tarjetas desde TARJETAS_CREDITO (excluye AMEX PAE) */
+  const wrap = document.getElementById('cred-tarjetas-options');
+  if(wrap && wrap.children.length === 0){
+    wrap.innerHTML = TARJETAS_CREDITO.map(t => `
+      <label class="ms-option">
+        <input type="checkbox" class="ms-cb" value="${esc(t)}" checked onchange="updateMsLabel('cred-tarjetas-ms');renderCreditos()">
+        <span class="ms-dot" style="background:${TARJETA_COLORS[t]||'#6b7280'}"></span>
+        ${esc(t)}
+      </label>`).join('');
+    updateMsLabel('cred-tarjetas-ms');
+  }
+  /* FIX 18: poblar dropdown de tarjeta en sección detalle */
+  const detTarjeta = document.getElementById('det-tarjeta');
+  if(detTarjeta && detTarjeta.children.length === 0){
+    detTarjeta.innerHTML = TARJETAS_CREDITO.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  }
 }
+
+/* FIX 18: colores por tarjeta (paleta consistente entre chart y dots) */
+const TARJETA_COLORS = {
+  'Visa Santander': '#0099ff',
+  'AMEX Santander': '#00d4aa',
+  'Visa ICBC':      '#ff8c42',
+  'Master MP':      '#ec4899',
+  'Master CencoPay':'#a78bfa', /* FIX 21 */
+};
 
 function renderCreditos(){
   initCredFiltros();
 
   const desde  = document.getElementById('cred-desde').value;
   const hasta  = document.getElementById('cred-hasta').value;
-  const ckVisa = document.getElementById('ck-visa').checked;
-  const ckAmex = document.getElementById('ck-amex').checked;
-  const ckPae  = document.getElementById('ck-pae').checked;
   const ckARS  = document.getElementById('ck-ars').checked;
   const ckUSD  = document.getElementById('ck-usd').checked;
 
-  const tarjetas = [];
-  if(ckVisa) tarjetas.push('Visa Santander');
-  if(ckAmex) tarjetas.push('AMEX Santander');
-  if(ckPae)  tarjetas.push('AMEX PAE');
+  /* FIX 18: tarjetas vienen del multi-select, ya NO de checkboxes individuales */
+  const tarjetas = getMsSelected('cred-tarjetas-ms');
 
   const monedas = [];
   if(ckARS) monedas.push('ARS');
   if(ckUSD) monedas.push('USD');
 
-  // Filtrar por fecha
+  /* Filtrar por fecha */
   const rowsFiltradas = allRows.filter(r=>{
     const f = partesFecha(r);
     if(!f.y) return false;
@@ -1371,26 +2162,21 @@ function renderCreditos(){
     return true;
   });
 
-  // ── GASTOS: filas donde CON es una tarjeta seleccionada ──
+  /* GASTOS: filas donde CON es una tarjeta seleccionada */
   const gastos = rowsFiltradas.filter(r => tarjetas.includes(str(r.medio_pago)));
 
-  // ── PAGOS: filas donde EN es "Pago Visa Santander" o "Pago Amex" ──
-  const PAGO_ENS = ['Pago Visa Santander','Pago Amex','Pago AMEX Santander','Pago AMEX'];
-  const pagos = rowsFiltradas.filter(r => PAGO_ENS.some(p => str(r.descripcion).toLowerCase() === p.toLowerCase()));
+  /* PAGOS: filas donde EN es "Pago <Tarjeta>" para las tarjetas seleccionadas */
+  const PAGO_ENS = tarjetas.map(t => ('Pago ' + t).toLowerCase());
+  const pagos = rowsFiltradas.filter(r => PAGO_ENS.includes(str(r.descripcion).toLowerCase()));
 
-  // Obtener meses del rango
+  /* Obtener meses del rango.
+     FIX 18: el chart antes incluía un mes anterior por usar `new Date(desde)` directo
+     y caer en zona horaria local. Acá usamos getMesesRango que ya está fixed. */
   const meses = getMesesRango(desde, hasta);
 
-  // ── Armar datos por tarjeta x mes ──
-  const TARJETA_LABELS = {
-    'Visa Santander': 'Visa Santander',
-    'AMEX Santander': 'AMEX Santander',
-    'AMEX PAE':       'AMEX PAE',
-  };
-
-  const gastosData = {}; // { 'Visa Santander': { 'ARS': {'2025-01': 50000, ...}, 'USD': {...} } }
+  /* Armar datos por tarjeta x mes (estructura para tabla pivot) */
+  const gastosData = {}; /* { 'Visa Santander': { ARS: {...}, USD: {...} } } */
   tarjetas.forEach(t => { gastosData[t] = {}; monedas.forEach(m => gastosData[t][m] = {}); });
-
   gastos.forEach(r => {
     const t   = str(r.medio_pago);
     const mon = str(r.moneda)||'ARS';
@@ -1402,54 +2188,78 @@ function renderCreditos(){
     }
   });
 
-  // ── Tabla gastos ──
+  /* ── KPIs de deuda total / próximo cierre / futura ── */
+  renderCredKPIs(tarjetas, monedas);
+
+  /* ── Tabla gastos: agrupado por tarjeta, sub-filas ARS/USD ── */
   const gastosWrap = document.getElementById('cred-gastos-wrap');
   if(!meses.length || !tarjetas.length){
     gastosWrap.innerHTML='<div class="empty">Sin datos</div>';
   } else {
     const mesHeaders = meses.map(k=>`<th>${fmtMesKey(k)}</th>`).join('');
     let rows = '';
+    /* FIX 18: header de tarjeta + sub-filas ARS/USD agrupadas */
     tarjetas.forEach(t=>{
+      const totalesTarjeta = meses.map(k => {
+        let sum = 0;
+        monedas.forEach(mon => sum += (gastosData[t]?.[mon]?.[k] || 0));
+        return sum;
+      });
+      const granTotalTarjeta = totalesTarjeta.reduce((a,v)=>a+v,0);
+      /* Solo mostrar si la tarjeta tiene movimientos en el rango */
+      if(granTotalTarjeta === 0) return;
+      /* Header de tarjeta */
+      rows += `<tr class="cred-tarjeta-header">
+        <td>${esc(t)}</td>
+        ${totalesTarjeta.map(v=>`<td class="td-mono">${v?'$'+fmtNum(v):'-'}</td>`).join('')}
+        <td class="td-mono">$${fmtNum(granTotalTarjeta)}</td>
+      </tr>`;
+      /* Sub-filas ARS/USD */
       monedas.forEach(mon=>{
         const rowData = meses.map(k=> gastosData[t]?.[mon]?.[k] || 0);
         const total   = rowData.reduce((a,v)=>a+v,0);
         if(!total) return;
         rows += `<tr>
-          <td style="white-space:nowrap;font-weight:600">${t}<br><span style="font-size:10px;color:var(--muted);font-weight:400">${mon}</span></td>
-          ${rowData.map(v=>`<td class="td-mono">${v?'$'+fmtNum(v):'-'}</td>`).join('')}
-          <td class="td-mono" style="color:var(--accent);font-weight:700">$${fmtNum(total)}</td>
+          <td class="cred-moneda-cell">↳ ${mon}</td>
+          ${rowData.map(v=>`<td class="td-mono">${v?fmtNum(v):'-'}</td>`).join('')}
+          <td class="td-mono" style="color:var(--accent);font-weight:600">${fmtNum(total)}</td>
         </tr>`;
       });
     });
-    // Totales por mes
+    /* Totales por mes (toda la pestaña) */
     const totalesMes = meses.map(k=>{
       let sum=0;
       tarjetas.forEach(t=>{ monedas.forEach(mon=>{ sum+=gastosData[t]?.[mon]?.[k]||0; }); });
       return sum;
     });
     const totalTotal = totalesMes.reduce((a,v)=>a+v,0);
-    rows += `<tr style="background:var(--card2);font-weight:700">
-      <td>TOTAL</td>
-      ${totalesMes.map(v=>`<td class="td-mono">$${fmtNum(v)}</td>`).join('')}
-      <td class="td-mono" style="color:var(--accent)">$${fmtNum(totalTotal)}</td>
-    </tr>`;
+    if(totalTotal > 0){
+      rows += `<tr style="background:var(--card2);font-weight:700;border-top:2px solid var(--border2)">
+        <td>TOTAL</td>
+        ${totalesMes.map(v=>`<td class="td-mono">$${fmtNum(v)}</td>`).join('')}
+        <td class="td-mono" style="color:var(--accent)">$${fmtNum(totalTotal)}</td>
+      </tr>`;
+    }
     gastosWrap.innerHTML=`<table>
-      <thead><tr><th>Tarjeta</th>${mesHeaders}<th>Total</th></tr></thead>
+      <thead><tr><th>Tarjeta / Moneda</th>${mesHeaders}<th>Total</th></tr></thead>
       <tbody>${rows||'<tr><td colspan="'+(meses.length+2)+'"><div class="empty">Sin gastos</div></td></tr>'}</tbody>
     </table>`;
   }
 
-  // ── Tabla pagos ──
-  const pagosData = {}; // { 'Pago Visa Santander': { ARS: {...}, USD: {...} } }
+  /* ── Tabla pagos (mismo formato agrupado) ── */
+  const pagosData = {};
   pagos.forEach(r=>{
     const en  = str(r.descripcion);
+    /* Asociar el pago a su tarjeta correspondiente (sacar "Pago " del frente) */
+    const tarjetaAsociada = en.replace(/^Pago\s+/i, '').trim();
+    if(!tarjetas.includes(tarjetaAsociada)) return;
     const mon = str(r.moneda)||'ARS';
     const f   = partesFecha(r);
     if(!f.y) return;
     const key = `${f.y}-${String(f.m).padStart(2,'0')}`;
-    if(!pagosData[en]) pagosData[en]={};
-    if(!pagosData[en][mon]) pagosData[en][mon]={};
-    pagosData[en][mon][key] = (pagosData[en][mon][key]||0) + (parseFloat(r.monto)||0);
+    if(!pagosData[tarjetaAsociada]) pagosData[tarjetaAsociada] = {};
+    if(!pagosData[tarjetaAsociada][mon]) pagosData[tarjetaAsociada][mon] = {};
+    pagosData[tarjetaAsociada][mon][key] = (pagosData[tarjetaAsociada][mon][key]||0) + (parseFloat(r.monto)||0);
   });
 
   const pagosWrap = document.getElementById('cred-pagos-wrap');
@@ -1458,36 +2268,188 @@ function renderCreditos(){
   } else {
     const mesHeaders2 = meses.map(k=>`<th>${fmtMesKey(k)}</th>`).join('');
     let rows2='';
-    Object.entries(pagosData).forEach(([en, monObj])=>{
-      Object.entries(monObj).forEach(([mon, mesObj])=>{
-        const rowData = meses.map(k=>mesObj[k]||0);
-        const total   = rowData.reduce((a,v)=>a+v,0);
+    tarjetas.forEach(t => {
+      if(!pagosData[t]) return;
+      const totalesTarjeta = meses.map(k => {
+        let sum = 0;
+        monedas.forEach(mon => sum += (pagosData[t][mon]?.[k] || 0));
+        return sum;
+      });
+      const granTotalTarjeta = totalesTarjeta.reduce((a,v)=>a+v,0);
+      if(granTotalTarjeta === 0) return;
+      rows2 += `<tr class="cred-tarjeta-header">
+        <td>${esc(t)}</td>
+        ${totalesTarjeta.map(v=>`<td class="td-mono">${v?'$'+fmtNum(v):'-'}</td>`).join('')}
+        <td class="td-mono">$${fmtNum(granTotalTarjeta)}</td>
+      </tr>`;
+      monedas.forEach(mon=>{
+        const rowData = meses.map(k => pagosData[t][mon]?.[k] || 0);
+        const total = rowData.reduce((a,v)=>a+v,0);
         if(!total) return;
-        rows2+=`<tr>
-          <td style="white-space:nowrap;font-weight:600">${en}<br><span style="font-size:10px;color:var(--muted);font-weight:400">${mon}</span></td>
-          ${rowData.map(v=>`<td class="td-mono">${v?'$'+fmtNum(v):'-'}</td>`).join('')}
-          <td class="td-mono" style="color:var(--green);font-weight:700">$${fmtNum(total)}</td>
+        rows2 += `<tr>
+          <td class="cred-moneda-cell">↳ ${mon}</td>
+          ${rowData.map(v=>`<td class="td-mono">${v?fmtNum(v):'-'}</td>`).join('')}
+          <td class="td-mono" style="color:var(--green);font-weight:600">${fmtNum(total)}</td>
         </tr>`;
       });
     });
     pagosWrap.innerHTML=`<table>
-      <thead><tr><th>Pago</th>${mesHeaders2}<th>Total</th></tr></thead>
+      <thead><tr><th>Tarjeta / Moneda</th>${mesHeaders2}<th>Total</th></tr></thead>
       <tbody>${rows2||'<tr><td colspan="'+(meses.length+2)+'"><div class="empty">Sin pagos</div></td></tr>'}</tbody>
     </table>`;
   }
 
-  // ── Mini chart barras apiladas ──
+  /* Mini chart barras apiladas */
   renderCredChart(meses, tarjetas, monedas, gastosData);
+
+  /* FIX 18: poblar dropdown de meses del detalle según el rango actual + render */
+  poblarMesesDetalle(meses);
+  renderDetalleCreditos();
+}
+
+/* FIX 18: KPIs de deuda total / próximo cierre / futura.
+   - Total: compras − pagos (todo el histórico de cada tarjeta).
+   - Próximo cierre: gastos cargados con fecha del mes calendario en curso (asumimos que vencen el cierre próximo).
+   - Futura: gastos cargados con fecha posterior al mes en curso (cuotas que vienen). */
+function renderCredKPIs(tarjetas, monedas){
+  const cont = document.getElementById('cred-kpis');
+  if(!cont) return;
+  const hoy = new Date();
+  const inicioMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const finMesActual = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0, 23, 59, 59);
+
+  /* Solo ARS para los KPIs (los USD se podrían sumar aparte si hace falta).
+     Acá unimos todas las tarjetas seleccionadas y todas las monedas elegidas. */
+  let totalDeuda = 0, totalCierre = 0, totalFutura = 0;
+  tarjetas.forEach(tarjeta => {
+    monedas.forEach(moneda => {
+      let compras = 0, pagos = 0, comprasCierre = 0, comprasFutura = 0;
+      const nombrePago = 'Pago ' + tarjeta;
+      allRows.forEach(r => {
+        if(String(r.moneda||'ARS').toUpperCase() !== moneda) return;
+        const monto = parseFloat(r.monto)||0;
+        if(!monto) return;
+        const f = r.fecha ? new Date(r.fecha) : null;
+        if(String(r.medio_pago||'').trim() === tarjeta){
+          compras += monto;
+          if(f && f >= inicioMesActual && f <= finMesActual) comprasCierre += monto;
+          else if(f && f > finMesActual) comprasFutura += monto;
+        }
+        if(String(r.descripcion||'').trim() === nombrePago) pagos += monto;
+      });
+      const deuda = compras - pagos;
+      /* Convertir a moneda base de KPI: ARS si está seleccionado, sino USD */
+      const monedaBase = monedas.includes('ARS') ? 'ARS' : 'USD';
+      totalDeuda += convertirA(deuda, moneda, monedaBase) || 0;
+      totalCierre += convertirA(comprasCierre, moneda, monedaBase) || 0;
+      totalFutura += convertirA(comprasFutura, moneda, monedaBase) || 0;
+    });
+  });
+  const monedaBase = monedas.includes('ARS') ? 'ARS' : 'USD';
+
+  cont.innerHTML = `
+    <div class="cred-kpi cred-kpi-danger">
+      <div class="cred-kpi-label">Deuda total</div>
+      <div class="cred-kpi-value">${monedaBase} ${fmtNum(totalDeuda)}</div>
+      <div class="cred-kpi-sub">compras − pagos histórico</div>
+    </div>
+    <div class="cred-kpi cred-kpi-warn">
+      <div class="cred-kpi-label">Cierra este mes</div>
+      <div class="cred-kpi-value">${monedaBase} ${fmtNum(totalCierre)}</div>
+      <div class="cred-kpi-sub">gastos del mes actual</div>
+    </div>
+    <div class="cred-kpi">
+      <div class="cred-kpi-label">Futura</div>
+      <div class="cred-kpi-value">${monedaBase} ${fmtNum(totalFutura)}</div>
+      <div class="cred-kpi-sub">cuotas a vencer</div>
+    </div>
+  `;
+}
+
+/* FIX 18: poblar dropdown de meses para detalle según el rango actual */
+function poblarMesesDetalle(meses){
+  const sel = document.getElementById('det-mes');
+  if(!sel) return;
+  const prevValue = sel.value;
+  /* Default: el mes más reciente del rango */
+  const mesesOrdenados = [...meses].reverse();
+  sel.innerHTML = mesesOrdenados.map(k => `<option value="${k}">${fmtMesKey(k)}</option>`).join('');
+  if(prevValue && mesesOrdenados.includes(prevValue)) sel.value = prevValue;
+}
+
+/* FIX 18: detalle de transacciones por tarjeta + moneda + mes elegidos */
+function renderDetalleCreditos(){
+  const tarjeta = document.getElementById('det-tarjeta').value;
+  const moneda  = document.getElementById('det-moneda').value;
+  const mesKey  = document.getElementById('det-mes').value; /* "YYYY-MM" */
+  const wrap = document.getElementById('cred-detalle-wrap');
+  if(!tarjeta || !moneda || !mesKey){
+    wrap.innerHTML = '<div class="empty">Elegí tarjeta, moneda y mes</div>';
+    return;
+  }
+  const [yStr, mStr] = mesKey.split('-');
+  const año = parseInt(yStr), mes = parseInt(mStr);
+
+  const filas = allRows.filter(r => {
+    if(String(r.medio_pago||'').trim() !== tarjeta) return false;
+    if(String(r.moneda||'ARS').toUpperCase() !== moneda) return false;
+    const f = partesFecha(r);
+    return f.y === año && f.m === mes;
+  });
+
+  if(filas.length === 0){
+    wrap.innerHTML = '<div class="empty">Sin transacciones para esa tarjeta + moneda + mes</div>';
+    return;
+  }
+
+  /* Ordenar por fecha descendente */
+  filas.sort((a,b) => {
+    const fa = partesFecha(a), fb = partesFecha(b);
+    return ((fb.y||0)*10000+(fb.m||0)*100+(fb.d||0)) - ((fa.y||0)*10000+(fa.m||0)*100+(fa.d||0));
+  });
+
+  const total = filas.reduce((s,r) => s + (parseFloat(r.monto)||0), 0);
+
+  const filasHTML = filas.map(r => `<tr>
+    <td class="td-mono td-muted" style="white-space:nowrap">${esc(fmtFecha(r))}</td>
+    <td>${esc(str(r.descripcion))}</td>
+    <td class="td-mono">${fmtMonto(parseFloat(r.monto)||0)}</td>
+    <td class="td-muted" style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(str(r.comentario))}">${esc(str(r.comentario))}</td>
+    <td class="td-muted">${r.cuota?esc(String(r.cuota)):'-'}</td>
+    <td class="td-muted">${r.cuotas?esc(String(r.cuotas)):'-'}</td>
+  </tr>`).join('');
+
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th>Fecha</th>
+      <th>Descripción (EN)</th>
+      <th>Monto</th>
+      <th>Comentario</th>
+      <th>Cuota</th>
+      <th>Cuotas</th>
+    </tr></thead>
+    <tbody>${filasHTML}
+      <tr style="background:var(--card2);font-weight:700">
+        <td colspan="2">TOTAL (${filas.length} trx)</td>
+        <td class="td-mono" style="color:var(--accent)">${fmtNum(total)} ${moneda}</td>
+        <td colspan="3"></td>
+      </tr>
+    </tbody>
+  </table>`;
 }
 
 function getMesesRango(desde, hasta){
   if(!desde||!hasta) return [];
   const meses=[];
-  const d=new Date(desde); d.setDate(1);
-  const h=new Date(hasta);
-  while(d<=h){
-    meses.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
-    d.setMonth(d.getMonth()+1);
+  /* FIX 18: parsear "YYYY-MM-DD" manualmente para evitar shift de timezone
+     que hacía aparecer un mes extra al inicio en el chart. */
+  const [yD,mD] = desde.split('-').map(Number);
+  const [yH,mH] = hasta.split('-').map(Number);
+  let y = yD, m = mD;
+  while(y < yH || (y === yH && m <= mH)){
+    meses.push(`${y}-${String(m).padStart(2,'0')}`);
+    m++;
+    if(m > 12){ m = 1; y++; }
   }
   return meses;
 }
@@ -1503,12 +2465,7 @@ function renderCredChart(meses, tarjetas, monedas, gastosData){
   if(credChart){ credChart.destroy(); credChart=null; }
   if(!meses.length) return;
 
-  const COLORS={
-    'Visa Santander':'#0099ff',
-    'AMEX Santander':'#00d4aa',
-    'AMEX PAE':      '#ffa502',
-  };
-
+  /* FIX 18: usa la paleta global TARJETA_COLORS para coherencia visual con los dots */
   const datasets=[];
   tarjetas.forEach(t=>{
     monedas.forEach(mon=>{
@@ -1517,7 +2474,7 @@ function renderCredChart(meses, tarjetas, monedas, gastosData){
       datasets.push({
         label: t+(monedas.length>1?' ('+mon+')':''),
         data,
-        backgroundColor: COLORS[t]||(mon==='USD'?'#ffa502':'#0099ff'),
+        backgroundColor: TARJETA_COLORS[t]||(mon==='USD'?'#ffa502':'#0099ff'),
         borderRadius:3,
         borderSkipped:false,
       });
@@ -1545,7 +2502,7 @@ function renderCredChart(meses, tarjetas, monedas, gastosData){
 let egChart = null;
 
 // Cuentas Balance — CON de estas = egreso real de patrimonio
-const CUENTAS_BALANCE_CON = ['Santander','MP','Efectivo','BBVA','Hipotecario','Calfpay','Buenbit','Binance','Lemon','IOL'];
+const CUENTAS_BALANCE_CON = ['Santander','MP','ICBC','CencoPay','Efectivo','BBVA','Hipotecario','Calfpay','NEXO','Binance','Lemon','IOL']; /* FIX 21: +CencoPay */
 
 const CAT_COLORS = {
   'Vivienda':           '#3b82f6',
@@ -1631,7 +2588,8 @@ function renderEgresos(){
   const ckCredito = document.getElementById('ck-eg-credito').checked;
   const monedas = [...(ckARS?['ARS']:[]), ...(ckUSD?['USD']:[])];
 
-  const TARJETAS_CREDITO = ['visa santander','amex santander','amex pae'];
+  /* FIX 21: antes era una lista hardcodeada vieja (faltaban Visa ICBC, Master MP). Ahora deriva de la global. */
+  const TARJETAS_CREDITO = [...TARJETAS_CREDITO_GLOBAL, ...TARJETAS_IMPUTABLES].map(t => t.toLowerCase());
 
   const catsActivas = new Set(getMsSelected('eg-cats-ms'));
 
@@ -1770,9 +2728,14 @@ let igChart = null;
 const CUENTAS_INGRESO_FALLBACK = [
   'AMEX PAE','Sueldo PAE','Cuenta de Gastos',
   'Intereses MP','Intereses Calfpay','Rendimiento','Cashback',
-  'Venta Cruze','Venta Entradas','Venta Placas Video','Devolucion',
-  'Vision Bi','Negocio AxD'
+  'Venta Cruze','Venta Entradas','Venta Placas Video','Devolución',
+  'Vision BI','Negocio AxD'
 ];
+
+/* FIX 17: cuentas Balance que también queremos ver como Ingreso (negocios propios).
+   Vision BI es la cuenta del negocio Vision BI: mecánicamente es Balance, pero
+   conceptualmente todo lo que llega ahí es ingreso real. */
+const CUENTAS_NEGOCIO_EXTRA = ['Vision BI'];
 
 const TIPO_COLORS = {
   'Sueldo':            '#3b82f6',
@@ -1786,13 +2749,28 @@ const TIPO_COLORS = {
 };
 
 function getCuentasIngreso(){
-  // Dynamic from tablasCuentas if available
+  /* FIX 17: combinar fuentes y aplicar filtros conceptuales.
+     - Suma cuentas con tipo_cuenta='Ingreso' detectadas dinámicamente.
+     - Suma cuentas de negocio (Balance que también son fuente de ingreso real).
+     - Resta las tarjetas de crédito: técnicamente aparecen como CON únicamente
+       (cuando comprás), pero NO son ingresos reales — son deuda. */
+  let lista;
   const dynamic = tablasCuentas
     .filter(c => c.tipo_cuenta === 'Ingreso')
     .map(c => c.nombre)
     .filter((v,i,a) => a.indexOf(v)===i);
-  if(dynamic.length > 0) return dynamic;
-  return CUENTAS_INGRESO_FALLBACK;
+  if(dynamic.length > 0) lista = dynamic.slice();
+  else lista = CUENTAS_INGRESO_FALLBACK.slice();
+
+  /* Agregar cuentas de negocio si no están */
+  CUENTAS_NEGOCIO_EXTRA.forEach(c => { if(lista.indexOf(c) < 0) lista.push(c); });
+
+  /* Excluir solo tarjetas de crédito (deuda, no ingreso real).
+     AMEX PAE (imputable) SÍ queda en Ingresos porque es parte de la compensación
+     del usuario — los gastos cubiertos por PAE son ingreso conceptual. */
+  lista = lista.filter(c => TARJETAS_CREDITO.indexOf(c) < 0);
+
+  return lista;
 }
 
 function initIgFiltros(){
@@ -1980,6 +2958,24 @@ function actualizarUltimaCarga(){
     return;
   }
 
+  /* FIX 14: detectar si la última carga es demasiado vieja (posible guardado roto) */
+  let staleWarning = '';
+  const fechaTx = tx.fecha ? new Date(tx.fecha) : null;
+  if(fechaTx && !isNaN(fechaTx.getTime())){
+    const diffDias = (Date.now() - fechaTx.getTime()) / (1000*60*60*24);
+    if(diffDias > 7){
+      staleWarning = `<div style="background:#3a1f1a;border:1px solid var(--danger);color:var(--danger);padding:8px 12px;font-size:11px;font-weight:600;border-bottom:1px solid var(--border);">⚠ La última fila del Sheet tiene más de ${Math.floor(diffDias)} días. Si cargaste cosas recientemente, abrí el Sheet directo y verificá que no haya filtros activos.</div>`;
+    }
+  }
+  /* Insertar el warning al principio del widget si corresponde */
+  let warnDiv = document.getElementById('ultima-carga-warn');
+  if(!warnDiv){
+    warnDiv = document.createElement('div');
+    warnDiv.id = 'ultima-carga-warn';
+    widget.insertBefore(warnDiv, widget.firstChild);
+  }
+  warnDiv.innerHTML = staleWarning;
+
   /* Resumen 1 línea */
   const fechaFmt = formatearFechaCorta(tx.fecha);
   const montoFmt = fmtNum(parseFloat(tx.monto)||0);
@@ -2050,13 +3046,14 @@ let pnSaldosIniciales = []; /* [{cuenta, moneda, saldo}] */
    El costo es 1 fetch extra por re-render, pero garantiza datos frescos sin tener que recargar la app. */
 
 /* Cuentas de inversión (resto Balance = Líquido) */
-const CUENTAS_INVERSION = ['Buenbit','Binance','Lemon','IOL'];
+const CUENTAS_INVERSION = ['NEXO','Binance','Lemon','IOL'];
 /* FIX 9b: whitelist temporal de cuentas Balance reales (líquido).
    La hoja Cuentas tiene falsos positivos (Flores, Entradas, etc.) por la lógica
    automática de generarTablas. Hasta resolver el modelo de edición de roles,
    forzamos esta lista para el bloque Líquido. */
-const CUENTAS_LIQUIDAS = ['MP','Mercado Pago','Santander','Hipotecario','Buenbit','Binance','Lemon','IOL','Efectivo','Calfpay'];
-/* Nota: Buenbit aparece en ambas listas a propósito porque puede tener saldos en ARS/USD (líquido)
+/* FIX 16: limpieza de whitelist. Sacamos 'Mercado Pago' (alias duplicado, solo usa 'MP'). */
+const CUENTAS_LIQUIDAS = ['MP','Santander','ICBC','CencoPay','Hipotecario','NEXO','Binance','Lemon','IOL','Efectivo','Calfpay']; /* FIX 21: +CencoPay */
+/* Nota: NEXO aparece en ambas listas a propósito porque puede tener saldos en ARS/USD (líquido)
    y en USDT/cripto (inversión). El bloque al que va cada fila se decide por moneda más abajo. */
 /* Activos cuya unidad nativa NO es ARS/USD — necesitan tasa para mostrar Saldo USD */
 const ACTIVOS_CON_TASA = {
@@ -2084,7 +3081,7 @@ async function cargarSaldosIniciales(){
   const url = config.scriptUrl;
   if(!url) return;
   try{
-    const r = await fetch(url + '?action=saldos');
+    const r = await fetch(urlSinCache(url, 'action=saldos'));
     const d = await r.json();
     if(d.status==='ok') pnSaldosIniciales = d.rows || [];
   } catch(e){ console.error('Error saldos iniciales:', e); }
@@ -2163,7 +3160,164 @@ function esCuentaBalance(nombreCuenta){
    Razón: la hoja Cuentas clasifica mal a las tarjetas porque solo aparecen en CON
    (mientras que "Pago Visa Santander" aparece en EN como nombre distinto, no se cruzan).
    La hoja Tipos sí las marca como "Crédito" gracias a REGLAS_TIPO. */
-const TARJETAS_CREDITO = ['Visa Santander', 'AMEX Santander'];
+const TARJETAS_CREDITO = ['Visa Santander', 'AMEX Santander', 'Visa ICBC', 'Master MP', 'Master CencoPay']; /* FIX 21: +Master CencoPay (pago: 'Pago Master CencoPay') */
+/* FIX 16: tarjetas imputables (no son deuda del usuario, son tracking de gastos reembolsables/cubiertos).
+   AMEX PAE: la empresa PAE paga los consumos. Solo aparece en Reconciliación, NO en Patrimonio. */
+const TARJETAS_IMPUTABLES = ['AMEX PAE'];
+const TARJETAS_CREDITO_GLOBAL = TARJETAS_CREDITO; /* FIX 21: alias para funciones que hacen shadowing local */
+
+/* ══════════════════════════════════════════════════════════
+   FIX 21 — Últimos movimientos por cuenta (favoritas en localStorage)
+   Convención: EN = entra a la cuenta, CON = sale de la cuenta.
+   Tarjetas: último gasto (CON = tarjeta) y último pago (EN = "Pago <tarjeta>").
+   ══════════════════════════════════════════════════════════ */
+const LS_MOV_FAV = 'ft_mov_favoritas';
+let _movEditando = false;
+
+function getCuentasCandidatasMov(){
+  return [...new Set([...CUENTAS_LIQUIDAS, ...CUENTAS_NEGOCIO_EXTRA, ...TARJETAS_CREDITO, ...TARJETAS_IMPUTABLES])];
+}
+function getMovFavoritas(){
+  try{
+    const v = JSON.parse(localStorage.getItem(LS_MOV_FAV) || 'null');
+    if(Array.isArray(v)) return v;
+  }catch(e){}
+  return [...CUENTAS_LIQUIDAS, ...TARJETAS_CREDITO]; /* default razonable la primera vez */
+}
+function setMovFavoritas(arr){ try{ localStorage.setItem(LS_MOV_FAV, JSON.stringify(arr)); }catch(e){} }
+function toggleMovFavorita(cuenta){
+  const favs = getMovFavoritas();
+  const i = favs.indexOf(cuenta);
+  if(i >= 0) favs.splice(i, 1); else favs.push(cuenta);
+  setMovFavoritas(favs);
+  renderMovimientosRecientes();
+}
+function toggleMovEditar(){ _movEditando = !_movEditando; renderMovimientosRecientes(); }
+
+function _movFechaKey(r){ const f = partesFecha(r); return f.y ? f.y*10000 + f.m*100 + (f.d||1) : 0; }
+function _movDiasDesde(r){
+  const f = partesFecha(r); if(!f.y) return null;
+  const d = new Date(f.y, f.m-1, f.d||1);
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  return Math.round((hoy - d) / 86400000);
+}
+/* Último por fecha; ante empate de fecha gana el cargado más tarde (orden del Sheet) */
+function _movUltimo(rows){
+  let best = null, bk = -1;
+  (rows||[]).forEach(r => { const k = _movFechaKey(r); if(k >= bk){ bk = k; best = r; } });
+  return best;
+}
+function _movHace(dias){
+  if(dias === null) return '';
+  if(dias < 0) return `en ${-dias} d`;
+  if(dias === 0) return 'hoy';
+  if(dias === 1) return 'ayer';
+  return `hace ${dias} d`;
+}
+function _movMon(r){ return (str(r.moneda) || 'ARS').toUpperCase(); }
+
+/* Una línea: label + monto arriba, fecha · contraparte · hace abajo */
+function _movLinea(label, r, prefijo, campoContra, clase){
+  if(!r) return `<div class="mov-linea mov-vacia"><div class="mov-top"><span class="mov-lbl">${label}</span><span class="mov-monto">—</span></div><div class="mov-sub">sin registros</div></div>`;
+  const dias = _movDiasDesde(r);
+  const stale = dias !== null && dias > 30 ? ' stale' : '';
+  const contra = esc(str(r[campoContra])) || '—';
+  const com = str(r.comentario) ? ` · ${esc(str(r.comentario))}` : '';
+  const signo = clase === 'up' ? '+' : '−';
+  return `<div class="mov-linea">
+    <div class="mov-top"><span class="mov-lbl">${label}</span><span class="mov-monto ${clase}">${signo}${fmtNum(parseFloat(r.monto)||0)}</span></div>
+    <div class="mov-sub">${fmtFecha(r)} · ${prefijo} <b>${contra}</b>${com} · <span class="mov-hace${stale}">${_movHace(dias)}</span></div>
+  </div>`;
+}
+
+function _movBadge(ultimos){
+  const r = _movUltimo(ultimos.filter(Boolean));
+  if(!r) return `<span class="mov-badge">sin movimientos</span>`;
+  const dias = _movDiasDesde(r);
+  return `<span class="mov-badge${dias !== null && dias > 30 ? ' stale' : ''}">${_movHace(dias)}</span>`;
+}
+
+function _movCardCuenta(cuenta, porEN, porCON){
+  const entradas = porEN[cuenta] || [], salidas = porCON[cuenta] || [];
+  const bloques = [], todos = [];
+  ['ARS','USD'].forEach(mon => {
+    const ing = _movUltimo(entradas.filter(r => _movMon(r) === mon));
+    const egr = _movUltimo(salidas.filter(r => _movMon(r) === mon));
+    if(!ing && !egr) return;
+    todos.push(ing, egr);
+    bloques.push(`<div class="mov-mon">${mon}</div>
+      ${_movLinea('Último ingreso', ing, 'desde', 'medio_pago', 'up')}
+      ${_movLinea('Último egreso', egr, 'en', 'descripcion', 'down')}`);
+  });
+  return `<div class="mov-card">
+    <div class="mov-card-head"><div class="mov-card-nombre">${esc(cuenta)}</div>${_movBadge(todos)}</div>
+    ${bloques.length ? bloques.join('') : '<div class="mov-sub">Sin movimientos en ARS ni USD.</div>'}
+  </div>`;
+}
+
+function _movCardTarjeta(tarjeta, porEN, porCON){
+  const gastos = porCON[tarjeta] || [], pagos = porEN['Pago ' + tarjeta] || [];
+  const bloques = [], todos = [];
+  ['ARS','USD'].forEach(mon => {
+    const g = _movUltimo(gastos.filter(r => _movMon(r) === mon));
+    const p = _movUltimo(pagos.filter(r => _movMon(r) === mon));
+    if(!g && !p) return;
+    todos.push(g, p);
+    bloques.push(`<div class="mov-mon">${mon}</div>
+      ${_movLinea('Último gasto', g, 'en', 'descripcion', 'down')}
+      ${_movLinea('Último pago', p, 'desde', 'medio_pago', 'up')}`);
+  });
+  const color = TARJETA_COLORS[tarjeta] || 'var(--muted)';
+  return `<div class="mov-card">
+    <div class="mov-card-head"><div class="mov-card-nombre"><span class="mov-dot" style="background:${color}"></span>${esc(tarjeta)}</div>${_movBadge(todos)}</div>
+    ${bloques.length ? bloques.join('') : '<div class="mov-sub">Sin gastos ni pagos cargados todavía.</div>'}
+  </div>`;
+}
+
+function renderMovimientosRecientes(){
+  const cont = document.getElementById('mov-lista');
+  const editor = document.getElementById('mov-editor');
+  const btn = document.getElementById('mov-btn-editar');
+  if(!cont) return;
+  const favs = getMovFavoritas();
+  const candidatas = getCuentasCandidatasMov();
+
+  btn.textContent = _movEditando ? '✓ Listo' : '⚙ Elegir cuentas';
+  editor.style.display = _movEditando ? 'block' : 'none';
+  if(_movEditando){
+    editor.innerHTML = `<div class="mov-chips">${candidatas.map(c =>
+      `<button class="mov-chip ${favs.includes(c) ? 'on' : ''}" onclick="toggleMovFavorita('${esc(c).replace(/'/g, "\\'")}')">${esc(c)}</button>`
+    ).join('')}</div>`;
+  }
+
+  if(!allRows || !allRows.length){
+    cont.innerHTML = '<div class="mov-sub" style="padding:20px 0;text-align:center;">Todavía no se cargaron los movimientos. Tocá ↻ arriba.</div>';
+    return;
+  }
+
+  /* Indexar una sola vez por EN y por CON */
+  const porEN = {}, porCON = {};
+  allRows.forEach(r => {
+    const en = str(r.descripcion).trim(), con = str(r.medio_pago).trim();
+    if(en)  (porEN[en]   = porEN[en]   || []).push(r);
+    if(con) (porCON[con] = porCON[con] || []).push(r);
+  });
+
+  const esTarjeta = c => TARJETAS_CREDITO.includes(c) || TARJETAS_IMPUTABLES.includes(c);
+  const cuentas  = candidatas.filter(c => favs.includes(c) && !esTarjeta(c));
+  const tarjetas = candidatas.filter(c => favs.includes(c) &&  esTarjeta(c));
+
+  if(!cuentas.length && !tarjetas.length){
+    cont.innerHTML = '<div class="mov-sub" style="padding:20px 0;text-align:center;">No elegiste ninguna cuenta. Tocá ⚙ Elegir cuentas.</div>';
+    return;
+  }
+
+  let html = '';
+  if(cuentas.length)  html += `<div class="mov-seccion">💧 Cuentas</div>` + cuentas.map(c => _movCardCuenta(c, porEN, porCON)).join('');
+  if(tarjetas.length) html += `<div class="mov-seccion">💳 Tarjetas</div>` + tarjetas.map(t => _movCardTarjeta(t, porEN, porCON)).join('');
+  cont.innerHTML = html;
+}
+
 function esCuentaCredito(nombreCuenta){
   /* Camino B: whitelist hardcoded — siempre gana */
   if(TARJETAS_CREDITO.indexOf(nombreCuenta) >= 0) return true;
@@ -2265,6 +3419,779 @@ function calcularDeudaTarjeta(stats, nombreTarjeta){
   return result; /* { 'ARS': {saldo, pagosPeriodo, comprasPeriodo}, ... } */
 }
 
+/* ════════════════════════════════════════════════════════
+   FIX 16 — Sub-tabs de Patrimonio + Reconciliación
+   Sub-tabs: Resumen (lo existente) / Reconciliación (nuevo).
+   Reconciliación: comparar saldos "Real" (input usuario) vs "FlowTrack" (calculado).
+   Persistencia: localStorage 'ft_reconciliacion' = {fecha, valores: {key: realStr}}.
+   ════════════════════════════════════════════════════════ */
+
+const PN_SUBTABS = ['resumen', 'reconciliacion', 'movimientos']; /* FIX 21: +movimientos */
+let _pnSubtabActiva = 'resumen';
+
+function showPNSubtab(id){
+  _pnSubtabActiva = id;
+  PN_SUBTABS.forEach(t => {
+    document.getElementById('pnsubpanel-'+t)?.classList.toggle('active', t===id);
+    document.getElementById('pnsubtab-'+t)?.classList.toggle('active', t===id);
+  });
+  if(id === 'reconciliacion'){
+    renderReconciliacion();
+  } else if(id === 'movimientos'){
+    renderMovimientosRecientes();
+  } else {
+    /* Al volver al Resumen, recalcular el badge por si cambió algo */
+    actualizarBadgeSalud();
+  }
+}
+
+/* ── Persistencia ── */
+function getReconciliacionData(){
+  try { return JSON.parse(localStorage.getItem('ft_reconciliacion')||'{}'); }
+  catch(e) { return {}; }
+}
+function setReconciliacionValor(key, valor){
+  const data = getReconciliacionData();
+  if(!data.valores) data.valores = {};
+  if(valor === '' || valor === null) delete data.valores[key];
+  else data.valores[key] = valor;
+  data.fecha = new Date().toISOString();
+  localStorage.setItem('ft_reconciliacion', JSON.stringify(data));
+}
+function resetReconciliacion(){
+  if(!confirm('¿Borrar todos los valores ingresados de reconciliación?')) return;
+  localStorage.removeItem('ft_reconciliacion');
+  renderReconciliacion();
+  actualizarBadgeSalud();
+}
+
+/* ── Helpers de formato y parseo ── */
+function parseNumeroFlex(s){
+  if(s === null || s === undefined || s === '') return null;
+  /* Acepta: "1.200.000", "1200000", "1,200,000.50", "1200.50", "1200,50" */
+  let t = String(s).trim();
+  if(!t) return null;
+  /* Si tiene ambos, asume coma=decimal: quita puntos miles, cambia coma a punto */
+  if(t.indexOf(',') >= 0 && t.indexOf('.') >= 0){
+    t = t.replace(/\./g,'').replace(',', '.');
+  } else if(t.indexOf(',') >= 0){
+    /* Si solo tiene coma: si vienen 3 dígitos después → es miles (ej: 1,200), sino decimal */
+    const partes = t.split(',');
+    if(partes[1] && partes[1].length === 3) t = t.replace(',','');
+    else t = t.replace(',','.');
+  } else {
+    /* Solo puntos: si hay varios o 3 dígitos después → miles, sino decimal */
+    const partes = t.split('.');
+    if(partes.length > 2) t = t.replace(/\./g,'');
+    else if(partes[1] && partes[1].length === 3) t = t.replace(/\./g,'');
+  }
+  const n = parseFloat(t);
+  return isNaN(n) ? null : n;
+}
+
+function fmtNumDecimales(n, decimales){
+  if(n === null || n === undefined || isNaN(n)) return '—';
+  return n.toLocaleString('es-AR', {minimumFractionDigits: decimales, maximumFractionDigits: decimales});
+}
+
+/* ── Calcular saldo actual de una cuenta+moneda (mismo método que Patrimonio) ── */
+function calcularSaldoCuenta(cuenta, moneda){
+  let saldo = 0;
+  pnSaldosIniciales.forEach(s => {
+    if(s.cuenta === cuenta && String(s.moneda||'ARS').toUpperCase() === moneda){
+      saldo += parseFloat(s.saldo)||0;
+    }
+  });
+  allRows.forEach(r => {
+    const monto = parseFloat(r.monto)||0;
+    if(!monto) return;
+    if(String(r.moneda||'ARS').toUpperCase() !== moneda) return;
+    if(String(r.medio_pago||'').trim() === cuenta) saldo -= monto;
+    if(String(r.descripcion||'').trim() === cuenta) saldo += monto;
+  });
+  return saldo;
+}
+
+/* ── Para tarjetas, calcular deuda neta (compras − pagos) ── */
+function calcularDeudaTarjetaSimple(tarjeta, moneda){
+  let compras = 0, pagos = 0;
+  const nombrePago = 'Pago ' + tarjeta;
+  allRows.forEach(r => {
+    if(String(r.moneda||'ARS').toUpperCase() !== moneda) return;
+    const monto = parseFloat(r.monto)||0;
+    if(String(r.medio_pago||'').trim() === tarjeta) compras += monto;
+    if(String(r.descripcion||'').trim() === nombrePago) pagos += monto;
+  });
+  return compras - pagos;
+}
+
+/* ── Para tarjeta imputable (AMEX PAE), gastos del MES en curso ── */
+function calcularGastoMesImputable(tarjeta, moneda){
+  const hoy = new Date();
+  const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  let total = 0;
+  allRows.forEach(r => {
+    if(String(r.medio_pago||'').trim() !== tarjeta) return;
+    if(String(r.moneda||'ARS').toUpperCase() !== moneda) return;
+    const f = r.fecha ? new Date(r.fecha) : null;
+    if(!f || isNaN(f.getTime())) return;
+    if(f < inicioMes) return;
+    total += parseFloat(r.monto)||0;
+  });
+  return total;
+}
+
+/* ── Clasificar diferencia (umbrales por % del saldo FlowTrack) ── */
+function clasificarDiferencia(diff, base, esCantidad){
+  if(diff === null || diff === undefined) return {clase:'rec-diff-empty', icono:'—', txt:'—'};
+  const absBase = Math.abs(base);
+  const absDiff = Math.abs(diff);
+  /* Si base muy cercano a 0, usar diff absoluto como criterio simple */
+  if(absBase < 0.0001){
+    if(absDiff < 0.0001) return {clase:'rec-diff-ok', icono:'✓', txt:'0'};
+    return {clase:'rec-diff-danger', icono:'🚨', txt: formatearDiff(diff, esCantidad)};
+  }
+  const pct = absDiff / absBase;
+  if(pct < 0.01) return {clase:'rec-diff-ok', icono:'✓', txt: formatearDiff(diff, esCantidad)};
+  if(pct < 0.10) return {clase:'rec-diff-warn', icono:'⚠', txt: formatearDiff(diff, esCantidad)};
+  return {clase:'rec-diff-danger', icono:'🚨', txt: formatearDiff(diff, esCantidad)};
+}
+
+function formatearDiff(diff, esCantidad){
+  const signo = diff > 0 ? '+' : '';
+  if(esCantidad) return signo + fmtNumDecimales(diff, 4);
+  return signo + fmtNum(diff);
+}
+
+/* ── Render principal de Reconciliación ── */
+function renderReconciliacion(){
+  cargarSaldosIniciales().then(() => {
+    _renderReconciliacionCore();
+  });
+}
+
+function _renderReconciliacionCore(){
+  const data = getReconciliacionData();
+
+  /* Última fecha */
+  const fechaSpan = document.getElementById('rec-ultima-fecha');
+  if(data.fecha){
+    const f = new Date(data.fecha);
+    const ahora = new Date();
+    const diffH = (ahora - f) / (1000*60*60);
+    let txt;
+    if(diffH < 1) txt = 'hace ' + Math.round(diffH*60) + ' min';
+    else if(diffH < 24) txt = 'hace ' + Math.round(diffH) + ' h';
+    else txt = 'hace ' + Math.round(diffH/24) + ' días';
+    fechaSpan.textContent = 'Última verificación: ' + txt;
+  } else {
+    fechaSpan.textContent = 'Sin verificaciones previas';
+  }
+
+  /* Calcular qué cuenta+moneda mostrar para cada bloque */
+  /* === BLOQUE LÍQUIDO: solo ARS y USD === */
+  const filasLiquido = [];
+  CUENTAS_LIQUIDAS.forEach(cuenta => {
+    ['ARS','USD'].forEach(moneda => {
+      const saldo = calcularSaldoCuenta(cuenta, moneda);
+      /* Incluir si tiene saldo o si tiene movimientos */
+      const tieneMov = allRows.some(r =>
+        (String(r.medio_pago||'').trim()===cuenta || String(r.descripcion||'').trim()===cuenta)
+        && String(r.moneda||'ARS').toUpperCase()===moneda
+      );
+      if(Math.abs(saldo) > 0.01 || tieneMov){
+        filasLiquido.push({cuenta, moneda, saldo, esCantidad:false});
+      }
+    });
+  });
+
+  /* === BLOQUE POSICIONES: activos (no ARS ni USD) en cuentas de inversión === */
+  const filasPosiciones = [];
+  CUENTAS_INVERSION.forEach(cuenta => {
+    /* Detectar qué activos tiene esta cuenta */
+    const activos = new Set();
+    allRows.forEach(r => {
+      if(String(r.medio_pago||'').trim()===cuenta || String(r.descripcion||'').trim()===cuenta){
+        const m = String(r.moneda||'').toUpperCase();
+        if(m && m !== 'ARS' && m !== 'USD') activos.add(m);
+      }
+    });
+    [...activos].sort().forEach(activo => {
+      const saldo = calcularSaldoCuenta(cuenta, activo);
+      if(Math.abs(saldo) > 0.0001){
+        filasPosiciones.push({cuenta, moneda:activo, saldo, esCantidad:true});
+      }
+    });
+  });
+
+  /* === BLOQUE TARJETAS: tarjetas crédito + imputables === */
+  const filasTarjetas = [];
+  TARJETAS_CREDITO.forEach(tarjeta => {
+    ['ARS','USD'].forEach(moneda => {
+      const deuda = calcularDeudaTarjetaSimple(tarjeta, moneda);
+      if(Math.abs(deuda) > 0.01){
+        filasTarjetas.push({cuenta:tarjeta, moneda, saldo: deuda, esCantidad:false, esTarjeta:true, esImputable:false});
+      }
+    });
+  });
+  TARJETAS_IMPUTABLES.forEach(tarjeta => {
+    ['ARS','USD'].forEach(moneda => {
+      const gasto = calcularGastoMesImputable(tarjeta, moneda);
+      if(Math.abs(gasto) > 0.01){
+        filasTarjetas.push({cuenta:tarjeta, moneda, saldo: gasto, esCantidad:false, esTarjeta:true, esImputable:true});
+      }
+    });
+  });
+
+  /* Render */
+  document.getElementById('rec-bloque-liquido').innerHTML = filasLiquido.length
+    ? '<div class="rec-titulo-bloque">💧 Cuentas líquidas</div>' + filasLiquido.map(f => renderFilaRec(f, data)).join('')
+    : '';
+  document.getElementById('rec-bloque-posiciones').innerHTML = filasPosiciones.length
+    ? '<div class="rec-titulo-bloque">📈 Posiciones (activos)</div>' + filasPosiciones.map(f => renderFilaRec(f, data)).join('')
+    : '';
+  document.getElementById('rec-bloque-tarjetas').innerHTML = filasTarjetas.length
+    ? '<div class="rec-titulo-bloque">💳 Tarjetas</div>' + filasTarjetas.map(f => renderFilaRec(f, data)).join('')
+    : '';
+}
+
+function renderFilaRec(f, data){
+  const key = `${f.cuenta}|${f.moneda}`;
+  const valorReal = data.valores ? data.valores[key] : null;
+  const realNum = valorReal !== undefined && valorReal !== null ? parseNumeroFlex(valorReal) : null;
+  const diff = realNum !== null ? (realNum - f.saldo) : null;
+  const clasificacion = clasificarDiferencia(diff, f.saldo, f.esCantidad);
+
+  /* Aux: para activos, mostrar valor en USD */
+  let auxHtml = '';
+  if(f.esCantidad){
+    const enUSD = convertirA(f.saldo, f.moneda, 'USD');
+    if(enUSD !== null){
+      auxHtml = `<div class="rec-row-aux">≈ USD ${fmtNum(enUSD)}</div>`;
+    } else {
+      auxHtml = `<div class="rec-row-aux pn-warn">⚠ sin tasa</div>`;
+    }
+  }
+  /* Para imputables: agregar badge + aclaración */
+  let badgeImputable = '';
+  let aclaracionImputable = '';
+  let rowClass = 'rec-row';
+  if(f.esImputable){
+    badgeImputable = '<span class="rec-row-aux-imputable">IMPUTABLE</span>';
+    aclaracionImputable = '<div class="rec-row-aclaracion">Gasto del mes en curso — comparar con cuenta de gastos PAE</div>';
+    rowClass = 'rec-row imputable';
+  }
+
+  const valorFmt = f.esCantidad ? fmtNumDecimales(f.saldo, 4) : fmtNum(f.saldo);
+  const inputValue = valorReal !== undefined && valorReal !== null ? esc(valorReal) : '';
+  const labelReal = f.esImputable ? 'Real PAE' : 'Real';
+  const step = f.esCantidad ? '0.0001' : '0.01';
+
+  return `<div class="${rowClass}">
+    <div class="rec-row-titulo">
+      <div><span class="rec-row-nombre">${esc(f.cuenta)}</span><span class="rec-row-mon">${esc(f.moneda)}${f.esTarjeta && !f.esImputable ? ' · deuda' : ''}</span> ${badgeImputable}</div>
+      ${auxHtml}
+    </div>
+    ${aclaracionImputable}
+    <div class="rec-row-grid">
+      <div>
+        <div class="rec-cell-label">${labelReal}</div>
+        <input type="text" inputmode="decimal" class="rec-cell-input"
+               value="${inputValue}" placeholder="—"
+               data-key="${esc(key)}" oninput="onRecInput(this)">
+      </div>
+      <div>
+        <div class="rec-cell-label">FlowTrack</div>
+        <div class="rec-cell-val">${valorFmt}</div>
+      </div>
+      <div>
+        <div class="rec-cell-label">Diferencia</div>
+        <div class="rec-cell-val ${clasificacion.clase}" id="rec-diff-${esc(key).replace(/[^a-zA-Z0-9]/g,'_')}">${clasificacion.txt}${clasificacion.icono!=='—'?' '+clasificacion.icono:''}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* Debounce simple para no recalcular en cada tecla */
+let _recInputTimer = null;
+function onRecInput(input){
+  const key = input.dataset.key;
+  const valor = input.value.trim();
+  setReconciliacionValor(key, valor);
+  /* Recalcular celda diferencia inmediatamente (visual feedback) */
+  const realNum = parseNumeroFlex(valor);
+  /* Recalcular saldo de esa fila */
+  const [cuenta, moneda] = key.split('|');
+  let saldoFT;
+  let esCantidad = false;
+  let esImputable = TARJETAS_IMPUTABLES.includes(cuenta);
+  if(TARJETAS_CREDITO.includes(cuenta)) saldoFT = calcularDeudaTarjetaSimple(cuenta, moneda);
+  else if(esImputable) saldoFT = calcularGastoMesImputable(cuenta, moneda);
+  else if(CUENTAS_INVERSION.includes(cuenta) && moneda!=='ARS' && moneda!=='USD'){
+    saldoFT = calcularSaldoCuenta(cuenta, moneda);
+    esCantidad = true;
+  } else saldoFT = calcularSaldoCuenta(cuenta, moneda);
+
+  const diff = realNum !== null ? (realNum - saldoFT) : null;
+  const clas = clasificarDiferencia(diff, saldoFT, esCantidad);
+  const cellId = 'rec-diff-' + key.replace(/[^a-zA-Z0-9]/g,'_');
+  const cell = document.getElementById(cellId);
+  if(cell){
+    cell.className = 'rec-cell-val ' + clas.clase;
+    cell.textContent = clas.txt + (clas.icono!=='—' ? ' '+clas.icono : '');
+  }
+  /* Debounce de actualización de fecha + badge */
+  clearTimeout(_recInputTimer);
+  _recInputTimer = setTimeout(() => {
+    document.getElementById('rec-ultima-fecha').textContent = 'Última verificación: hace 0 min';
+  }, 500);
+}
+
+/* ── Badge de salud arriba del PN Resumen ── */
+function actualizarBadgeSalud(){
+  const cont = document.getElementById('pn-badge-salud');
+  if(!cont) return;
+  const data = getReconciliacionData();
+  if(!data.valores || Object.keys(data.valores).length === 0){
+    cont.style.display = 'none';
+    return;
+  }
+  /* Contar cuentas con diferencia warn/danger */
+  let noOK = 0, total = 0;
+  Object.keys(data.valores).forEach(key => {
+    const [cuenta, moneda] = key.split('|');
+    const realNum = parseNumeroFlex(data.valores[key]);
+    if(realNum === null) return;
+    total++;
+    let saldoFT;
+    let esCantidad = false;
+    if(TARJETAS_CREDITO.includes(cuenta)) saldoFT = calcularDeudaTarjetaSimple(cuenta, moneda);
+    else if(TARJETAS_IMPUTABLES.includes(cuenta)) saldoFT = calcularGastoMesImputable(cuenta, moneda);
+    else if(CUENTAS_INVERSION.includes(cuenta) && moneda!=='ARS' && moneda!=='USD'){
+      saldoFT = calcularSaldoCuenta(cuenta, moneda);
+      esCantidad = true;
+    } else saldoFT = calcularSaldoCuenta(cuenta, moneda);
+    const diff = realNum - saldoFT;
+    const c = clasificarDiferencia(diff, saldoFT, esCantidad);
+    if(c.clase !== 'rec-diff-ok' && c.clase !== 'rec-diff-empty') noOK++;
+  });
+  if(total === 0){
+    cont.style.display = 'none';
+    return;
+  }
+  /* Calcular cuándo fue */
+  const f = new Date(data.fecha);
+  const diffH = (new Date() - f) / (1000*60*60);
+  let cuandoTxt;
+  if(diffH < 24) cuandoTxt = 'hoy';
+  else if(diffH < 48) cuandoTxt = 'ayer';
+  else cuandoTxt = 'hace ' + Math.round(diffH/24) + ' días';
+
+  if(noOK === 0){
+    cont.className = 'pn-badge-salud pn-badge-ok';
+    cont.innerHTML = `✓ Verificado ${cuandoTxt} · ${total} cuenta${total>1?'s':''} cuadra${total>1?'n':''}`;
+  } else {
+    cont.className = 'pn-badge-salud pn-badge-warn';
+    cont.innerHTML = `⚠ ${noOK} cuenta${noOK>1?'s':''} no cuadra${noOK>1?'n':''} · verificado ${cuandoTxt}`;
+  }
+  cont.style.display = 'flex';
+}
+
+/* ════════════════════════════════════════════════════════
+   FIX 19 — Presupuestos
+   Camino B: presupuestos paralelos (categorías + EN específicos, independientes).
+   Persistencia: localStorage 'ft_presupuestos' = {categorias: {cat: monto}, ens: {en: monto}}.
+   ════════════════════════════════════════════════════════ */
+
+/* ── Persistencia ── */
+function getPresupuestosData(){
+  try {
+    const d = JSON.parse(localStorage.getItem('ft_presupuestos')||'{}');
+    if(!d.categorias) d.categorias = {};
+    if(!d.ens) d.ens = {};
+    return d;
+  } catch(e) { return {categorias:{}, ens:{}}; }
+}
+function setPresupuestoCategoria(cat, monto){
+  const d = getPresupuestosData();
+  if(monto === null || monto === '' || isNaN(monto)) delete d.categorias[cat];
+  else d.categorias[cat] = monto;
+  localStorage.setItem('ft_presupuestos', JSON.stringify(d));
+}
+function setPresupuestoEN(en, monto){
+  const d = getPresupuestosData();
+  if(monto === null || monto === '' || isNaN(monto)){
+    delete d.ens[en];
+  } else {
+    d.ens[en] = monto;
+  }
+  localStorage.setItem('ft_presupuestos', JSON.stringify(d));
+}
+function eliminarENPresupuesto(en){
+  const d = getPresupuestosData();
+  delete d.ens[en];
+  localStorage.setItem('ft_presupuestos', JSON.stringify(d));
+  renderPresupuestos();
+}
+
+/* ── Helpers de gasto mes y promedio histórico ──
+   Reglas alineadas con Egresos:
+   - Solo ARS (Presupuestos opera en ARS por ahora).
+   - Excluir categorías "Cuenta Balance" y "Activos Adquiridos".
+   - Excluir movimientos internos: si EN está en CUENTAS_BALANCE_CON, es transferencia. */
+function _esEgresoReal(r){
+  if(String(r.moneda||'ARS').toUpperCase() !== 'ARS') return false;
+  const cat = String(r.categoria||'').trim();
+  if(cat === 'Cuenta Balance' || cat === 'Activos Adquiridos') return false;
+  /* Excluir transferencias internas */
+  if(CUENTAS_BALANCE_CON.includes(String(r.descripcion||'').trim())) return false;
+  return true;
+}
+
+function calcularGastoMesCategoria(cat){
+  const hoy = new Date();
+  const ym = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
+  let total = 0;
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    if(String(r.categoria||'').trim() !== cat) return;
+    const f = partesFecha(r);
+    if(!f.y) return;
+    const key = `${f.y}-${String(f.m).padStart(2,'0')}`;
+    if(key === ym) total += parseFloat(r.monto)||0;
+  });
+  return total;
+}
+
+function calcularGastoMesEN(en){
+  const hoy = new Date();
+  const ym = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
+  let total = 0;
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    if(String(r.descripcion||'').trim() !== en) return;
+    const f = partesFecha(r);
+    if(!f.y) return;
+    const key = `${f.y}-${String(f.m).padStart(2,'0')}`;
+    if(key === ym) total += parseFloat(r.monto)||0;
+  });
+  return total;
+}
+
+/* Promedio últimos N meses cerrados (no incluye mes en curso). */
+function calcularPromedioHistorico(filtro, valor, meses){
+  const hoy = new Date();
+  /* Construir lista de últimos N meses cerrados (mes anterior hacia atrás) */
+  const mesesArr = [];
+  for(let i = 1; i <= meses; i++){
+    const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+    mesesArr.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+  }
+  const totalesPorMes = {};
+  mesesArr.forEach(k => totalesPorMes[k] = 0);
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    if(filtro === 'cat' && String(r.categoria||'').trim() !== valor) return;
+    if(filtro === 'en'  && String(r.descripcion||'').trim() !== valor) return;
+    const f = partesFecha(r);
+    if(!f.y) return;
+    const key = `${f.y}-${String(f.m).padStart(2,'0')}`;
+    if(totalesPorMes[key] !== undefined) totalesPorMes[key] += parseFloat(r.monto)||0;
+  });
+  const sum = Object.values(totalesPorMes).reduce((a,v)=>a+v, 0);
+  return sum / meses;
+}
+
+/* ── Clasificador de diferencia (mismo paradigma que Reconciliación) ── */
+function clasificarPresupuestoDiff(gastado, presupuesto){
+  if(!presupuesto || presupuesto <= 0) return {clase:'pre-diff-empty', txt:'sin meta', barClase:''};
+  const pct = gastado / presupuesto;
+  const diff = gastado - presupuesto;
+  const signo = diff > 0 ? '+' : '';
+  const txt = `${signo}${fmtNum(diff)} (${Math.round(pct*100)}%)`;
+  if(pct <= 1.0)  return {clase:'pre-diff-ok',     txt, barClase:'', pct};
+  if(pct <= 1.10) return {clase:'pre-diff-warn',   txt, barClase:'warn', pct};
+  return                  {clase:'pre-diff-danger', txt, barClase:'danger', pct};
+}
+
+/* ── Render principal de Presupuestos ── */
+function renderPresupuestos(){
+  const histMeses = parseInt(document.getElementById('pre-historico').value) || 6;
+  const topN      = parseInt(document.getElementById('pre-topn').value)      || 10;
+
+  /* Listar todas las categorías con gasto del mes actual y ordenar por gasto desc */
+  const cats = {};
+  const hoy = new Date();
+  const ym = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}`;
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    const cat = String(r.categoria||'').trim();
+    if(!cat) return;
+    const f = partesFecha(r);
+    if(!f.y) return;
+    const key = `${f.y}-${String(f.m).padStart(2,'0')}`;
+    if(key === ym){
+      cats[cat] = (cats[cat]||0) + (parseFloat(r.monto)||0);
+    }
+  });
+  const catsOrdenadas = Object.entries(cats)
+    .sort((a,b) => b[1]-a[1])
+    .slice(0, topN)
+    .map(([cat, gastado]) => ({cat, gastado}));
+
+  /* Render bloques */
+  renderResumenPresupuesto(catsOrdenadas);
+  renderBloqueCategoriasPre(catsOrdenadas, histMeses);
+  renderBloqueENsPre(histMeses);
+}
+
+/* ── Render del resumen ejecutivo arriba ── */
+function renderResumenPresupuesto(catsOrdenadas){
+  const data = getPresupuestosData();
+  const hoy = new Date();
+  const mesNombre = MESES[hoy.getMonth()] + ' ' + hoy.getFullYear();
+  document.getElementById('pre-mes-label').textContent = mesNombre;
+
+  /* Total gastado (mes actual, todas las categorías) y total presupuestado (manual) */
+  let totalGastado = 0;
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    const f = partesFecha(r);
+    if(!f.y) return;
+    if(f.y === hoy.getFullYear() && (f.m-1) === hoy.getMonth()){
+      totalGastado += parseFloat(r.monto)||0;
+    }
+  });
+  const totalPresup = Object.values(data.categorias).reduce((a,v) => a + (parseFloat(v)||0), 0);
+
+  /* Total visual */
+  const totalEl = document.getElementById('pre-resumen-total');
+  if(totalPresup > 0){
+    totalEl.innerHTML = `<span class="gastado">$${fmtNum(totalGastado)}</span> <span class="total">/ $${fmtNum(totalPresup)}</span>`;
+  } else {
+    totalEl.innerHTML = `<span class="gastado">$${fmtNum(totalGastado)}</span> <span class="total" style="font-size:12px">(sin presupuesto definido)</span>`;
+  }
+
+  /* Barra de progreso */
+  const bar = document.getElementById('pre-resumen-bar');
+  if(totalPresup > 0){
+    const pct = Math.min(100, (totalGastado / totalPresup) * 100);
+    bar.style.width = pct + '%';
+    bar.className = 'pre-resumen-bar';
+    if(pct > 100 || totalGastado > totalPresup) bar.className = 'pre-resumen-bar danger';
+    else if(pct > 90) bar.className = 'pre-resumen-bar warn';
+  } else {
+    bar.style.width = '0%';
+  }
+
+  /* Meta: días transcurridos / días totales */
+  const diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+  const diaActual = hoy.getDate();
+  const diasRestantes = diasMes - diaActual;
+  document.getElementById('pre-resumen-meta').textContent =
+    `Día ${diaActual} de ${diasMes} · faltan ${diasRestantes} días`;
+
+  /* Proyección lineal: gastado * (diasMes / diaActual) */
+  const proyEl = document.getElementById('pre-resumen-proy');
+  if(diaActual > 0 && totalGastado > 0){
+    const proyeccion = totalGastado * (diasMes / diaActual);
+    let claseProy = 'proy-ok';
+    let icono = '✓';
+    if(totalPresup > 0){
+      if(proyeccion > totalPresup * 1.10){ claseProy = 'proy-danger'; icono = '🚨'; }
+      else if(proyeccion > totalPresup){ claseProy = 'proy-warn'; icono = '⚠'; }
+    } else {
+      claseProy = '';
+      icono = '';
+    }
+    proyEl.innerHTML = `Al ritmo actual, vas a terminar en <span class="${claseProy}">$${fmtNum(proyeccion)}${icono?' '+icono:''}</span>`;
+  } else {
+    proyEl.innerHTML = '<span style="color:var(--muted)">Sin gastos este mes todavía</span>';
+  }
+}
+
+/* ── Render del bloque de Categorías ── */
+function renderBloqueCategoriasPre(catsOrdenadas, histMeses){
+  const cont = document.getElementById('pre-bloque-cats');
+  if(!catsOrdenadas.length){
+    cont.innerHTML = '<div class="pre-empty">Sin gastos este mes todavía. Las categorías aparecerán cuando empieces a cargar.</div>';
+    return;
+  }
+  const data = getPresupuestosData();
+  cont.innerHTML = catsOrdenadas.map(({cat, gastado}) => {
+    const presup = parseFloat(data.categorias[cat]) || 0;
+    const inputVal = data.categorias[cat] !== undefined ? data.categorias[cat] : '';
+    const clas = clasificarPresupuestoDiff(gastado, presup);
+    const hist = calcularPromedioHistorico('cat', cat, histMeses);
+    const diffHist = gastado - hist;
+    const diffHistSigno = diffHist > 0 ? '+' : '';
+    const clasHist = !hist ? 'pre-diff-empty' :
+                     diffHist <= 0 ? 'pre-diff-ok' :
+                     (diffHist/hist) <= 0.10 ? 'pre-diff-warn' : 'pre-diff-danger';
+    const pctBar = presup > 0 ? Math.min(100, (gastado/presup)*100) : 0;
+    return `<div class="pre-row">
+      <div class="pre-row-titulo">
+        <div class="pre-row-nombre">${esc(cat)}</div>
+        <div class="pre-row-gastado">$${fmtNum(gastado)}</div>
+      </div>
+      <div class="pre-row-grid">
+        <div>
+          <div class="pre-cell-label">Presupuesto manual</div>
+          <input type="text" inputmode="decimal" class="pre-cell-input"
+            value="${esc(inputVal)}" placeholder="—"
+            data-tipo="cat" data-key="${esc(cat)}" oninput="onPresupuestoInput(this)">
+        </div>
+        <div>
+          <div class="pre-cell-label">vs Presupuesto</div>
+          <div class="pre-cell-diff ${clas.clase}">${clas.txt}</div>
+        </div>
+      </div>
+      ${presup > 0 ? `<div class="pre-mini-bar"><div class="pre-mini-bar-fill ${clas.barClase}" style="width:${pctBar}%"></div></div>` : ''}
+      <div class="pre-row-aux">
+        <span>Histórico ${histMeses}m: <span class="historico-val">$${fmtNum(hist)}</span></span>
+        <span class="pre-cell-diff ${clasHist}" style="font-size:10px">${hist ? `${diffHistSigno}${fmtNum(diffHist)} vs hist` : 'sin histórico'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Render del bloque de EN (conceptos específicos) ── */
+function renderBloqueENsPre(histMeses){
+  const cont = document.getElementById('pre-bloque-ens');
+  const data = getPresupuestosData();
+  const ens = Object.keys(data.ens);
+  if(ens.length === 0){
+    cont.innerHTML = '<div class="pre-empty">Todavía no agregaste ningún concepto específico. Tocá "+ Agregar concepto" para empezar a vigilar gastos puntuales (ej: Super Disco, Spotify, Café Martínez).</div>';
+    return;
+  }
+  /* Calcular gasto del mes para cada EN y ordenar desc */
+  const filas = ens.map(en => ({en, gastado: calcularGastoMesEN(en)}))
+                   .sort((a,b) => b.gastado - a.gastado);
+
+  cont.innerHTML = filas.map(({en, gastado}) => {
+    const presup = parseFloat(data.ens[en]) || 0;
+    const inputVal = data.ens[en] !== undefined ? data.ens[en] : '';
+    const clas = clasificarPresupuestoDiff(gastado, presup);
+    const hist = calcularPromedioHistorico('en', en, histMeses);
+    const diffHist = gastado - hist;
+    const diffHistSigno = diffHist > 0 ? '+' : '';
+    const clasHist = !hist ? 'pre-diff-empty' :
+                     diffHist <= 0 ? 'pre-diff-ok' :
+                     (diffHist/hist) <= 0.10 ? 'pre-diff-warn' : 'pre-diff-danger';
+    const pctBar = presup > 0 ? Math.min(100, (gastado/presup)*100) : 0;
+    return `<div class="pre-row">
+      <div class="pre-row-titulo">
+        <div class="pre-row-nombre">${esc(en)}</div>
+        <div class="pre-row-gastado">$${fmtNum(gastado)}</div>
+      </div>
+      <div class="pre-row-grid">
+        <div>
+          <div class="pre-cell-label">Presupuesto manual</div>
+          <input type="text" inputmode="decimal" class="pre-cell-input"
+            value="${esc(inputVal)}" placeholder="—"
+            data-tipo="en" data-key="${esc(en)}" oninput="onPresupuestoInput(this)">
+        </div>
+        <div>
+          <div class="pre-cell-label">vs Presupuesto</div>
+          <div class="pre-cell-diff ${clas.clase}">${clas.txt}</div>
+        </div>
+      </div>
+      ${presup > 0 ? `<div class="pre-mini-bar"><div class="pre-mini-bar-fill ${clas.barClase}" style="width:${pctBar}%"></div></div>` : ''}
+      <div class="pre-row-aux">
+        <span>Histórico ${histMeses}m: <span class="historico-val">$${fmtNum(hist)}</span></span>
+        <span style="display:flex;gap:10px;align-items:center;">
+          <span class="pre-cell-diff ${clasHist}" style="font-size:10px">${hist ? `${diffHistSigno}${fmtNum(diffHist)} vs hist` : 'sin histórico'}</span>
+          <button class="pre-row-rm" onclick="eliminarENPresupuesto('${esc(en).replace(/'/g,'\\\'')}')">✕ quitar</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Handler de input editable (con persistencia + re-render diferida) ── */
+let _preInputTimer = null;
+function onPresupuestoInput(input){
+  const tipo = input.dataset.tipo;
+  const key  = input.dataset.key;
+  const valor = parseNumeroFlex(input.value);
+  if(tipo === 'cat') setPresupuestoCategoria(key, valor);
+  else if(tipo === 'en') setPresupuestoEN(key, valor);
+  /* Debounce: re-render completo al detener tipeo (mantiene foco simple) */
+  clearTimeout(_preInputTimer);
+  _preInputTimer = setTimeout(() => {
+    /* Re-render solo el resumen + diff de la fila (sin tocar inputs).
+       Más simple: recálculo completo. El usuario ya soltó el input. */
+    renderPresupuestos();
+    /* Restaurar foco en el input editado */
+    setTimeout(() => {
+      const sel = `input.pre-cell-input[data-tipo="${tipo}"][data-key="${key.replace(/"/g,'\\"')}"]`;
+      const newInput = document.querySelector(sel);
+      if(newInput){
+        newInput.focus();
+        /* Cursor al final */
+        const v = newInput.value;
+        newInput.value = '';
+        newInput.value = v;
+      }
+    }, 10);
+  }, 600);
+}
+
+/* ── Modal: agregar concepto (EN) ── */
+function abrirModalAgregarEN(){
+  const data = getPresupuestosData();
+  const yaAgregados = new Set(Object.keys(data.ens));
+  /* Listar todos los EN únicos que NO sean cuentas balance (transferencias internas) */
+  const ensMap = {};
+  allRows.forEach(r => {
+    if(!_esEgresoReal(r)) return;
+    const en = String(r.descripcion||'').trim();
+    if(!en) return;
+    ensMap[en] = (ensMap[en]||0) + (parseFloat(r.monto)||0);
+  });
+  /* Ordenar por gasto total desc */
+  const ens = Object.entries(ensMap)
+    .sort((a,b) => b[1]-a[1])
+    .map(([en, total]) => ({en, total, ya: yaAgregados.has(en)}));
+  window._modalENs = ens;
+  document.getElementById('modal-en-search').value = '';
+  renderModalEN('');
+  document.getElementById('modal-agregar-en').classList.add('active');
+}
+function cerrarModalAgregarEN(){
+  document.getElementById('modal-agregar-en').classList.remove('active');
+}
+function filtrarModalEN(){
+  const q = document.getElementById('modal-en-search').value.toLowerCase();
+  renderModalEN(q);
+}
+function renderModalEN(query){
+  const cont = document.getElementById('modal-en-lista');
+  const lista = (window._modalENs || []).filter(o => !query || o.en.toLowerCase().includes(query));
+  if(lista.length === 0){
+    cont.innerHTML = '<div class="pre-empty" style="margin:0;border-radius:0;border:none">Sin resultados</div>';
+    return;
+  }
+  cont.innerHTML = lista.slice(0, 80).map(o => {
+    if(o.ya) return `<div class="modal-en-item disabled">
+      <span>${esc(o.en)}</span>
+      <span class="modal-en-item-meta">ya agregado</span>
+    </div>`;
+    return `<div class="modal-en-item" onclick="agregarENPresupuesto('${esc(o.en).replace(/'/g,'\\\'')}')">
+      <span>${esc(o.en)}</span>
+      <span class="modal-en-item-meta">total hist.: $${fmtNum(o.total)}</span>
+    </div>`;
+  }).join('');
+}
+function agregarENPresupuesto(en){
+  /* Agregar con presupuesto vacío (el usuario lo edita después inline) */
+  const d = getPresupuestosData();
+  if(!d.ens[en]) d.ens[en] = '';
+  localStorage.setItem('ft_presupuestos', JSON.stringify(d));
+  cerrarModalAgregarEN();
+  renderPresupuestos();
+}
+
 function renderPatrimonio(){
   cargarSaldosIniciales().then(() => {
     inicializarFiltrosPN();
@@ -2321,6 +4248,9 @@ function _renderPatrimonioCore(){
 
   /* Resumen ejecutivo */
   renderResumenPN(liquidoFiltrado, inversionesFiltradas, stats, tarjetasUnicas);
+
+  /* FIX 16: badge de salud de reconciliación */
+  actualizarBadgeSalud();
 }
 
 function renderBloqueLiquido(filas){
@@ -2396,7 +4326,7 @@ function renderBloqueLiquido(filas){
 
 function renderBloqueInversiones(filas){
   const wrap = document.getElementById('pn-bloque-inversiones');
-  /* Agrupar por cuenta (Buenbit, Binance, Lemon, IOL) */
+  /* Agrupar por cuenta (NEXO, Binance, Lemon, IOL) */
   const porCuenta = {};
   filas.forEach(e => {
     if(!porCuenta[e.cuenta]) porCuenta[e.cuenta] = [];
@@ -2475,6 +4405,29 @@ function renderBloqueInversiones(filas){
   </div>`;
 }
 
+/* FIX 18: descompone la deuda de una tarjeta en {cierre, futura}.
+   - cierre: gastos con fecha del mes calendario actual (vencen el próximo cierre).
+   - futura: gastos con fecha posterior al mes actual (cuotas a vencer).
+   Nota: no resta pagos para estos dos buckets — son "compras a pagar".
+   La deuda TOTAL sigue siendo la que calcula calcularDeudaTarjeta (compras − pagos histórico). */
+function calcularDesgloseDeudaTarjeta(tarjeta, moneda){
+  const hoy = new Date();
+  const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+  const finMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0, 23, 59, 59);
+  let cierre = 0, futura = 0;
+  allRows.forEach(r => {
+    if(String(r.medio_pago||'').trim() !== tarjeta) return;
+    if(String(r.moneda||'ARS').toUpperCase() !== moneda) return;
+    const monto = parseFloat(r.monto)||0;
+    if(!monto) return;
+    const f = r.fecha ? new Date(r.fecha) : null;
+    if(!f || isNaN(f.getTime())) return;
+    if(f >= inicioMes && f <= finMes) cierre += monto;
+    else if(f > finMes) futura += monto;
+  });
+  return {cierre, futura};
+}
+
 function renderBloquePasivos(stats, tarjetasUnicas){
   const wrap = document.getElementById('pn-bloque-pasivos');
 
@@ -2523,14 +4476,18 @@ function renderBloquePasivos(stats, tarjetasUnicas){
 
   const subTablasHTML = monedas.map(moneda => {
     const filasM = porMoneda[moneda].sort((a,b) => a.tarjeta.localeCompare(b.tarjeta));
-    let subSaldo = 0;
+    let subSaldo = 0, subCierre = 0, subFutura = 0;
     const filasHTML = filasM.map(t => {
       subSaldo += t.saldo;
+      /* FIX 18: desglose temporal de la deuda */
+      const desglose = calcularDesgloseDeudaTarjeta(t.tarjeta, moneda);
+      subCierre += desglose.cierre;
+      subFutura += desglose.futura;
       return `<tr>
         <td>${esc(t.tarjeta)}</td>
-        <td class="num up">${fmtNum(t.pagosPeriodo)}</td>
         <td class="num danger">${fmtNum(t.saldo)}</td>
-        <td class="num down">${fmtNum(t.comprasPeriodo)}</td>
+        <td class="num" style="color:var(--warn);font-weight:500">${desglose.cierre > 0 ? fmtNum(desglose.cierre) : '-'}</td>
+        <td class="num td-muted">${desglose.futura > 0 ? fmtNum(desglose.futura) : '-'}</td>
       </tr>`;
     }).join('');
     return `<div class="pn-subtabla">
@@ -2541,9 +4498,9 @@ function renderBloquePasivos(stats, tarjetasUnicas){
       <div class="pn-tabla-wrap"><table class="pn-tabla">
         <thead><tr>
           <th>Tarjeta</th>
-          <th class="num">Pagos</th>
-          <th class="num">Deuda real</th>
-          <th class="num">Compras</th>
+          <th class="num">Deuda total</th>
+          <th class="num">Cierra este mes</th>
+          <th class="num">Futura</th>
         </tr></thead>
         <tbody>${filasHTML}</tbody>
       </table></div>
@@ -2637,7 +4594,7 @@ async function cargarPendientes(){
   btn.style.display = 'none';
   _pendientesCambios = {};
   try{
-    const r = await fetch(url + '?action=pendientes');
+    const r = await fetch(urlSinCache(url, 'action=pendientes'));
     const d = await r.json();
     if(d.status !== 'ok'){ summary.textContent = 'Error al cargar: ' + (d.message||'?'); return; }
     _pendientesCache = d.rows || [];
@@ -2713,7 +4670,7 @@ async function guardarPendientes(){
   showToast('Calculando impacto…');
   try{
     const data = encodeURIComponent(JSON.stringify(ens));
-    const r = await fetch(url + '?action=contarPropagacion&data=' + data);
+    const r = await fetch(urlSinCache(url, 'action=contarPropagacion&data=' + data));
     const d = await r.json();
     if(d.status !== 'ok'){ showToast('Error al contar: ' + (d.message||'?')); return; }
     /* Mostrar modal de confirmación */
@@ -2749,7 +4706,7 @@ async function confirmarPropagacion(){
   btn.textContent = 'Guardando…';
   try{
     const data = encodeURIComponent(JSON.stringify(updates));
-    const r = await fetch(url + '?action=updateCategorias&data=' + data);
+    const r = await fetch(urlSinCache(url, 'action=updateCategorias&data=' + data));
     const d = await r.json();
     if(d.status === 'ok'){
       showToast(`✓ ${d.cats_actualizadas} categorías · ${d.movimientos_actualizados} filas`);
@@ -2777,7 +4734,7 @@ async function regenerarTablas(){
   btn.textContent = '⏳ Procesando… (puede tardar 10-30s)';
   result.textContent = '';
   try{
-    const r = await fetch(url + '?action=regenerarTablas');
+    const r = await fetch(urlSinCache(url, 'action=regenerarTablas'));
     const d = await r.json();
     if(d.status === 'ok'){
       const res = d.result || {};
@@ -2797,6 +4754,27 @@ async function regenerarTablas(){
 }
 
 </script>
+
+<!-- FIX 20: Modal aprobador para transacciones detectadas desde foto -->
+<div class="modal-overlay" id="modal-aprobador">
+  <div class="modal-box" style="max-width:640px;max-height:90vh;display:flex;flex-direction:column;">
+    <div class="modal-title" style="color:var(--accent)">📋 Revisar transacciones detectadas</div>
+    <div class="modal-subtitle">
+      <span id="aprobador-header-info">— detectadas</span>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">
+        Destildá las que quieras descartar. Editá inline los valores que la IA se haya equivocado.
+      </div>
+    </div>
+    <div id="aprobador-lista" style="flex:1;overflow-y:auto;margin:12px 0;padding-right:4px;"></div>
+    <div class="modal-actions" style="border-top:1px solid var(--border);padding-top:12px;">
+      <button class="btn btn-secondary" onclick="cerrarModalAprobador()">Cancelar</button>
+      <button class="btn btn-primary" id="btnConfirmarAprob" onclick="confirmarCargaAprobador()">
+        💾 Cargar seleccionadas al Sheet
+      </button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </body>
 </html>
